@@ -8,7 +8,10 @@ This repo is intentionally light for now. The immediate work is to validate:
 2. `gamestory-logai-api`
 3. identity integration
 
-After that, this repo should own the Schneider stack composition, runbooks, environment templates, smoke tests, and service wiring for SignalAutobahn, Agentic Core, Simulation, Teams, and external-system mocks.
+After that, this repo should own the Schneider stack composition, runbooks, environment templates, smoke tests, and service wiring for SignalAutobahn, Agentic Core, Teams, and external-system mocks.
+
+See `docs/order-orchestration-flow.md` for the phase 1 order orchestration flow.
+See `docs/helm-overrides.md` for the remote/build/dev Helm override model.
 
 Schneider-specific identity setup lives in:
 
@@ -27,7 +30,8 @@ logai-ui
   -> gamestory-logai-api
       -> gamestory-signal-autobahn
           -> gamestory_agentic_core
-          -> gamestory_simulation
           -> gamestory_teams_interfacing
-          -> mock WMS / SynQ / Cognos
+          -> mock SynQ / Cognos
 ```
+
+Simulation remains UI-only for phase 1 and is not wired to the backend flow.

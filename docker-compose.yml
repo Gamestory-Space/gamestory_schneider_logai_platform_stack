@@ -1,0 +1,190 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: schneider-logai-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-keycloak}
+      POSTGRES_USER: ${POSTGRES_USER:-keycloak}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - schneider_logai_postgres_data:/var/lib/postgresql/data
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    container_name: schneider-logai-keycloak
+    restart: unless-stopped
+    command: start-dev --import-realm
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-keycloak}
+      KC_DB_USERNAME: ${POSTGRES_USER:-keycloak}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+      KC_HOSTNAME: http://localhost:8080
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_ENABLED: "true"
+      KC_PROXY_HEADERS: xforwarded
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      ENTRA_TENANT_ID: ${ENTRA_TENANT_ID:-}
+      ENTRA_CLIENT_ID: ${ENTRA_CLIENT_ID:-}
+      ENTRA_CLIENT_SECRET: ${ENTRA_CLIENT_SECRET:-}
+      KEYCLOAK_IDP_ALIAS: gamestory-entra
+    volumes:
+      - ../../../gamestory-identity-kit/keycloak/realms:/opt/keycloak/data/import:ro
+    ports:
+      - "${KEYCLOAK_PORT:-8080}:8080"
+
+  identity-api:
+    image: localhost/gamestory/identity-api:remote-build-dev
+    build:
+      context: ../../../gamestory-identity-kit/backend
+    container_name: schneider-logai-identity-api
+    restart: unless-stopped
+    depends_on:
+      keycloak:
+        condition: service_started
+    environment:
+      SERVICE_NAME: gamestory-sso-api
+      ENVIRONMENT: ${ENVIRONMENT:-local}
+      KEYCLOAK_PUBLIC_URL: http://localhost:8080
+      KEYCLOAK_REALM: gamestory-sso
+      KEYCLOAK_ISSUER_URL: http://localhost:8080/realms/gamestory-sso
+      KEYCLOAK_JWKS_URL: http://localhost:8080/realms/gamestory-sso/protocol/openid-connect/certs
+      KEYCLOAK_JWKS_FETCH_URL: http://keycloak:8080/realms/gamestory-sso/protocol/openid-connect/certs
+      KEYCLOAK_AUDIENCE: sample-app
+      SUPPORTED_PROTOCOLS: oidc,oauth2
+      API_CORS_ORIGINS: http://localhost:3000,http://sample.localhost:3000
+    ports:
+      - "${IDENTITY_API_PORT:-8000}:8000"
+
+  mock-schneider-sources:
+    image: localhost/gamestory/schneider-mock-sources:remote-build-dev
+    build:
+      context: ../../../gamestory-schneider-mock-sources
+    container_name: schneider-logai-mock-sources
+    restart: unless-stopped
+    ports:
+      - "${MOCK_SOURCES_PORT:-8050}:8000"
+
+  signal-autobahn:
+    image: localhost/gamestory/signal-autobahn:remote-build-dev
+    build:
+      context: ../../../gamestory-signal-autobahn
+    container_name: schneider-logai-signal-autobahn
+    restart: unless-stopped
+    depends_on:
+      mock-schneider-sources:
+        condition: service_started
+    environment:
+      SERVICE_NAME: gamestory-signal-autobahn
+      ENVIRONMENT: ${ENVIRONMENT:-local}
+      SCHNEIDER_MOCK_SOURCES_BASE_URL: http://mock-schneider-sources:8000
+      LOGAI_API_BASE_URL: http://logai-api:8000
+      TEAMS_BACKEND_BASE_URL: http://teams-interface:8000
+      AGENTIC_CORE_BASE_URL: http://agentic-core:8000
+    ports:
+      - "${SIGNAL_AUTOBAHN_PORT:-8020}:8000"
+
+  agentic-core:
+    image: localhost/gamestory/agentic-core:remote-build-dev
+    build:
+      context: ../../../gamestory_agentic_core
+    container_name: schneider-logai-agentic-core
+    restart: unless-stopped
+    volumes:
+      - ../../../gamestory_agentic_core/config:/app/config:ro
+    ports:
+      - "${AGENTIC_CORE_PORT:-8040}:8000"
+
+  teams-interface:
+    image: localhost/gamestory/teams-interface:remote-build-dev
+    build:
+      context: ../../../gamestory_teams_interfacing
+    container_name: schneider-logai-teams-interface
+    restart: unless-stopped
+    environment:
+      MICROSOFT_APP_ID: ${MICROSOFT_APP_ID:-replace-me}
+      MICROSOFT_APP_PASSWORD: ${MICROSOFT_APP_PASSWORD:-replace-me}
+      MICROSOFT_APP_TENANT_ID: ${MICROSOFT_APP_TENANT_ID:-replace-me}
+    volumes:
+      - schneider_logai_teams_state:/app/state
+    working_dir: /app/state
+    command: ["uvicorn", "app:app", "--app-dir", "/app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "${TEAMS_INTERFACE_PORT:-8030}:8000"
+
+  logai-api:
+    image: localhost/gamestory/logai-api:remote-build-dev
+    build:
+      context: ../../../gamestory-logai-api
+    container_name: schneider-logai-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      signal-autobahn:
+        condition: service_started
+      agentic-core:
+        condition: service_started
+      teams-interface:
+        condition: service_started
+    environment:
+      SERVICE_NAME: gamestory-logai-api
+      ENVIRONMENT: ${ENVIRONMENT:-local}
+      API_CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000,http://sample.localhost:3000
+      SIGNAL_AUTOBAHN_BASE_URL: http://signal-autobahn:8000
+      AGENTIC_CORE_BASE_URL: http://agentic-core:8000
+      TEAMS_INTERFACE_BASE_URL: http://teams-interface:8000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-keycloak}:${POSTGRES_PASSWORD:-change-me}@postgres:5432/${POSTGRES_DB:-keycloak}
+      APPLY_DATABASE_SCHEMA_ON_STARTUP: "true"
+      SEED_SAMPLE_DATA_ON_STARTUP: "true"
+    ports:
+      - "${LOGAI_API_PORT:-8010}:8000"
+
+  logai-ui:
+    image: localhost/gamestory/logai-ui:remote-build-dev
+    build:
+      context: ../../../logai_ai
+      dockerfile: docker
+      args:
+        NEXT_PUBLIC_AUTH_MODE: ${NEXT_PUBLIC_AUTH_MODE:-none}
+        NEXT_PUBLIC_AUTH_URL: http://localhost:8080
+        NEXT_PUBLIC_AUTH_REALM: gamestory-sso
+        NEXT_PUBLIC_AUTH_CLIENT_ID: sample-ui
+        NEXT_PUBLIC_AUTH_IDP_HINT: gamestory-entra
+        NEXT_PUBLIC_AUTH_CALLBACK_URL: http://sample.localhost:3000/auth/callback
+        NEXT_PUBLIC_IDENTITY_API_BASE_URL: http://localhost:8000
+        NEXT_PUBLIC_LOGAI_API_BASE_URL: http://localhost:8010
+    container_name: schneider-logai-ui
+    restart: unless-stopped
+    depends_on:
+      logai-api:
+        condition: service_started
+      identity-api:
+        condition: service_started
+    environment:
+      NEXT_PUBLIC_AUTH_MODE: ${NEXT_PUBLIC_AUTH_MODE:-none}
+      NEXT_PUBLIC_AUTH_URL: http://localhost:8080
+      NEXT_PUBLIC_AUTH_REALM: gamestory-sso
+      NEXT_PUBLIC_AUTH_CLIENT_ID: sample-ui
+      NEXT_PUBLIC_AUTH_IDP_HINT: gamestory-entra
+      NEXT_PUBLIC_AUTH_CALLBACK_URL: http://sample.localhost:3000/auth/callback
+      NEXT_PUBLIC_IDENTITY_API_BASE_URL: http://localhost:8000
+      NEXT_PUBLIC_LOGAI_API_BASE_URL: http://localhost:8010
+    ports:
+      - "${LOGAI_UI_PORT:-3000}:3000"
+
+volumes:
+  schneider_logai_postgres_data:
+  schneider_logai_teams_state:

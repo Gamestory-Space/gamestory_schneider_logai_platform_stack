@@ -1,0 +1,68 @@
+global:
+  imagePullPolicy: IfNotPresent
+
+images:
+  logaiUi:
+    repository: localhost/gamestory/logai-ui
+    tag: remote-build-dev
+  logaiApi:
+    repository: localhost/gamestory/logai-api
+    tag: remote-build-dev
+  identityApi:
+    repository: localhost/gamestory/identity-api
+    tag: remote-build-dev
+  signalAutobahn:
+    repository: localhost/gamestory/signal-autobahn
+    tag: remote-build-dev
+  teamsInterface:
+    repository: localhost/gamestory/teams-interface
+    tag: remote-build-dev
+  agenticCore:
+    repository: localhost/gamestory/agentic-core
+    tag: remote-build-dev
+  mockSources:
+    repository: localhost/gamestory/schneider-mock-sources
+    tag: remote-build-dev
+  keycloak:
+    repository: quay.io/keycloak/keycloak
+    tag: "26.0"
+
+services:
+  mockSources:
+    enabled: true
+
+external:
+  postgres:
+    mode: local-or-rds
+    connectionSecretName: postgres-connection
+
+sso:
+  authMode: none
+  keycloak:
+    publicUrl: http://localhost:8080
+    realm: gamestory-sso
+    clientId: sample-ui
+    idpHint: gamestory-entra
+    callbackUrl: http://sample.localhost:3000/auth/callback
+    issuerUrl: http://localhost:8080/realms/gamestory-sso
+    jwksUrl: http://localhost:8080/realms/gamestory-sso/protocol/openid-connect/certs
+    audience: sample-app
+  entra:
+    tenantId: "<local-dev-entra-tenant-id>"
+    clientId: "<local-dev-entra-client-id>"
+    secretName: remote-build-dev-entra-idp-credentials
+    clientSecretSecretKey: ENTRA_CLIENT_SECRET
+
+teams:
+  enabled: true
+  appId: "<local-dev-teams-app-id>"
+  tenantId: "<local-dev-teams-tenant-id>"
+  credentialsSecretName: remote-build-dev-teams-bot-credentials
+  appPasswordSecretKey: MICROSOFT_APP_PASSWORD
+  messagingEndpointPath: /api/messages
+
+agenticCore:
+  config:
+    mode: configMap
+    configMapName: remote-build-dev-agentic-function-config
+    mountPath: /app/config

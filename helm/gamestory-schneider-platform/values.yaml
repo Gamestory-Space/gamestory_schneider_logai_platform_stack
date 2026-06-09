@@ -1,0 +1,95 @@
+global:
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets: []
+
+images:
+  logaiUi:
+    repository: gamestory/logai-ui
+    tag: local
+  logaiApi:
+    repository: gamestory/logai-api
+    tag: local
+  identityApi:
+    repository: gamestory/identity-api
+    tag: local
+  signalAutobahn:
+    repository: gamestory/signal-autobahn
+    tag: local
+  teamsInterface:
+    repository: gamestory/teams-interface
+    tag: local
+  agenticCore:
+    repository: gamestory/agentic-core
+    tag: local
+  mockSources:
+    repository: gamestory/schneider-mock-sources
+    tag: local
+  keycloak:
+    repository: quay.io/keycloak/keycloak
+    tag: "26.0"
+
+services:
+  logaiUi:
+    enabled: true
+    replicas: 1
+  logaiApi:
+    enabled: true
+    replicas: 1
+  identityApi:
+    enabled: true
+    replicas: 1
+  signalAutobahn:
+    enabled: true
+    replicas: 1
+  teamsInterface:
+    enabled: true
+    replicas: 1
+  agenticCore:
+    enabled: true
+    replicas: 1
+  mockSources:
+    enabled: true
+    replicas: 1
+  keycloak:
+    enabled: true
+    replicas: 1
+
+external:
+  postgres:
+    mode: rds
+    connectionSecretName: postgres-connection
+
+sso:
+  authMode: none
+  keycloak:
+    publicUrl: http://localhost:8080
+    realm: gamestory-sso
+    clientId: sample-ui
+    idpHint: gamestory-entra
+    callbackUrl: http://sample.localhost:3000/auth/callback
+    issuerUrl: http://localhost:8080/realms/gamestory-sso
+    jwksUrl: http://localhost:8080/realms/gamestory-sso/protocol/openid-connect/certs
+    audience: sample-app
+  entra:
+    tenantId: ""
+    clientId: ""
+    tenantIdSecretKey: ENTRA_TENANT_ID
+    clientIdSecretKey: ENTRA_CLIENT_ID
+    clientSecretSecretKey: ENTRA_CLIENT_SECRET
+    secretName: entra-idp-credentials
+
+teams:
+  enabled: true
+  appId: ""
+  tenantId: ""
+  credentialsSecretName: teams-bot-credentials
+  appIdSecretKey: MICROSOFT_APP_ID
+  appPasswordSecretKey: MICROSOFT_APP_PASSWORD
+  tenantIdSecretKey: MICROSOFT_APP_TENANT_ID
+  messagingEndpointPath: /api/messages
+
+agenticCore:
+  config:
+    mode: configMap
+    configMapName: agentic-function-config
+    mountPath: /app/config

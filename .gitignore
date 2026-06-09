@@ -5,3 +5,22 @@ tmp/
 identity/generated/
 identity/*.env
 !identity/*.env.example
+
+# Environment-specific Helm overrides may contain local/customer values.
+environments/**/values.yaml
+environments/**/values.yml
+environments/**/*.secret.yaml
+environments/**/*.secret.yml
+environments/**/*.secrets.yaml
+environments/**/*.secrets.yml
+environments/**/secrets.yaml
+environments/**/secrets.yml
+environments/**/secrets.template.yaml
+environments/**/secrets.template.yml
+
+# Keep non-sensitive examples/templates trackable.
+!environments/**/values.example.yaml
+!environments/**/values.example.yml
+!environments/**/secrets.example.yaml
+!environments/**/secrets.example.yml
+!environments/**/.gitkeep
