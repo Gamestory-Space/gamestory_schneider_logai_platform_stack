@@ -1,0 +1,32 @@
+global:
+  environment: uat
+  imagePullPolicy: Always
+  imagePullSecrets: [{name: schneider-jfrog-pull-secret}]
+identityApi:
+  image: {repository: jfrog.example.invalid/schneider/identity-api, tag: "1.0.0", digest: ""}
+  resources: {requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: 500m, memory: 512Mi}}
+logaiApi:
+  image: {repository: jfrog.example.invalid/schneider/logai-api, tag: "1.0.0", digest: ""}
+  resources: {requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: "1", memory: 1Gi}}
+logaiUi:
+  image: {repository: jfrog.example.invalid/schneider/logai-ui, tag: "1.0.0", digest: ""}
+  resources: {requests: {cpu: 50m, memory: 128Mi}, limits: {cpu: 500m, memory: 512Mi}}
+postgres: {enabled: false}
+externalDatabase:
+  enabled: true
+  host: uat-postgres.example.invalid
+  port: 5432
+  database: logai
+  username: logai_runtime
+  existingSecret: schneider-managed-uat-database
+identity:
+  authMode: none
+  publicUrl: https://auth-uat.example.invalid
+  callbackUrl: https://logai-uat.example.invalid/auth/callback
+keycloak:
+  existingAdminSecret: schneider-managed-uat-keycloak-admin
+  command: ["/opt/keycloak/bin/kc.sh", "start"]
+ingress:
+  enabled: true
+  className: gce
+  hosts: {ui: logai-uat.example.invalid, api: api-uat.example.invalid, identityApi: identity-uat.example.invalid, keycloak: auth-uat.example.invalid}

@@ -1,0 +1,10 @@
+Gamestory Schneider LogAI Platform is installed in {{ .Release.Namespace }}.
+
+{{- if .Values.ingress.enabled }}
+Ingress is enabled. Confirm DNS and TLS records for the configured hosts.
+{{- else }}
+Ingress is disabled. For local access, use kubectl port-forward against the UI, API, identity API, or Keycloak service.
+{{- end }}
+
+Check status:
+  kubectl get pods -n {{ .Release.Namespace }}

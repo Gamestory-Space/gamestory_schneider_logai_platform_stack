@@ -1,0 +1,63 @@
+{{- if .Values.keycloak.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "schneider.name" . }}-keycloak
+  labels: {{- include "schneider.labels" . | nindent 4 }}
+spec:
+  selector: {{- include "schneider.selectorLabels" (dict "root" . "component" "keycloak") | nindent 4 }}
+  ports: [{name: http, port: {{ .Values.keycloak.service.port }}, targetPort: http}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "schneider.name" . }}-keycloak
+  labels: {{- include "schneider.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.keycloak.replicas }}
+  selector:
+    matchLabels: {{- include "schneider.selectorLabels" (dict "root" . "component" "keycloak") | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "schneider.selectorLabels" (dict "root" . "component" "keycloak") | nindent 8 }}
+    spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: keycloak
+          image: {{ include "schneider.image" .Values.keycloak.image | quote }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          command: {{ toJson .Values.keycloak.command }}
+          ports: [{name: http, containerPort: 8080}]
+          env:
+            - {name: KC_HEALTH_ENABLED, value: "true"}
+            - {name: KC_HTTP_ENABLED, value: "true"}
+            - {name: KC_HOSTNAME_STRICT, value: "false"}
+            - {name: KC_DB, value: postgres}
+            - name: KC_DB_URL
+              value: {{ printf "jdbc:postgresql://%s:%v/%s" (ternary .Values.externalDatabase.host (printf "%s-postgres" (include "schneider.name" .)) .Values.externalDatabase.enabled) (ternary .Values.externalDatabase.port .Values.postgres.service.port .Values.externalDatabase.enabled) (ternary .Values.externalDatabase.database .Values.postgres.database .Values.externalDatabase.enabled) | quote }}
+            - name: KC_DB_USERNAME
+              value: {{ ternary .Values.externalDatabase.username .Values.postgres.username .Values.externalDatabase.enabled | quote }}
+            - name: KC_DB_PASSWORD
+              valueFrom: {secretKeyRef: {name: {{ include "schneider.dbSecretName" . }}, key: {{ ternary .Values.externalDatabase.passwordKey .Values.postgres.passwordKey .Values.externalDatabase.enabled }}}}
+            - name: KC_BOOTSTRAP_ADMIN_USERNAME
+              valueFrom: {secretKeyRef: {name: {{ include "schneider.adminSecretName" . }}, key: {{ .Values.keycloak.adminUserKey }}}}
+            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+              valueFrom: {secretKeyRef: {name: {{ include "schneider.adminSecretName" . }}, key: {{ .Values.keycloak.adminPasswordKey }}}}
+            - name: KEYCLOAK_ADMIN
+              valueFrom: {secretKeyRef: {name: {{ include "schneider.adminSecretName" . }}, key: {{ .Values.keycloak.adminUserKey }}}}
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              valueFrom: {secretKeyRef: {name: {{ include "schneider.adminSecretName" . }}, key: {{ .Values.keycloak.adminPasswordKey }}}}
+          startupProbe:
+            httpGet: {path: /health/started, port: http}
+            periodSeconds: 10
+            failureThreshold: 30
+          readinessProbe:
+            httpGet: {path: /health/ready, port: http}
+            periodSeconds: {{ .Values.probes.periodSeconds }}
+          livenessProbe:
+            httpGet: {path: /health/live, port: http}
+            periodSeconds: {{ .Values.probes.periodSeconds }}
+          resources: {{- toYaml .Values.keycloak.resources | nindent 12 }}
+{{- end }}

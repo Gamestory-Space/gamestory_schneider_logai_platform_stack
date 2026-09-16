@@ -1,6 +1,6 @@
 apiVersion: v2
 name: gamestory-schneider-platform
-description: Gamestory Schneider Logai platform umbrella chart.
+description: Canonical deployment chart for the Gamestory Schneider LogAI platform.
 type: application
-version: 0.1.0
-appVersion: "0.1.0"
+version: 0.2.0
+appVersion: "0.2.0"

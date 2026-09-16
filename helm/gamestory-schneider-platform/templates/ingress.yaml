@@ -1,0 +1,32 @@
+{{- if .Values.ingress.enabled }}
+{{- $root := . -}}
+{{- $routes := dict "ui" (dict "service" "logai-ui" "port" .Values.logaiUi.service.port) "api" (dict "service" "logai-api" "port" .Values.logaiApi.service.port) "identityApi" (dict "service" "identity-api" "port" .Values.identityApi.service.port) "keycloak" (dict "service" "keycloak" "port" .Values.keycloak.service.port) -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "schneider.name" . }}
+  labels: {{- include "schneider.labels" . | nindent 4 }}
+  annotations: {{- toYaml .Values.ingress.annotations | nindent 4 }}
+spec:
+  {{- with .Values.ingress.className }}
+  ingressClassName: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.ingress.tls }}
+  tls: {{ toYaml . | nindent 4 }}
+  {{- end }}
+  rules:
+    {{- range $name, $route := $routes }}
+    {{- $host := index $root.Values.ingress.hosts $name }}
+    {{- if $host }}
+    - host: {{ $host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "schneider.name" $root }}-{{ $route.service }}
+                port: {number: {{ $route.port }}}
+    {{- end }}
+    {{- end }}
+{{- end }}

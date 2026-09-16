@@ -1,37 +1,48 @@
-# Gamestory Schneider Logai Platform Stack
+# Gamestory Schneider LogAI Platform Stack
 
-Customer/platform stack repo for bringing the Schneider Logai deployment together.
+Canonical deployment repository for the five-workload Schneider LogAI first drop: Postgres, Keycloak, Identity API, LogAI API, and LogAI UI.
 
-This repo is intentionally light for now. The immediate work is to validate:
+Helm is authoritative for all environments and supports GKE. Compose is a convenience path only for build, release, and client-local.
 
-1. `logai-ui`
-2. `gamestory-logai-api`
-3. identity integration
+| Environment | Owner | Helm | Compose |
+| --- | --- | --- | --- |
+| build | Gamestory | Yes | Yes |
+| release | Gamestory | Yes | Yes |
+| client-local | Schneider/local | Yes | Yes |
+| uat | Schneider | Yes | No |
+| prod | Schneider | Yes | No |
 
-After that, this repo should own the Schneider stack composition, runbooks, environment templates, smoke tests, and service wiring for SignalAutobahn, Agentic Core, Teams, and external-system mocks.
+## Validate
 
-See `docs/order-orchestration-flow.md` for the phase 1 order orchestration flow.
-See `docs/helm-overrides.md` for the remote/build/dev Helm override model.
+```bash
+./scripts/helm-lint.sh
+./scripts/helm-template.sh
 
-Schneider-specific identity setup lives in:
-
-```text
-identity/schneider.identity.env.example
-docs/schneider-identity.md
-docs/schneider-logai-identity-integration.md
+docker compose --env-file environments/build/compose.env.example config
+docker compose --env-file environments/release/compose.env.example config
+docker compose --env-file environments/client-local/compose.env.example config
 ```
 
-Generic identity templates and scripts remain in `gamestory-identity-kit`.
+## Deploy
 
-## Intended Stack Shape
+Build may build local source:
 
-```text
-logai-ui
-  -> gamestory-logai-api
-      -> gamestory-signal-autobahn
-          -> gamestory_agentic_core
-          -> gamestory_teams_interfacing
-          -> mock SynQ / Cognos
+```bash
+docker compose --env-file environments/build/compose.env.example build
+docker compose --env-file environments/build/compose.env.example up -d
 ```
 
-Simulation remains UI-only for phase 1 and is not wired to the backend flow.
+Release and client-local must use published artifacts:
+
+```bash
+docker compose --env-file environments/release/compose.env up -d --no-build
+docker compose --env-file environments/client-local/compose.env up -d --no-build
+```
+
+Helm example:
+
+```bash
+helm upgrade --install logai ./helm/gamestory-schneider-platform --namespace logai --create-namespace -f environments/client-local/values.yaml
+```
+
+See `docs/deployment-model.md`, `docs/local-k3s.md`, and `docs/schneider-handoff.md`. SSO is optional for this delivery; existing `gamestory-sso`, `sample-ui`, and `gamestory-entra` names are retained as defaults without requiring Entra credentials.

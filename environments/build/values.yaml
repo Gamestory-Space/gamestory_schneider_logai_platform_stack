@@ -1,0 +1,13 @@
+global: {environment: build, imagePullPolicy: IfNotPresent}
+identityApi:
+  image: {repository: registry.example.com/gamestory/identity-api, tag: build, digest: ""}
+logaiApi:
+  image: {repository: registry.example.com/gamestory/logai-api, tag: build, digest: ""}
+  applyDatabaseSchemaOnStartup: true
+  seedSampleDataOnStartup: true
+logaiUi:
+  image: {repository: registry.example.com/gamestory/logai-ui, tag: build, digest: ""}
+postgres: {enabled: true}
+externalDatabase: {enabled: false}
+identity: {authMode: none}
+ingress: {enabled: false}

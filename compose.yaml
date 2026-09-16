@@ -1,0 +1,118 @@
+name: gamestory-schneider-logai
+services:
+  postgres:
+    image: ${POSTGRES_IMAGE_REPOSITORY}:${POSTGRES_IMAGE_TAG}
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    ports: ["${POSTGRES_PORT}:5432"]
+    volumes: [postgres-data:/var/lib/postgresql/data]
+  keycloak:
+    image: ${KEYCLOAK_IMAGE_REPOSITORY}:${KEYCLOAK_IMAGE_TAG}
+    restart: unless-stopped
+    command: [start-dev]
+    depends_on:
+      postgres: {condition: service_healthy}
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_HEALTH_ENABLED: "true"
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME_STRICT: "false"
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      ENTRA_TENANT_ID: ${ENTRA_TENANT_ID:-}
+      ENTRA_CLIENT_ID: ${ENTRA_CLIENT_ID:-}
+      ENTRA_CLIENT_SECRET: ${ENTRA_CLIENT_SECRET:-}
+    healthcheck:
+      test: [CMD-SHELL, "exec 3<>/dev/tcp/127.0.0.1/9000; printf 'GET /health/ready HTTP/1.0\\r\\n\\r\\n' >&3; grep -q '200' <&3"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    ports: ["${KEYCLOAK_PORT}:8080"]
+  identity-api:
+    image: ${IDENTITY_API_IMAGE_REPOSITORY}:${IDENTITY_API_IMAGE_TAG}
+    pull_policy: ${APPLICATION_PULL_POLICY}
+    build: {context: "${IDENTITY_API_BUILD_CONTEXT}"}
+    restart: unless-stopped
+    depends_on: {keycloak: {condition: service_healthy}}
+    environment:
+      SERVICE_NAME: gamestory-sso-api
+      ENVIRONMENT: ${ENVIRONMENT}
+      KEYCLOAK_PUBLIC_URL: http://localhost:${KEYCLOAK_PORT}
+      KEYCLOAK_REALM: gamestory-sso
+      KEYCLOAK_ISSUER_URL: http://localhost:${KEYCLOAK_PORT}/realms/gamestory-sso
+      KEYCLOAK_JWKS_FETCH_URL: http://keycloak:8080/realms/gamestory-sso/protocol/openid-connect/certs
+      KEYCLOAK_AUDIENCE: sample-app
+      API_CORS_ORIGINS: http://localhost:${LOGAI_UI_PORT}
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    ports: ["${IDENTITY_API_PORT}:8000"]
+  logai-api:
+    image: ${LOGAI_API_IMAGE_REPOSITORY}:${LOGAI_API_IMAGE_TAG}
+    pull_policy: ${APPLICATION_PULL_POLICY}
+    build: {context: "${LOGAI_API_BUILD_CONTEXT}"}
+    restart: unless-stopped
+    depends_on: {postgres: {condition: service_healthy}}
+    environment:
+      SERVICE_NAME: gamestory-logai-api
+      ENVIRONMENT: ${ENVIRONMENT}
+      API_CORS_ORIGINS: http://localhost:${LOGAI_UI_PORT}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      APPLY_DATABASE_SCHEMA_ON_STARTUP: ${APPLY_DATABASE_SCHEMA_ON_STARTUP}
+      SEED_SAMPLE_DATA_ON_STARTUP: ${SEED_SAMPLE_DATA_ON_STARTUP}
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    ports: ["${LOGAI_API_PORT}:8000"]
+  logai-ui:
+    image: ${LOGAI_UI_IMAGE_REPOSITORY}:${LOGAI_UI_IMAGE_TAG}
+    pull_policy: ${APPLICATION_PULL_POLICY}
+    build:
+      context: "${LOGAI_UI_BUILD_CONTEXT}"
+      dockerfile: ${LOGAI_UI_DOCKERFILE}
+      args:
+        NEXT_PUBLIC_AUTH_MODE: ${NEXT_PUBLIC_AUTH_MODE}
+        NEXT_PUBLIC_AUTH_URL: http://localhost:${KEYCLOAK_PORT}
+        NEXT_PUBLIC_AUTH_REALM: gamestory-sso
+        NEXT_PUBLIC_AUTH_CLIENT_ID: sample-ui
+        NEXT_PUBLIC_AUTH_IDP_HINT: gamestory-entra
+        NEXT_PUBLIC_AUTH_CALLBACK_URL: http://localhost:${LOGAI_UI_PORT}/auth/callback
+        NEXT_PUBLIC_IDENTITY_API_BASE_URL: http://localhost:${IDENTITY_API_PORT}
+        NEXT_PUBLIC_LOGAI_API_BASE_URL: http://localhost:${LOGAI_API_PORT}
+    restart: unless-stopped
+    depends_on:
+      identity-api: {condition: service_healthy}
+      logai-api: {condition: service_healthy}
+    environment:
+      NEXT_PUBLIC_AUTH_MODE: ${NEXT_PUBLIC_AUTH_MODE}
+      NEXT_PUBLIC_AUTH_URL: http://localhost:${KEYCLOAK_PORT}
+      NEXT_PUBLIC_AUTH_REALM: gamestory-sso
+      NEXT_PUBLIC_AUTH_CLIENT_ID: sample-ui
+      NEXT_PUBLIC_AUTH_IDP_HINT: gamestory-entra
+      NEXT_PUBLIC_AUTH_CALLBACK_URL: http://localhost:${LOGAI_UI_PORT}/auth/callback
+      NEXT_PUBLIC_IDENTITY_API_BASE_URL: http://localhost:${IDENTITY_API_PORT}
+      NEXT_PUBLIC_LOGAI_API_BASE_URL: http://localhost:${LOGAI_API_PORT}
+    healthcheck:
+      test: [CMD-SHELL, "wget -qO- http://localhost:3000/ >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    ports: ["${LOGAI_UI_PORT}:3000"]
+volumes:
+  postgres-data:

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "schneider.name" . }}-config
+  labels: {{- include "schneider.labels" . | nindent 4 }}
+data:
+  ENVIRONMENT: {{ .Values.global.environment | quote }}
+  KEYCLOAK_REALM: {{ .Values.identity.realm | quote }}
+  KEYCLOAK_PUBLIC_URL: {{ .Values.identity.publicUrl | quote }}
+  KEYCLOAK_INTERNAL_URL: {{ default (printf "http://%s-keycloak:8080" (include "schneider.name" .)) .Values.identity.internalUrl | quote }}
+  KEYCLOAK_AUDIENCE: {{ .Values.identity.clientId | quote }}
+  NEXT_PUBLIC_AUTH_MODE: {{ .Values.identity.authMode | quote }}
+  NEXT_PUBLIC_AUTH_URL: {{ .Values.identity.publicUrl | quote }}
+  NEXT_PUBLIC_AUTH_REALM: {{ .Values.identity.realm | quote }}
+  NEXT_PUBLIC_AUTH_CLIENT_ID: {{ .Values.identity.clientId | quote }}
+  NEXT_PUBLIC_AUTH_IDP_HINT: {{ .Values.identity.idpHint | quote }}
+  NEXT_PUBLIC_AUTH_CALLBACK_URL: {{ .Values.identity.callbackUrl | quote }}

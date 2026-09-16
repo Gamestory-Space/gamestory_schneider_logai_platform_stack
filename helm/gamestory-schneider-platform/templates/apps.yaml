@@ -1,0 +1,78 @@
+{{- $root := . -}}
+{{- $apps := dict "identity-api" .Values.identityApi "logai-api" .Values.logaiApi "logai-ui" .Values.logaiUi -}}
+{{- range $name, $app := $apps }}
+{{- if $app.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "schneider.name" $root }}-{{ $name }}
+  labels: {{- include "schneider.labels" $root | nindent 4 }}
+spec:
+  selector: {{- include "schneider.selectorLabels" (dict "root" $root "component" $name) | nindent 4 }}
+  ports: [{name: http, port: {{ $app.service.port }}, targetPort: http}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "schneider.name" $root }}-{{ $name }}
+  labels: {{- include "schneider.labels" $root | nindent 4 }}
+spec:
+  replicas: {{ $app.replicas }}
+  selector:
+    matchLabels: {{- include "schneider.selectorLabels" (dict "root" $root "component" $name) | nindent 6 }}
+  template:
+    metadata:
+      annotations: {{- toYaml $root.Values.podAnnotations | nindent 8 }}
+      labels: {{- include "schneider.selectorLabels" (dict "root" $root "component" $name) | nindent 8 }}
+    spec:
+      {{- with $root.Values.global.imagePullSecrets }}
+      imagePullSecrets: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ $name }}
+          image: {{ include "schneider.image" $app.image | quote }}
+          imagePullPolicy: {{ $root.Values.global.imagePullPolicy }}
+          ports: [{name: http, containerPort: {{ $app.service.port }}}]
+          envFrom: [{configMapRef: {name: {{ include "schneider.name" $root }}-config}}]
+          env:
+            - name: NEXT_PUBLIC_IDENTITY_API_BASE_URL
+              value: {{ printf "http://%s-identity-api:8000" (include "schneider.name" $root) | quote }}
+            - name: NEXT_PUBLIC_LOGAI_API_BASE_URL
+              value: {{ printf "http://%s-logai-api:8000" (include "schneider.name" $root) | quote }}
+            - name: KEYCLOAK_ISSUER_URL
+              value: {{ printf "http://%s-keycloak:8080/realms/%s" (include "schneider.name" $root) $root.Values.identity.realm | quote }}
+            - name: KEYCLOAK_JWKS_FETCH_URL
+              value: {{ printf "http://%s-keycloak:8080/realms/%s/protocol/openid-connect/certs" (include "schneider.name" $root) $root.Values.identity.realm | quote }}
+            - name: DB_HOST
+              value: {{ ternary $root.Values.externalDatabase.host (printf "%s-postgres" (include "schneider.name" $root)) $root.Values.externalDatabase.enabled | quote }}
+            - name: DB_PORT
+              value: {{ ternary $root.Values.externalDatabase.port $root.Values.postgres.service.port $root.Values.externalDatabase.enabled | quote }}
+            - name: DB_NAME
+              value: {{ ternary $root.Values.externalDatabase.database $root.Values.postgres.database $root.Values.externalDatabase.enabled | quote }}
+            - name: DB_USER
+              value: {{ ternary $root.Values.externalDatabase.username $root.Values.postgres.username $root.Values.externalDatabase.enabled | quote }}
+            - name: DB_PASSWORD
+              valueFrom: {secretKeyRef: {name: {{ include "schneider.dbSecretName" $root }}, key: {{ ternary $root.Values.externalDatabase.passwordKey $root.Values.postgres.passwordKey $root.Values.externalDatabase.enabled }}}}
+            {{- if eq $name "logai-api" }}
+            - {name: APPLY_DATABASE_SCHEMA_ON_STARTUP, value: {{ $root.Values.logaiApi.applyDatabaseSchemaOnStartup | quote }}}
+            - {name: SEED_SAMPLE_DATA_ON_STARTUP, value: {{ $root.Values.logaiApi.seedSampleDataOnStartup | quote }}}
+            {{- end }}
+          startupProbe:
+            httpGet: {path: {{ ternary "/" "/health" (eq $name "logai-ui") }}, port: http}
+            periodSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            httpGet: {path: {{ ternary "/" "/health" (eq $name "logai-ui") }}, port: http}
+            periodSeconds: {{ $root.Values.probes.periodSeconds }}
+            timeoutSeconds: {{ $root.Values.probes.timeoutSeconds }}
+          livenessProbe:
+            httpGet: {path: {{ ternary "/" "/health" (eq $name "logai-ui") }}, port: http}
+            periodSeconds: {{ $root.Values.probes.periodSeconds }}
+            failureThreshold: {{ $root.Values.probes.failureThreshold }}
+          resources: {{- toYaml $app.resources | nindent 12 }}
+      nodeSelector: {{- toYaml $root.Values.nodeSelector | nindent 8 }}
+      tolerations: {{- toYaml $root.Values.tolerations | nindent 8 }}
+      affinity: {{- toYaml $root.Values.affinity | nindent 8 }}
+---
+{{- end }}
+{{- end }}

@@ -1,3 +1,4 @@
+# DEPRECATED: compose.yaml is the canonical five-workload topology. This legacy file is retained temporarily for migration reference.
 services:
   postgres:
     image: postgres:16-alpine

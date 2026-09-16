@@ -1,0 +1,38 @@
+global:
+  environment: prod
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets: [{name: schneider-jfrog-pull-secret}]
+identityApi:
+  replicas: 2
+  image: {repository: jfrog.example.invalid/schneider/identity-api, tag: "1.0.0", digest: "sha256:REPLACE_WITH_APPROVED_DIGEST"}
+  resources: {requests: {cpu: 250m, memory: 256Mi}, limits: {cpu: "1", memory: 1Gi}}
+logaiApi:
+  replicas: 2
+  image: {repository: jfrog.example.invalid/schneider/logai-api, tag: "1.0.0", digest: "sha256:REPLACE_WITH_APPROVED_DIGEST"}
+  resources: {requests: {cpu: 250m, memory: 256Mi}, limits: {cpu: "2", memory: 2Gi}}
+logaiUi:
+  replicas: 2
+  image: {repository: jfrog.example.invalid/schneider/logai-ui, tag: "1.0.0", digest: "sha256:REPLACE_WITH_APPROVED_DIGEST"}
+  resources: {requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: 500m, memory: 512Mi}}
+keycloak:
+  replicas: 2
+  existingAdminSecret: schneider-managed-prod-keycloak-admin
+  command: ["/opt/keycloak/bin/kc.sh", "start"]
+  resources: {requests: {cpu: 250m, memory: 512Mi}, limits: {cpu: "1", memory: 2Gi}}
+postgres: {enabled: false}
+externalDatabase:
+  enabled: true
+  host: prod-postgres.example.invalid
+  port: 5432
+  database: logai
+  username: logai_runtime
+  existingSecret: schneider-managed-prod-database
+identity:
+  authMode: none
+  publicUrl: https://auth.example.invalid
+  callbackUrl: https://logai.example.invalid/auth/callback
+ingress:
+  enabled: true
+  className: gce
+  tls: [{secretName: schneider-managed-prod-tls, hosts: [logai.example.invalid, api.example.invalid, identity.example.invalid, auth.example.invalid]}]
+  hosts: {ui: logai.example.invalid, api: api.example.invalid, identityApi: identity.example.invalid, keycloak: auth.example.invalid}

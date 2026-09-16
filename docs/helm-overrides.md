@@ -1,67 +1,22 @@
-# Helm Overrides
+# Helm overrides
 
-The first environment override is `remote-build-dev`.
-
-This represents our current remote/build/dev environment, effectively the dev-box setup used to build and validate the Schneider image set before handover.
+The chart uses this configuration hierarchy:
 
 ```text
-environments/
-  remote-build-dev/
-    values.example.yaml
-    secrets.example.yaml
+chart defaults -> environment values -> deployment/CD overrides -> runtime secrets
 ```
 
-Create local, ignored copies when deploying from this workstation:
+Exactly five canonical overlays are committed:
 
-```powershell
-Copy-Item environments/remote-build-dev/values.example.yaml environments/remote-build-dev/values.yaml
-Copy-Item environments/remote-build-dev/secrets.example.yaml environments/remote-build-dev/secrets.yaml
-```
+- `build` and `release`, owned by Gamestory
+- `client-local`, `uat`, and `prod`, owned by Schneider/client operations
 
-`values.yaml` captures environment intent:
-
-- image repositories and tags
-- whether mock sources are enabled
-- Keycloak public URLs and realm/client names
-- local Entra tenant/client IDs
-- local Teams app/tenant IDs
-- Teams secret names for passwords
-- Agentic Core config mount names
-
-`secrets.yaml` or Vault-backed secret manifests capture runtime secret material and are ignored by git.
-
-`secrets.example.yaml` captures the expected secret keys without real values:
-
-- Entra client secret
-- Microsoft Teams bot password
-- Postgres connection URL
-
-Real secret values must be created in the target environment and must not be committed.
-
-Future Schneider-side deployment repos can follow the same structure:
-
-```text
-environments/
-  build-dev/
-    values.yaml
-    secrets.references.yaml
-  uat/
-    values.yaml
-    secrets.references.yaml
-  prod/
-    values.yaml
-    secrets.references.yaml
-```
-
-The chart path is:
-
-```text
-helm/gamestory-schneider-platform
-```
-
-Example install command:
+All five support Helm deployment to GKE. Client-local can also target local Kubernetes/k3s. UAT and production use external Postgres and managed secret references; their example registry, DNS, ingress, database, and secret identifiers must be replaced by Schneider values.
 
 ```bash
-helm upgrade --install gamestory-platform ./helm/gamestory-schneider-platform \
-  -f environments/remote-build-dev/values.yaml
+helm upgrade --install logai ./helm/gamestory-schneider-platform \
+  --namespace logai --create-namespace \
+  -f environments/<environment>/values.yaml
 ```
+
+Use CI/CD `--set` or an additional private values file for deployment-specific references. Never store credentials in an environment values file. `remote-build-dev` is deprecated and retained only as migration history.

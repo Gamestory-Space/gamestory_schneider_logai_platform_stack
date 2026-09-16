@@ -1,0 +1,11 @@
+global: {environment: client-local, imagePullPolicy: IfNotPresent}
+identityApi:
+  image: {repository: registry.example.com/gamestory/identity-api, tag: "1.0.0", digest: ""}
+logaiApi:
+  image: {repository: registry.example.com/gamestory/logai-api, tag: "1.0.0", digest: ""}
+logaiUi:
+  image: {repository: registry.example.com/gamestory/logai-ui, tag: "1.0.0", digest: ""}
+postgres: {enabled: true}
+externalDatabase: {enabled: false}
+identity: {authMode: none}
+ingress: {enabled: false}
