@@ -15,7 +15,7 @@ services:
     ports: ["${POSTGRES_PORT}:5432"]
     volumes: [postgres-data:/var/lib/postgresql/data]
   keycloak:
-    image: ${KEYCLOAK_IMAGE_REPOSITORY}:${KEYCLOAK_IMAGE_TAG}
+    image: ${KEYCLOAK_IMAGE_REPOSITORY}:${KEYCLOAK_IMAGE_TAG}@${KEYCLOAK_IMAGE_DIGEST}
     restart: unless-stopped
     command: [start-dev]
     depends_on:
@@ -43,7 +43,6 @@ services:
   identity-api:
     image: ${IDENTITY_API_IMAGE_REPOSITORY}:${IDENTITY_API_IMAGE_TAG}
     pull_policy: ${APPLICATION_PULL_POLICY}
-    build: {context: "${IDENTITY_API_BUILD_CONTEXT}"}
     restart: unless-stopped
     depends_on: {keycloak: {condition: service_healthy}}
     environment:
@@ -64,7 +63,6 @@ services:
   logai-api:
     image: ${LOGAI_API_IMAGE_REPOSITORY}:${LOGAI_API_IMAGE_TAG}
     pull_policy: ${APPLICATION_PULL_POLICY}
-    build: {context: "${LOGAI_API_BUILD_CONTEXT}"}
     restart: unless-stopped
     depends_on: {postgres: {condition: service_healthy}}
     environment:
@@ -83,18 +81,6 @@ services:
   logai-ui:
     image: ${LOGAI_UI_IMAGE_REPOSITORY}:${LOGAI_UI_IMAGE_TAG}
     pull_policy: ${APPLICATION_PULL_POLICY}
-    build:
-      context: "${LOGAI_UI_BUILD_CONTEXT}"
-      dockerfile: ${LOGAI_UI_DOCKERFILE}
-      args:
-        NEXT_PUBLIC_AUTH_MODE: ${NEXT_PUBLIC_AUTH_MODE}
-        NEXT_PUBLIC_AUTH_URL: http://localhost:${KEYCLOAK_PORT}
-        NEXT_PUBLIC_AUTH_REALM: gamestory-sso
-        NEXT_PUBLIC_AUTH_CLIENT_ID: sample-ui
-        NEXT_PUBLIC_AUTH_IDP_HINT: gamestory-entra
-        NEXT_PUBLIC_AUTH_CALLBACK_URL: http://localhost:${LOGAI_UI_PORT}/auth/callback
-        NEXT_PUBLIC_IDENTITY_API_BASE_URL: http://localhost:${IDENTITY_API_PORT}
-        NEXT_PUBLIC_LOGAI_API_BASE_URL: http://localhost:${LOGAI_API_PORT}
     restart: unless-stopped
     depends_on:
       identity-api: {condition: service_healthy}

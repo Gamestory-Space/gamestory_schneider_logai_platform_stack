@@ -1,14 +1,12 @@
 # Gamestory Schneider LogAI Platform Stack
 
-Canonical deployment repository for the five-workload Schneider LogAI first drop: Postgres, Keycloak, Identity API, LogAI API, and LogAI UI.
-
-Helm is authoritative for all environments and supports GKE. Compose is a convenience path only for build, release, and client-local.
+Canonical deployment repository for Postgres, Keycloak, Identity API, LogAI API, and LogAI UI. Helm is authoritative across all five source-repository environments. The published client bundle contains only client-local, UAT, and production assets.
 
 | Environment | Owner | Helm | Compose |
 | --- | --- | --- | --- |
-| build | Gamestory | Yes | Yes |
-| release | Gamestory | Yes | Yes |
-| client-local | Schneider/local | Yes | Yes |
+| build | Gamestory | Yes | Yes, source-build override |
+| release | Gamestory | Yes | Yes, pull only |
+| client-local | Schneider/local | Yes | Yes, pull only |
 | uat | Schneider | Yes | No |
 | prod | Schneider | Yes | No |
 
@@ -17,32 +15,39 @@ Helm is authoritative for all environments and supports GKE. Compose is a conven
 ```bash
 ./scripts/helm-lint.sh
 ./scripts/helm-template.sh
+./scripts/validate-client-bundle.sh
 
-docker compose --env-file environments/build/compose.env.example config
-docker compose --env-file environments/release/compose.env.example config
-docker compose --env-file environments/client-local/compose.env.example config
+docker compose -f compose.yaml -f compose.build.yaml --env-file environments/build/compose.env.example config
+docker compose -f compose.yaml --env-file environments/release/compose.env.example config
+docker compose -f compose.yaml --env-file environments/client-local/compose.env.example config
 ```
 
-## Deploy
-
-Build may build local source:
+## Test
 
 ```bash
-docker compose --env-file environments/build/compose.env.example build
-docker compose --env-file environments/build/compose.env.example up -d
+# WSL2 + Podman local test
+cp environments/client-local/compose.env.example environments/client-local/compose.env
+./scripts/test-wsl-podman.sh
+
+# Gamestory local Kubernetes release test, after checking the active context
+ALLOW_LOCAL_K8S_DEPLOY=yes ./scripts/test-local-kubernetes.sh release
 ```
 
-Release and client-local must use published artifacts:
+## Build or deploy with Compose
 
 ```bash
-docker compose --env-file environments/release/compose.env up -d --no-build
-docker compose --env-file environments/client-local/compose.env up -d --no-build
+# Gamestory source build
+docker compose -f compose.yaml -f compose.build.yaml --env-file environments/build/compose.env.example up -d --build
+
+# Pull-only release or client-local
+docker compose -f compose.yaml --env-file environments/release/compose.env up -d --no-build
+docker compose -f compose.yaml --env-file environments/client-local/compose.env up -d --no-build
 ```
 
-Helm example:
+## Helm
 
 ```bash
 helm upgrade --install logai ./helm/gamestory-schneider-platform --namespace logai --create-namespace -f environments/client-local/values.yaml
 ```
 
-See `docs/deployment-model.md`, `docs/local-k3s.md`, and `docs/schneider-handoff.md`. SSO is optional for this delivery; existing `gamestory-sso`, `sample-ui`, and `gamestory-entra` names are retained as defaults without requiring Entra credentials.
+See `docs/testing.md`, `docs/platform-bundle.md`, `docs/deployment-model.md`, and `docs/schneider-handoff.md`.

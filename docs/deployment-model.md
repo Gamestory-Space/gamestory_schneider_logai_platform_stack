@@ -1,11 +1,17 @@
-# Deployment Model
+# Deployment model
 
-| Environment | Owner | Helm/GKE | Compose |
+## Source repository
+
+| Environment | Owner/location | Helm | Compose |
 | --- | --- | --- | --- |
-| build | Gamestory | Yes | Yes |
-| release | Gamestory | Yes | Yes, pull only |
-| client-local | Schneider/local | Yes; also local k3s | Yes, pull only |
-| uat | Schneider | Yes | No |
-| prod | Schneider | Yes | No |
+| build | Gamestory WSL2 | Local Kubernetes | Yes, source-build override |
+| release | Gamestory WSL2 | Local Kubernetes | Yes, pull only |
+| client-local | Schneider AWS validation host | Optional | Yes, pull only |
+| uat | Schneider AWS | EKS | No |
+| prod | Schneider AWS | EKS | No |
 
-Configuration precedence is chart defaults, environment values, delivery overrides, then runtime secrets. The placeholder GKE ingress, registry, DNS, secret, and database references in UAT and production must be replaced by Schneider-controlled values.
+## Client bundle
+
+The Docker Hub deployment bundle deliberately contains only `client-local`, `uat`, and `prod`. Client-local deploys Postgres as a container. UAT and production deploy no Postgres pod and connect to Schneider-managed AWS RDS PostgreSQL through runtime Secret references.
+
+Configuration precedence is chart defaults, environment values, Schneider/private delivery overrides, then runtime Secrets.

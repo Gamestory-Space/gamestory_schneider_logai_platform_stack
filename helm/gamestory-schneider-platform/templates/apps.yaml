@@ -51,6 +51,10 @@ spec:
               value: {{ ternary $root.Values.externalDatabase.database $root.Values.postgres.database $root.Values.externalDatabase.enabled | quote }}
             - name: DB_USER
               value: {{ ternary $root.Values.externalDatabase.username $root.Values.postgres.username $root.Values.externalDatabase.enabled | quote }}
+            - name: DATABASE_URL
+              valueFrom: {secretKeyRef: {name: {{ include "schneider.dbSecretName" $root }}, key: {{ ternary $root.Values.externalDatabase.databaseUrlKey $root.Values.postgres.databaseUrlKey $root.Values.externalDatabase.enabled }}}}
+            - name: DB_SSLMODE
+              value: {{ ternary $root.Values.externalDatabase.sslMode $root.Values.postgres.sslMode $root.Values.externalDatabase.enabled | quote }}
             - name: DB_PASSWORD
               valueFrom: {secretKeyRef: {name: {{ include "schneider.dbSecretName" $root }}, key: {{ ternary $root.Values.externalDatabase.passwordKey $root.Values.postgres.passwordKey $root.Values.externalDatabase.enabled }}}}
             {{- if eq $name "logai-api" }}

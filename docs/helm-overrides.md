@@ -11,7 +11,7 @@ Exactly five canonical overlays are committed:
 - `build` and `release`, owned by Gamestory
 - `client-local`, `uat`, and `prod`, owned by Schneider/client operations
 
-All five support Helm deployment to GKE. Client-local can also target local Kubernetes/k3s. UAT and production use external Postgres and managed secret references; their example registry, DNS, ingress, database, and secret identifiers must be replaced by Schneider values.
+All five support Helm deployment. Build and release target local Kubernetes in WSL2; client-local may also target local Kubernetes; UAT and production target AWS EKS and use Schneider-managed AWS RDS for PostgreSQL and managed secret references; their example registry, DNS, ingress, database, and secret identifiers must be replaced by Schneider values.
 
 ```bash
 helm upgrade --install logai ./helm/gamestory-schneider-platform \

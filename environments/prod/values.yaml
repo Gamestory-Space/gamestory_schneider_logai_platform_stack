@@ -27,6 +27,8 @@ externalDatabase:
   database: logai
   username: logai_runtime
   existingSecret: schneider-managed-prod-database
+  databaseUrlKey: databaseUrl
+  sslMode: require
 identity:
   authMode: none
   publicUrl: https://auth.example.invalid

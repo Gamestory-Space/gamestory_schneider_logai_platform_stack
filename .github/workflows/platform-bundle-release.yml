@@ -1,0 +1,68 @@
+name: Publish client deployment bundle
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Bundle version, for example v0.2.0
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  BUNDLE_REPOSITORY: docker.io/chrismdgs/gamestory_logai_schneider
+
+jobs:
+  validate-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+      - name: Select version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            version="${GITHUB_REF_NAME}"
+          else
+            version="${{ inputs.version }}"
+          fi
+          if [[ ! "$version" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9.-]+)?$ ]]; then
+            echo "Invalid version: $version" >&2
+            exit 1
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+      - name: Validate Helm client environments
+        run: |
+          helm lint ./helm/gamestory-schneider-platform
+          for environment in client-local uat prod; do
+            helm template logai ./helm/gamestory-schneider-platform -f "environments/${environment}/values.yaml" >/dev/null
+          done
+      - name: Validate client Compose
+        run: docker compose --env-file environments/client-local/compose.env.example -f compose.yaml config --quiet
+      - name: Assert client-only bundle contents
+        run: ./scripts/validate-client-bundle.sh
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: docker/setup-buildx-action@v3
+      - name: Build and publish client bundle
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: packaging/client-bundle.Dockerfile
+          push: true
+          build-args: BUNDLE_VERSION=${{ steps.version.outputs.version }}
+          tags: |
+            ${{ env.BUNDLE_REPOSITORY }}:platform-bundle-${{ steps.version.outputs.version }}
+            ${{ env.BUNDLE_REPOSITORY }}:platform-bundle-sha-${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ steps.version.outputs.version }}
