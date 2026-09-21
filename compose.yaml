@@ -55,7 +55,7 @@ services:
       KEYCLOAK_AUDIENCE: sample-app
       API_CORS_ORIGINS: http://localhost:${LOGAI_UI_PORT}
     healthcheck:
-      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      test: [CMD-SHELL, "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
       interval: 10s
       timeout: 5s
       retries: 12
@@ -73,7 +73,7 @@ services:
       APPLY_DATABASE_SCHEMA_ON_STARTUP: ${APPLY_DATABASE_SCHEMA_ON_STARTUP}
       SEED_SAMPLE_DATA_ON_STARTUP: ${SEED_SAMPLE_DATA_ON_STARTUP}
     healthcheck:
-      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      test: [CMD-SHELL, "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
       interval: 10s
       timeout: 5s
       retries: 12
@@ -95,7 +95,7 @@ services:
       NEXT_PUBLIC_IDENTITY_API_BASE_URL: http://localhost:${IDENTITY_API_PORT}
       NEXT_PUBLIC_LOGAI_API_BASE_URL: http://localhost:${LOGAI_API_PORT}
     healthcheck:
-      test: [CMD-SHELL, "wget -qO- http://localhost:3000/ >/dev/null || exit 1"]
+      test: [CMD-SHELL, "wget -qO- http://$${HOSTNAME}:3000/ >/dev/null || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 12

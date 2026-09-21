@@ -6,7 +6,7 @@ metadata:
   labels: {{- include "schneider.labels" . | nindent 4 }}
 spec:
   selector: {{- include "schneider.selectorLabels" (dict "root" . "component" "keycloak") | nindent 4 }}
-  ports: [{name: http, port: {{ .Values.keycloak.service.port }}, targetPort: http}]
+  ports: [{name: http, port: {{ .Values.keycloak.service.port }}, targetPort: http}, {name: management, port: {{ .Values.keycloak.service.managementPort }}, targetPort: management}]
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -29,7 +29,7 @@ spec:
           image: {{ include "schneider.image" .Values.keycloak.image | quote }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           command: {{ toJson .Values.keycloak.command }}
-          ports: [{name: http, containerPort: 8080}]
+          ports: [{name: http, containerPort: 8080}, {name: management, containerPort: 9000}]
           env:
             - {name: KC_HEALTH_ENABLED, value: "true"}
             - {name: KC_HTTP_ENABLED, value: "true"}
@@ -50,14 +50,14 @@ spec:
             - name: KEYCLOAK_ADMIN_PASSWORD
               valueFrom: {secretKeyRef: {name: {{ include "schneider.adminSecretName" . }}, key: {{ .Values.keycloak.adminPasswordKey }}}}
           startupProbe:
-            httpGet: {path: /health/started, port: http}
+            httpGet: {path: /health/started, port: management}
             periodSeconds: 10
             failureThreshold: 30
           readinessProbe:
-            httpGet: {path: /health/ready, port: http}
+            httpGet: {path: /health/ready, port: management}
             periodSeconds: {{ .Values.probes.periodSeconds }}
           livenessProbe:
-            httpGet: {path: /health/live, port: http}
+            httpGet: {path: /health/live, port: management}
             periodSeconds: {{ .Values.probes.periodSeconds }}
           resources: {{- toYaml .Values.keycloak.resources | nindent 12 }}
 {{- end }}
