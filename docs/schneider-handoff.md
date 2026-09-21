@@ -2,7 +2,7 @@
 
 ## Delivered artifact
 
-Schneider receives the versioned `platform-bundle-*` image from `docker.io/chrismdgs/gamestory_logai_schneider`. Extract it with Podman or Docker as described in `docs/platform-bundle.md`. The extracted artifact contains no application source or Gamestory build/release environments.
+Schneider receives the signed client deployment ZIP from the generic OCI reference `docker.io/chrismdgs/gamestory_logai_schneider:platform-<version>`. Pull it with ORAS and verify its checksum as described in `docs/platform-bundle.md`. The extracted artifact contains no application source or Gamestory build/release environments.
 
 ## Client-local
 

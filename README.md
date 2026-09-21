@@ -1,6 +1,6 @@
 # Gamestory Schneider LogAI Platform Stack
 
-Canonical deployment repository for Postgres, Keycloak, Identity API, LogAI API, and LogAI UI. Helm is authoritative across all five source-repository environments. The published client bundle contains only client-local, UAT, and production assets.
+Canonical deployment repository for Postgres, Keycloak, Identity API, LogAI API, and LogAI UI. Helm is authoritative across all five source-repository environments. The published client ZIP contains only client-local, UAT, and production assets.
 
 | Environment | Owner | Helm | Compose |
 | --- | --- | --- | --- |
@@ -9,6 +9,14 @@ Canonical deployment repository for Postgres, Keycloak, Identity API, LogAI API,
 | client-local | Schneider/local | Yes | Yes, pull only |
 | uat | Schneider | Yes | No |
 | prod | Schneider | Yes | No |
+
+## Platform release archive
+
+Release `v0.1.4` produces a signed, client-only ZIP and IREP evidence pack. The ZIP is pushed to Docker Hub as a generic OCI artifact, not as a runnable image. See `docs/platform-bundle.md`.
+
+```bash
+./scripts/package-client-release.sh v0.1.4 dist
+```
 
 ## Validate
 

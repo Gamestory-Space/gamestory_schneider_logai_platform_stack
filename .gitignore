@@ -15,3 +15,5 @@ environments/**/secrets.yml
 # remote-build-dev is deprecated; private legacy overrides remain ignored.
 environments/remote-build-dev/values.yaml
 environments/remote-build-dev/secrets.yaml
+
+dist/

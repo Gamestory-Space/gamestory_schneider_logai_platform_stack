@@ -12,6 +12,6 @@
 
 ## Client bundle
 
-The Docker Hub deployment bundle deliberately contains only `client-local`, `uat`, and `prod`. Client-local deploys Postgres as a container. UAT and production deploy no Postgres pod and connect to Schneider-managed AWS RDS PostgreSQL through runtime Secret references.
+The Docker Hub generic OCI deployment archive deliberately contains only `client-local`, `uat`, and `prod`. Client-local deploys Postgres as a container. UAT and production deploy no Postgres pod and connect to Schneider-managed AWS RDS PostgreSQL through runtime Secret references.
 
 Configuration precedence is chart defaults, environment values, Schneider/private delivery overrides, then runtime Secrets.

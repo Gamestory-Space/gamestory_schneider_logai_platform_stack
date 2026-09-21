@@ -1,68 +1,213 @@
-name: Publish client deployment bundle
+name: IREP Platform Archive Release
 
 on:
+  pull_request:
+    branches: [master]
   push:
     tags: ["v*"]
   workflow_dispatch:
     inputs:
       version:
-        description: Bundle version, for example v0.2.0
+        description: Release version, for example v0.1.4
         required: true
         type: string
 
 permissions:
-  contents: read
+  contents: write
+  actions: read
+  id-token: write
 
 env:
-  BUNDLE_REPOSITORY: docker.io/chrismdgs/gamestory_logai_schneider
+  SERVICE_NAME: gamestory-schneider-logai-platform
+  OCI_REPOSITORY: docker.io/chrismdgs/gamestory_logai_schneider
+  EVIDENCE_DIR: release-evidence/gamestory-schneider-logai-platform/${{ github.run_id }}
 
 jobs:
-  validate-and-publish:
+  irep:
+    name: Validate, Package, Scan, Sign, and Publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: azure/setup-helm@v4
-      - name: Select version
-        id: version
+      - uses: oras-project/setup-oras@v1
+      - name: Set release metadata
+        id: release
         shell: bash
         run: |
           set -euo pipefail
           if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             version="${GITHUB_REF_NAME}"
-          else
+            is_release=true
+          elif [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
             version="${{ inputs.version }}"
+            is_release=true
+          else
+            version="pr-${GITHUB_SHA::12}"
+            is_release=false
           fi
-          if [[ ! "$version" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9.-]+)?$ ]]; then
+          if [[ "$is_release" == true && ! "$version" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9.-]+)?$ ]]; then
             echo "Invalid version: $version" >&2
             exit 1
           fi
-          echo "version=${version}" >> "$GITHUB_OUTPUT"
-      - name: Validate Helm client environments
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "is_release=$is_release" >> "$GITHUB_OUTPUT"
+          echo "short_sha=${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
+      - name: Prepare evidence directories
+        run: mkdir -p "${EVIDENCE_DIR}"/{sbom,vulnerability-scan,license-review,provenance,signature,validation}
+      - name: Validate deployment assets
+        shell: bash
         run: |
-          helm lint ./helm/gamestory-schneider-platform
+          set -euo pipefail
+          helm lint ./helm/gamestory-schneider-platform | tee "${EVIDENCE_DIR}/validation/helm-lint.txt"
           for environment in client-local uat prod; do
-            helm template logai ./helm/gamestory-schneider-platform -f "environments/${environment}/values.yaml" >/dev/null
+            helm template logai ./helm/gamestory-schneider-platform \
+              -f "environments/${environment}/values.yaml" \
+              > "${EVIDENCE_DIR}/validation/helm-template-${environment}.yaml"
           done
-      - name: Validate client Compose
-        run: docker compose --env-file environments/client-local/compose.env.example -f compose.yaml config --quiet
-      - name: Assert client-only bundle contents
-        run: ./scripts/validate-client-bundle.sh
-      - uses: docker/login-action@v3
+          docker compose --env-file environments/client-local/compose.env.example \
+            -f compose.yaml config \
+            > "${EVIDENCE_DIR}/validation/compose-client-local.yaml"
+          bash -n scripts/*.sh scripts/client/*.sh
+          ./scripts/validate-client-bundle.sh | tee "${EVIDENCE_DIR}/validation/client-bundle-policy.txt"
+      - name: Package client deployment ZIP
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./scripts/package-client-release.sh "${{ steps.release.outputs.version }}" dist
+          archive="dist/schneider-logai-platform-${{ steps.release.outputs.version }}.zip"
+          checksum="${archive}.sha256"
+          mkdir -p dist/sbom-root
+          unzip -q "$archive" -d dist/sbom-root
+          echo "archive=$archive" >> "$GITHUB_OUTPUT"
+          echo "checksum=$checksum" >> "$GITHUB_OUTPUT"
+      - name: Generate CycloneDX filesystem SBOM
+        uses: anchore/sbom-action@v0
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - uses: docker/setup-buildx-action@v3
-      - name: Build and publish client bundle
-        uses: docker/build-push-action@v6
+          path: ./dist/sbom-root
+          format: cyclonedx-json
+          output-file: ${{ env.EVIDENCE_DIR }}/sbom/platform.cdx.json
+          upload-artifact: false
+      - name: Scan bundle filesystem
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
-          context: .
-          file: packaging/client-bundle.Dockerfile
-          push: true
-          build-args: BUNDLE_VERSION=${{ steps.version.outputs.version }}
-          tags: |
-            ${{ env.BUNDLE_REPOSITORY }}:platform-bundle-${{ steps.version.outputs.version }}
-            ${{ env.BUNDLE_REPOSITORY }}:platform-bundle-sha-${{ github.sha }}
-          labels: |
-            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.version=${{ steps.version.outputs.version }}
+          scan-type: fs
+          scan-ref: ./dist/sbom-root
+          format: sarif
+          output: ${{ env.EVIDENCE_DIR }}/vulnerability-scan/trivy.sarif
+          severity: CRITICAL,HIGH
+          exit-code: ${{ steps.release.outputs.is_release == 'true' && '1' || '0' }}
+          ignore-unfixed: true
+      - name: Create component inventory and release metadata
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          sbom="${EVIDENCE_DIR}/sbom/platform.cdx.json"
+          if [[ -f "$sbom" ]]; then
+            jq -r '["name","version","type","licenses"], (.components[]? | [(.name // ""),(.version // ""),(.type // ""),((.licenses // []) | map(.license.id // .license.name // "unknown") | join(";"))]) | @csv' "$sbom" > "${EVIDENCE_DIR}/license-review/component-inventory.csv"
+          else
+            echo 'SBOM unavailable.' > "${EVIDENCE_DIR}/license-review/component-inventory.csv"
+          fi
+          {
+            echo '# Platform Archive Metadata'
+            echo
+            echo "- Service: ${SERVICE_NAME}"
+            echo "- Version: ${{ steps.release.outputs.version }}"
+            echo "- Commit: ${GITHUB_SHA}"
+            echo "- Source: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
+            echo "- Workflow run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo "- Release build: ${{ steps.release.outputs.is_release }}"
+            echo '- Payload: client-only deployment ZIP; no runnable container image'
+          } > "${EVIDENCE_DIR}/artifact-metadata.md"
+          {
+            echo '# IREP Policy Traceability'
+            echo
+            echo '- Artifact identity: metadata, version, source commit, and SHA-256 checksum.'
+            echo '- SBOM: CycloneDX JSON generated from the extracted deployment ZIP.'
+            echo '- Component inventory: CSV derived from the filesystem SBOM.'
+            echo '- Vulnerability scan: Trivy filesystem SARIF for Critical and High findings.'
+            echo '- Configuration validation: Helm lint, three client Helm renders, Compose config, and shell syntax.'
+            echo '- Client boundary: bundle policy excludes Gamestory environments, build contexts, and source repositories.'
+            echo '- Authenticity: keyless Sigstore signature for the ZIP on release builds.'
+            echo '- Distribution: generic OCI artifact in Docker Hub plus GitHub Release attachments.'
+          } > "${EVIDENCE_DIR}/policy-traceability.md"
+          cp "${{ steps.package.outputs.checksum }}" "${EVIDENCE_DIR}/provenance/archive.sha256"
+      - uses: sigstore/cosign-installer@v3
+        if: steps.release.outputs.is_release == 'true'
+      - name: Sign archive blob
+        if: steps.release.outputs.is_release == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          signature="${{ steps.package.outputs.archive }}.sigstore.json"
+          cosign sign-blob --yes --bundle "$signature" "${{ steps.package.outputs.archive }}" \
+            | tee "${EVIDENCE_DIR}/signature/cosign-sign.txt"
+          cp "$signature" "${EVIDENCE_DIR}/signature/"
+      - name: Publish ZIP to Docker Hub as generic OCI artifact
+        if: steps.release.outputs.is_release == 'true'
+        id: publish
+        shell: bash
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$DOCKERHUB_TOKEN" | oras login docker.io -u "$DOCKERHUB_USERNAME" --password-stdin
+          ref="${OCI_REPOSITORY}:platform-${{ steps.release.outputs.version }}"
+          result="$(oras push "$ref" \
+            --artifact-type application/vnd.gamestory.schneider-platform.v1 \
+            --annotation "org.opencontainers.image.version=${{ steps.release.outputs.version }}" \
+            --annotation "org.opencontainers.image.revision=${GITHUB_SHA}" \
+            --format json \
+            "${{ steps.package.outputs.archive }}:application/zip" \
+            "${{ steps.package.outputs.checksum }}:text/plain" \
+            "${{ steps.package.outputs.archive }}.sigstore.json:application/vnd.dev.sigstore.bundle.v0.3+json")"
+          digest="$(jq -r '.digest' <<< "$result")"
+          oras tag "$ref" "platform-sha-${{ steps.release.outputs.short_sha }}"
+          {
+            echo '# Release Provenance'
+            echo
+            echo "- OCI reference: ${ref}"
+            echo "- OCI digest: ${digest}"
+            echo "- Source commit: ${GITHUB_SHA}"
+            echo "- Archive checksum: $(cut -d ' ' -f1 '${{ steps.package.outputs.checksum }}')"
+          } > "${EVIDENCE_DIR}/provenance/release-digest.md"
+      - name: Package evidence ZIP
+        if: always()
+        id: evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence_archive="dist/${SERVICE_NAME}-${{ steps.release.outputs.version }}-evidence.zip"
+          (cd "${EVIDENCE_DIR}" && zip -X -q -r "${GITHUB_WORKSPACE}/${evidence_archive}" .)
+          echo "archive=$evidence_archive" >> "$GITHUB_OUTPUT"
+      - name: Attach archives to GitHub Release
+        if: steps.release.outputs.is_release == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          version="${{ steps.release.outputs.version }}"
+          if ! gh release view "$version" >/dev/null 2>&1; then
+            gh release create "$version" --target "$GITHUB_SHA" --title "$version" --notes "Schneider LogAI platform deployment archive $version."
+          fi
+          gh release upload "$version" \
+            "${{ steps.package.outputs.archive }}" \
+            "${{ steps.package.outputs.checksum }}" \
+            "${{ steps.package.outputs.archive }}.sigstore.json" \
+            "${{ steps.evidence.outputs.archive }}" --clobber
+      - name: Upload workflow artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: irep-platform-${{ steps.release.outputs.version }}
+          path: |
+            dist/*.zip
+            dist/*.sha256
+            dist/*.sigstore.json
+            ${{ env.EVIDENCE_DIR }}
+          if-no-files-found: error
