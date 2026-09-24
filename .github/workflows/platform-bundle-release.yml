@@ -56,6 +56,10 @@ jobs:
           echo "short_sha=${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
       - name: Prepare evidence directories
         run: mkdir -p "${EVIDENCE_DIR}"/{sbom,vulnerability-scan,license-review,provenance,signature,validation}
+      - name: Enforce approved release source
+        if: steps.release.outputs.is_release == 'true'
+        shell: bash
+        run: ./scripts/validate-release-source.sh "$GITHUB_REF" "$GITHUB_SHA"
       - name: Validate deployment assets
         shell: bash
         run: |
@@ -71,6 +75,7 @@ jobs:
             > "${EVIDENCE_DIR}/validation/compose-client-local.yaml"
           bash -n scripts/*.sh scripts/client/*.sh
           ./scripts/validate-client-bundle.sh | tee "${EVIDENCE_DIR}/validation/client-bundle-policy.txt"
+          ./scripts/test-client-release-policy.sh | tee "${EVIDENCE_DIR}/validation/client-release-policy-tests.txt"
       - name: Package client deployment ZIP
         id: package
         shell: bash

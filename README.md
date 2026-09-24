@@ -24,6 +24,7 @@ Release `v0.1.4` produces a signed, client-only ZIP and IREP evidence pack. The 
 ./scripts/helm-lint.sh
 ./scripts/helm-template.sh
 ./scripts/validate-client-bundle.sh
+./scripts/test-client-release-policy.sh
 
 docker compose -f compose.yaml -f compose.build.yaml --env-file environments/build/compose.env.example config
 docker compose -f compose.yaml --env-file environments/release/compose.env.example config

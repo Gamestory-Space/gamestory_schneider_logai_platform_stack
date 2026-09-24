@@ -1,0 +1,13 @@
+# source path|destination path inside the client bundle
+compose.yaml|compose.yaml
+helm/gamestory-schneider-platform|helm/gamestory-schneider-platform
+environments/client-local|environments/client-local
+environments/uat|environments/uat
+environments/prod|environments/prod
+scripts/client|scripts
+scripts/smoke-test.sh|scripts/smoke-test.sh
+docs/client-local.md|docs/client-local.md
+docs/schneider-handoff.md|docs/schneider-handoff.md
+docs/deployment-model.md|docs/deployment-model.md
+identity/schneider.identity.env.example|identity/schneider.identity.env.example
+README.client.md|README.md

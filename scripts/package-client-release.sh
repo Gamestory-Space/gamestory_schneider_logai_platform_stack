@@ -12,15 +12,14 @@ mkdir -p "$output_path"
 staging="$(mktemp -d)"
 trap 'rm -rf "$staging"' EXIT
 bundle="$staging/schneider-logai-platform-$version"
-mkdir -p "$bundle/environments" "$bundle/helm" "$bundle/scripts" "$bundle/docs" "$bundle/identity"
-cp "$repo_root/compose.yaml" "$bundle/compose.yaml"
-cp -R "$repo_root/helm/gamestory-schneider-platform" "$bundle/helm/"
-for environment in client-local uat prod; do cp -R "$repo_root/environments/$environment" "$bundle/environments/"; done
-cp "$repo_root"/scripts/client/*.sh "$bundle/scripts/"
-cp "$repo_root/scripts/smoke-test.sh" "$bundle/scripts/smoke-test.sh"
-cp "$repo_root/docs/client-local.md" "$repo_root/docs/schneider-handoff.md" "$repo_root/docs/deployment-model.md" "$bundle/docs/"
-cp "$repo_root/identity/schneider.identity.env.example" "$bundle/identity/"
-cp "$repo_root/README.client.md" "$bundle/README.md"
+mkdir -p "$bundle"
+allowlist="$repo_root/release/client-bundle-allowlist.txt"
+while IFS='|' read -r source destination; do
+  [[ -n "$source" && "${source:0:1}" != "#" ]] || continue
+  [[ -e "$repo_root/$source" ]] || { echo "Allow-listed release input is missing: $source" >&2; exit 1; }
+  mkdir -p "$(dirname "$bundle/$destination")"
+  cp -R "$repo_root/$source" "$bundle/$destination"
+done < "$allowlist"
 printf '%s\n' "$version" > "$bundle/VERSION"
 git -C "$repo_root" rev-parse HEAD > "$bundle/SOURCE_COMMIT"
 "$repo_root/scripts/validate-client-bundle.sh" "$bundle"
@@ -37,3 +36,4 @@ else
   exit 1
 fi
 sha256sum "$archive" > "$archive.sha256"
+"$repo_root/scripts/validate-client-archive.sh" "$archive"
