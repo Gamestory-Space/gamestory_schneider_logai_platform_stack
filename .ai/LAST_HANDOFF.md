@@ -2,85 +2,42 @@
 
 Classification: **GAMESTORY CONFIDENTIAL INTERNAL ENGINEERING MATERIAL**
 
-Date: 2026-09-24  
+Date: 2026-09-28
 Agent: Codex
 
 Implementation Branch: `master`  
-Implementation Commit: `196507ca096430f211ac0c58dc9f3762401919b5`  
+Implementation Commit: `0daa41a`
 Direction Branch: `project-direction`  
 Direction Commit: `project-direction` HEAD containing this handoff
 
 ## Session Objective
 
-Implement the shared project-direction mechanism, establish a verified baseline, and prevent internal state from crossing the Schneider release boundary.
+Add manual Argo CD deployment definitions for Schneider environments, including the client Dev AWS environment, without adding GitHub Actions deployment or infrastructure provisioning.
 
 ## Implementation Changes
 
-- Removed the previously drafted direct EKS GitHub Actions deployment workflow; Argo CD remains independent of CI.
-- Added explicit client-bundle allow-list construction.
-- Added approved-release-source validation with a hard rejection for `project-direction`.
-- Added recursive final bundle/ZIP leakage checks and policy tests.
-- Integrated source and leakage policy checks into the platform release workflow.
+- Added `logai-dev-aws`, `logai-uat`, and `logai-prod` Argo CD Applications using the shared platform chart and environment-specific values.
+- Added the client `dev-aws` values overlay with external service placeholders and no in-cluster PostgreSQL.
+- All Applications reference `main`, use Schneider-owned placeholders, require manual sync, and set `CreateNamespace=false`.
+- Documented onboarding and included Argo plus Dev AWS assets in client bundle validation and packaging.
 
-## Project State Changes
+## Validation
 
-Created the initial code-verified system baseline covering platform, components, database, deployment, security, release, and gaps.
+- Helm v3.19.0 lint: 0 failures.
+- All build, release, client-local, Dev AWS, UAT, and Production configurations rendered successfully.
+- All three Argo Application YAML files rendered successfully through Helm's YAML parser.
+- Git whitespace, client input policy, prohibited sync settings, credential-pattern review, and workflow non-modification checks passed.
 
-## Discussions
+## Deployment / Security / Release Impact
 
-Captured `DISC-DB-001`, `DISC-DB-002`, `DISC-AGENT-001`, `DISC-RELEASE-001`, and `DISC-DEPLOY-001`.
+Argo CD can reconcile each environment after Schneider replaces placeholders and onboards permitted sources/destinations. No credentials or secrets were added, namespaces remain externally provisioned, and synchronization is manual. Dev AWS and Argo definitions are included in client release bundles.
 
-## Decisions Confirmed
+## Known Issues / Decisions Required
 
-Captured approved `DB-001` through `DB-006`, `DEPLOY-001`, and `RELEASE-001`. `DB-007` remains proposed.
-
-## Decisions Required
-
-Select Keycloak/LogAI database isolation topology and decide whether to rename the Gamestory platform branch from `master` to `main`.
-
-## Open Questions
-
-`DB-Q001`, `REPO-Q001`, `DEPLOY-Q001`, and `SEC-Q001`.
-
-## New Dependencies
-
-No runtime dependency added. Final archive validation requires `zip` and `unzip` in release CI; the existing workflow runner already uses both.
-
-## Deployment Impact
-
-No runtime deployment behavior changed. Client direction is two Argo CD Applications: UAT from `main`, production from protected `production`.
-
-## Database Impact
-
-No schema or data changed. Current direct LogAI/PostgreSQL connectivity was verified. Flyway direction was recorded but not implemented.
-
-## Security Impact
-
-Internal project state is isolated on `project-direction`; client release source and artifact leakage now hard-fail. No secrets were added.
-
-## Release Impact
-
-Client bundle contents are now driven by `release/client-bundle-allowlist.txt`; constructed ZIPs undergo recursive leakage validation before publication.
-
-## Tests / Validation
-
-- All shell scripts pass `bash -n`.
-- Git whitespace validation passes.
-- `project-direction` rejection test passes.
-- Synthetic `.ai/PROJECT_STATE.md` leakage test passes by correctly rejecting the bundle.
-- Existing client-input policy validation passes.
-- Full ZIP construction was not run locally because Linux `zip` is absent; the policy test reports this skip and CI runs the check.
-
-## Known Issues
-
-- Remote implementation branch is `master`, not PRD-prescribed `main`.
-- The two client Argo CD Application manifests were not available for verification.
-
-## Synchronization Result
-
-- Implementation commit `196507ca096430f211ac0c58dc9f3762401919b5` was pushed to `origin/master`.
-- The internal `project-direction` branch was created and pushed to `origin/project-direction`.
+- Schneider must provide the AppProject, Git URL, three cluster names/namespaces, and the Dev AWS ingress class.
+- All initial Applications reference `main`; this differs from the earlier `DEPLOY-001` production-branch direction.
+- The current chart does not deploy the future Teams Interface/Bot described in architecture documents.
 
 ## Recommended Next Step
 
-Push both branches, configure protection so `project-direction` cannot feed release workflows, then obtain and review the client Argo CD Application definitions before implementing Flyway in separately approved work.
+Obtain Schneider onboarding values, confirm branch and synchronization governance, replace placeholders through review, and perform the first manual Argo sync per environment.

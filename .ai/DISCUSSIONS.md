@@ -70,6 +70,6 @@ Context: The client intends Argo CD—not GitHub Actions—to deploy the platfor
 
 Options considered: GitHub Actions directly deploying Helm; GitHub Actions invoking Argo CD; manual Argo synchronization; two continuously reconciling Applications with Git promotion.
 
-Current Direction: Argo CD remains independent of CI. Implementation commit `107af1f` adds two Applications that both reference `main` and require explicit/manual synchronization, following the latest delivery requirement while Schneider governance is confirmed. The earlier continuously reconciling UAT/protected-production promotion model remains recorded in `DEPLOY-001` and now differs from the implemented initial-sync policy.
+Current Direction: Argo CD remains independent of CI. Implementation commits `107af1f` and `0daa41a` add Dev AWS, UAT, and Production Applications that reference `main` and require explicit/manual synchronization, following the latest delivery requirement while Schneider governance is confirmed. The earlier continuously reconciling UAT/protected-production promotion model remains recorded in `DEPLOY-001` and now differs from the implemented initial-sync policy.
 
 Related Decision: `DEPLOY-001`

@@ -3,7 +3,7 @@
 Classification: **GAMESTORY CONFIDENTIAL INTERNAL ENGINEERING MATERIAL**
 
 Last Updated: 2026-09-28  
-Implementation Commit: `107af1f` (`master`)  
+Implementation Commit: `0daa41a` (`master`)
 Direction Commit: `project-direction` HEAD containing this revision
 
 ## Platform
@@ -24,7 +24,7 @@ Chart `gamestory-schneider-platform` version `0.1.4` deploys Identity API, LogAI
 
 ## Argo CD
 
-Two Argo CD Application manifests are implemented: `logai-uat` and `logai-prod`. Both use the shared `helm/gamestory-schneider-platform` chart from `main`, select their existing environment values files, use Schneider-owned AppProject/repository/cluster/namespace placeholders, disable namespace creation, and require manual synchronization. The Argo definitions and documentation are included in the client release allow-list. Final Schneider values and onboarding remain outstanding.
+Three Argo CD Application manifests are implemented: `logai-dev-aws`, `logai-uat`, and `logai-prod`. All use the shared `helm/gamestory-schneider-platform` chart from `main`, select their environment values files, use Schneider-owned AppProject/repository/cluster/namespace placeholders, disable namespace creation, and require manual synchronization. The Argo definitions and documentation are included in the client release allow-list. Final Schneider values and onboarding remain outstanding.
 
 ## CI/CD
 
@@ -84,7 +84,7 @@ The platform produces a signed client-only ZIP plus checksum and Sigstore bundle
 
 ### DEV
 
-No canonical `dev` overlay exists. `build` is the Gamestory source-build environment; deprecated `remote-build-dev` remains only as migration history and is excluded from client releases.
+`dev-aws` is the client AWS development overlay and uses external PostgreSQL, JFrog/example placeholders, managed Secret references, and a Schneider-provided ingress class. `build` remains the Gamestory source-build environment; deprecated `remote-build-dev` remains only as migration history and is excluded from client releases.
 
 ### TEST
 
