@@ -4,6 +4,7 @@ helm/gamestory-schneider-platform|helm/gamestory-schneider-platform
 environments/client-local|environments/client-local
 environments/uat|environments/uat
 environments/prod|environments/prod
+argocd|argocd
 scripts/client|scripts
 scripts/smoke-test.sh|scripts/smoke-test.sh
 docs/client-local.md|docs/client-local.md

@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: logai-uat
+  namespace: argocd
+spec:
+  project: <SCHNEIDER_ARGO_PROJECT>
+  source:
+    repoURL: <SCHNEIDER_PLATFORM_REPO_URL>
+    targetRevision: main
+    path: helm/gamestory-schneider-platform
+    helm:
+      valueFiles:
+        - ../../environments/uat/values.yaml
+  destination:
+    name: <SCHNEIDER_UAT_EKS_CLUSTER>
+    namespace: <LOGAI_UAT_NAMESPACE>
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=false
