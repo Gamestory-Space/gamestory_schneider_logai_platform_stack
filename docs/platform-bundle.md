@@ -2,27 +2,28 @@
 
 CI publishes a client-only ZIP for each platform release. It is not a runnable container image.
 
-For release `v0.1.4`, the Docker Hub generic OCI reference is:
+For release `v0.1.5`, the Docker Hub generic OCI reference is:
 
 ```text
-docker.io/chrismdgs/gamestory_logai_schneider:platform-v0.1.4
+docker.io/chrismdgs/gamestory_logai_schneider:platform-v0.1.5
 ```
 
 The artifact contains the deployment ZIP, its SHA-256 checksum, and its Sigstore bundle. Pull it with ORAS:
 
 ```bash
-oras pull docker.io/chrismdgs/gamestory_logai_schneider:platform-v0.1.4
-sha256sum --check schneider-logai-platform-v0.1.4.zip.sha256
-unzip schneider-logai-platform-v0.1.4.zip
+oras pull docker.io/chrismdgs/gamestory_logai_schneider:platform-v0.1.5
+sha256sum --check schneider-logai-platform-v0.1.5.zip.sha256
+unzip schneider-logai-platform-v0.1.5.zip
 ```
 
-The same files and a separate evidence ZIP are attached to the GitHub `v0.1.4` release.
+The same files and a separate evidence ZIP are attached to the GitHub `v0.1.5` release.
 
 The deployment ZIP contains only:
 
 - Pull-only `compose.yaml`
 - Helm chart
-- `client-local`, `uat`, and `prod` overlays
+- `client-local`, `dev-aws`, `uat`, and `prod` overlays
+- Argo CD Application definitions for Dev AWS, UAT, and Production
 - Schneider deployment and smoke-test scripts
 - Client deployment documentation and identity example
 

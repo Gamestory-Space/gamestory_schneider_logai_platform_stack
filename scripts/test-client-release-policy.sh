@@ -18,7 +18,7 @@ else
   echo "SKIP: final ZIP test requires zip; CI runners execute this check."
 fi
 
-mkdir -p "$test_root/leak/environments/client-local" "$test_root/leak/environments/uat" "$test_root/leak/environments/prod" "$test_root/leak/.ai"
+mkdir -p "$test_root/leak/environments/client-local" "$test_root/leak/environments/dev-aws" "$test_root/leak/environments/uat" "$test_root/leak/environments/prod" "$test_root/leak/.ai"
 printf 'internal\n' > "$test_root/leak/.ai/PROJECT_STATE.md"
 if "$repo_root/scripts/validate-client-bundle.sh" "$test_root/leak" >/dev/null 2>&1; then
   echo "Internal project state was incorrectly accepted in a client bundle." >&2

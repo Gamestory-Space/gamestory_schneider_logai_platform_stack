@@ -6,12 +6,12 @@ The chart uses this configuration hierarchy:
 chart defaults -> environment values -> deployment/CD overrides -> runtime secrets
 ```
 
-Exactly five canonical overlays are committed:
+Exactly six canonical overlays are committed:
 
 - `build` and `release`, owned by Gamestory
-- `client-local`, `uat`, and `prod`, owned by Schneider/client operations
+- `client-local`, `dev-aws`, `uat`, and `prod`, owned by Schneider/client operations
 
-All five support Helm deployment. Build and release target local Kubernetes in WSL2; client-local may also target local Kubernetes; UAT and production target AWS EKS and use Schneider-managed AWS RDS for PostgreSQL and managed secret references; their example registry, DNS, ingress, database, and secret identifiers must be replaced by Schneider values.
+All six support Helm deployment. Build and release target local Kubernetes in WSL2; client-local may also target local Kubernetes; Dev AWS, UAT, and production target AWS EKS and use Schneider-managed AWS RDS for PostgreSQL and managed secret references; their example registry, DNS, ingress, database, and secret identifiers must be replaced by Schneider values.
 
 ```bash
 helm upgrade --install logai ./helm/gamestory-schneider-platform \

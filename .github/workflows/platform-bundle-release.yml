@@ -65,7 +65,7 @@ jobs:
         run: |
           set -euo pipefail
           helm lint ./helm/gamestory-schneider-platform | tee "${EVIDENCE_DIR}/validation/helm-lint.txt"
-          for environment in client-local uat prod; do
+          for environment in client-local dev-aws uat prod; do
             helm template logai ./helm/gamestory-schneider-platform \
               -f "environments/${environment}/values.yaml" \
               > "${EVIDENCE_DIR}/validation/helm-template-${environment}.yaml"
@@ -134,7 +134,7 @@ jobs:
             echo '- SBOM: CycloneDX JSON generated from the extracted deployment ZIP.'
             echo '- Component inventory: CSV derived from the filesystem SBOM.'
             echo '- Vulnerability scan: Trivy filesystem SARIF for Critical and High findings.'
-            echo '- Configuration validation: Helm lint, three client Helm renders, Compose config, and shell syntax.'
+            echo '- Configuration validation: Helm lint, four client Helm renders, Compose config, and shell syntax.'
             echo '- Client boundary: bundle policy excludes Gamestory environments, build contexts, and source repositories.'
             echo '- Authenticity: keyless Sigstore signature for the ZIP on release builds.'
             echo '- Distribution: generic OCI artifact in Docker Hub plus GitHub Release attachments.'

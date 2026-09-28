@@ -1,8 +1,9 @@
 # Schneider LogAI deployment bundle
 
-This client-only release archive contains three environments:
+This client-only release archive contains four environments:
 
 - `client-local`: Podman or Docker Compose with bundled Postgres
+- `dev-aws`: Helm/Kubernetes with AWS RDS PostgreSQL
 - `uat`: Helm/Kubernetes with AWS RDS PostgreSQL
 - `prod`: Helm/Kubernetes with AWS RDS PostgreSQL
 
