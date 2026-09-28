@@ -2,8 +2,8 @@
 
 Classification: **GAMESTORY CONFIDENTIAL INTERNAL ENGINEERING MATERIAL**
 
-Last Updated: 2026-09-24  
-Implementation Commit: `196507ca096430f211ac0c58dc9f3762401919b5` (`master`)  
+Last Updated: 2026-09-28  
+Implementation Commit: `107af1f` (`master`)  
 Direction Commit: `project-direction` HEAD containing this revision
 
 ## Platform
@@ -24,7 +24,7 @@ Chart `gamestory-schneider-platform` version `0.1.4` deploys Identity API, LogAI
 
 ## Argo CD
 
-No Argo CD manifests are implemented in the Gamestory platform repository. Current agreed direction is two client-owned Applications: UAT tracks `main`; production tracks a protected `production` branch. The client-side implementation has not been inspected and is not represented as complete here.
+Two Argo CD Application manifests are implemented: `logai-uat` and `logai-prod`. Both use the shared `helm/gamestory-schneider-platform` chart from `main`, select their existing environment values files, use Schneider-owned AppProject/repository/cluster/namespace placeholders, disable namespace creation, and require manual synchronization. The Argo definitions and documentation are included in the client release allow-list. Final Schneider values and onboarding remain outstanding.
 
 ## CI/CD
 
@@ -105,7 +105,7 @@ Schneider EKS, RDS PostgreSQL, JFrog, DNS/ingress/TLS, managed Secrets, Entra co
 ## Known Implementation Gaps
 
 - Repository implementation branch is named `master`, while the approved direction refers to `main`.
-- Client Argo CD Applications are not present or verified here.
+- Argo CD placeholders require Schneider-provided AppProject, repository, cluster, and namespace values before use.
 - Flyway migration image and PreSync Job are not implemented.
 - Keycloak/LogAI database isolation is unresolved.
 - UAT/production registry, digest, DNS, ingress, RDS, and Secret identifiers remain placeholders.

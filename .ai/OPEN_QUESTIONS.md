@@ -28,9 +28,9 @@ Decision Required From: CTO/repository owner
 
 Status: OPEN
 
-Question: What are the final client Git URL, chart path, cluster destination, namespaces, Argo project, and sync policies for `logai-uat` and `logai-prod`?
+Question: What are the final client Git URL, cluster destinations, namespaces, and Argo project for `logai-uat` and `logai-prod`, and when should automated reconciliation be enabled?
 
-Context: The two-Application promotion model is approved, but client-site manifests were not available for baseline inspection.
+Context: The two Application manifests now exist with verified chart/value paths, manual synchronization, namespace creation disabled, and placeholders for Schneider-owned settings. Both initially reference `main`, which differs from the earlier approved protected-production branch direction.
 
 Related Discussion: `DISC-DEPLOY-001`  
 Decision Required From: Client platform owner / CTO
