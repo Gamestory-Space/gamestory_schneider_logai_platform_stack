@@ -3,7 +3,7 @@
 Classification: **GAMESTORY CONFIDENTIAL INTERNAL ENGINEERING MATERIAL**
 
 Last Updated: 2026-09-28  
-Implementation Commit: `0daa41a` (`master`)
+Implementation Commit: `f7ea6fc06194e111ee71574f67d187e4c7f93101` (`master`)
 Direction Commit: `project-direction` HEAD containing this revision
 
 ## Platform
@@ -20,7 +20,7 @@ UAT and production overlays target Schneider-owned Kubernetes/EKS operationally,
 
 ## Helm
 
-Chart `gamestory-schneider-platform` version `0.1.4` deploys Identity API, LogAI API, LogAI UI, Keycloak, optional PostgreSQL, Services, ConfigMap, Secrets, and optional Ingress. It does not currently contain Flyway or database-migration Jobs, Argo CD Applications, NetworkPolicies, PodDisruptionBudgets, or explicit pod/container security contexts.
+Chart `gamestory-schneider-platform` version `0.1.5` deploys Identity API, LogAI API, LogAI UI, Keycloak, optional PostgreSQL, Services, ConfigMap, Secrets, and optional Ingress. It does not currently contain Flyway or database-migration Jobs, Argo CD Applications, NetworkPolicies, PodDisruptionBudgets, or explicit pod/container security contexts.
 
 ## Argo CD
 
@@ -78,7 +78,7 @@ Client packaging is allow-list based. Final bundle policy rejects `.ai`, `AGENTS
 
 ## Release Packaging
 
-The platform produces a signed client-only ZIP plus checksum and Sigstore bundle, published as a generic Docker Hub OCI artifact. The ZIP contains client-local/UAT/production deployment material and excludes build/release environments and source repositories. Evidence includes SBOM, vulnerability scan, validation, provenance, and signature outputs.
+Release `v0.1.5` successfully published the signed client-only ZIP, checksum, and Sigstore bundle as Docker Hub OCI artifact `platform-v0.1.5`, with GitHub Release attachments. The ZIP contains client-local/Dev AWS/UAT/production deployment material and Argo definitions while excluding build/release environments and source repositories. Evidence includes SBOM, vulnerability scan, validation, provenance, and signature outputs.
 
 ## Environments
 
@@ -92,11 +92,11 @@ No canonical `test` overlay exists. Local validation uses build/release/client-l
 
 ### UAT
 
-Uses external PostgreSQL/RDS, JFrog placeholders, one replica per application, managed Secret references, and ingress placeholders. Intended client Argo CD source is `main`, but Argo manifests are not in this repository.
+Uses external PostgreSQL/RDS, JFrog placeholders, one replica per application, managed Secret references, and ingress placeholders. Its Argo Application references `main` and requires manual sync.
 
 ### PROD
 
-Uses external PostgreSQL/RDS, two replicas for applications and Keycloak, managed Secret references, TLS/ingress placeholders, and placeholder approved digests. Intended client Argo CD source is protected branch `production`, but Argo manifests are not in this repository.
+Uses external PostgreSQL/RDS, two replicas for applications and Keycloak, managed Secret references, TLS/ingress placeholders, and placeholder approved digests. Its implemented Argo Application references `main` and requires manual sync; this differs from the earlier protected `production` branch direction.
 
 ## External Dependencies
 
