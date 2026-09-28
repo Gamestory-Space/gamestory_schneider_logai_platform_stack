@@ -4,8 +4,9 @@ GitHub Actions remains the continuous integration mechanism for the individual L
 
 This repository declares the desired LogAI platform deployment. Its shared Helm chart composes the independently versioned application images and supporting Kubernetes resources. Argo CD reads that Helm definition from Git and reconciles it into Schneider EKS.
 
-UAT and Production use the same chart at `helm/gamestory-schneider-platform`. They are distinguished by their environment-specific values files under `environments/` and by the cluster and namespace destinations in their respective Argo CD Applications:
+Dev AWS, UAT, and Production use the same chart at `helm/gamestory-schneider-platform`. They are distinguished by their environment-specific values files under `environments/` and by the cluster and namespace destinations in their respective Argo CD Applications:
 
+- `logai-dev-aws.yaml` uses `environments/dev-aws/values.yaml` and the Dev AWS destination.
 - `logai-uat.yaml` uses `environments/uat/values.yaml` and the UAT destination.
 - `logai-prod.yaml` uses `environments/prod/values.yaml` and the Production destination.
 
@@ -14,6 +15,7 @@ UAT and Production use the same chart at `helm/gamestory-schneider-platform`. Th
 Before applying these definitions, Schneider's Argo team must replace every angle-bracketed placeholder and configure the referenced Argo AppProject to permit:
 
 - the LogAI platform Git repository as a source;
+- the Dev AWS EKS cluster and LogAI Dev AWS namespace as a destination;
 - the UAT EKS cluster and LogAI UAT namespace as a destination; and
 - the Production EKS cluster and LogAI Production namespace as a destination.
 

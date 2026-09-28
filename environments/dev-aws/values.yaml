@@ -1,0 +1,34 @@
+global:
+  environment: dev-aws
+  imagePullPolicy: Always
+  imagePullSecrets: [{name: schneider-jfrog-pull-secret}]
+identityApi:
+  image: {repository: jfrog.example.invalid/schneider/identity-api, tag: "1.0.0", digest: ""}
+  resources: {requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: 500m, memory: 512Mi}}
+logaiApi:
+  image: {repository: jfrog.example.invalid/schneider/logai-api, tag: "1.0.0", digest: ""}
+  resources: {requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: "1", memory: 1Gi}}
+logaiUi:
+  image: {repository: jfrog.example.invalid/schneider/logai-ui, tag: "1.0.0", digest: ""}
+  resources: {requests: {cpu: 50m, memory: 128Mi}, limits: {cpu: 500m, memory: 512Mi}}
+postgres: {enabled: false}
+externalDatabase:
+  enabled: true
+  host: dev-aws-postgres.example.invalid
+  port: 5432
+  database: logai
+  username: logai_runtime
+  existingSecret: schneider-managed-dev-aws-database
+  databaseUrlKey: databaseUrl
+  sslMode: require
+identity:
+  authMode: none
+  publicUrl: https://auth-dev-aws.example.invalid
+  callbackUrl: https://logai-dev-aws.example.invalid/auth/callback
+keycloak:
+  existingAdminSecret: schneider-managed-dev-aws-keycloak-admin
+  command: ["/opt/keycloak/bin/kc.sh", "start"]
+ingress:
+  enabled: true
+  className: <SCHNEIDER_DEV_AWS_INGRESS_CLASS>
+  hosts: {ui: logai-dev-aws.example.invalid, api: api-dev-aws.example.invalid, identityApi: identity-dev-aws.example.invalid, keycloak: auth-dev-aws.example.invalid}

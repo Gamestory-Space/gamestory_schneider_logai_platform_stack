@@ -9,6 +9,7 @@ fi
 client_inputs=(
   "$repo_root/compose.yaml"
   "$repo_root/environments/client-local"
+  "$repo_root/environments/dev-aws"
   "$repo_root/environments/uat"
   "$repo_root/environments/prod"
   "$repo_root/scripts/client"
@@ -20,7 +21,7 @@ if grep -RInE 'gamestory-identity-kit|(^|[/\\])logai_ai([/\\]|$)|_BUILD_CONTEXT=
 fi
 if [[ -n "$bundle" ]]; then
   [[ -d "$bundle" ]] || { echo "Client bundle not found: $bundle" >&2; exit 1; }
-  for required in client-local uat prod; do [[ -d "$bundle/environments/$required" ]] || { echo "Missing $required" >&2; exit 1; }; done
+  for required in client-local dev-aws uat prod; do [[ -d "$bundle/environments/$required" ]] || { echo "Missing $required" >&2; exit 1; }; done
   for forbidden in build release remote-build-dev compose.build.yaml packaging .git .github .ai AGENTS.md; do
     [[ ! -e "$bundle/environments/$forbidden" && ! -e "$bundle/$forbidden" ]] || { echo "Forbidden bundle content: $forbidden" >&2; exit 1; }
   done

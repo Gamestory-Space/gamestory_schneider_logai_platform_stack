@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: logai-dev-aws
+  namespace: argocd
+spec:
+  project: <SCHNEIDER_ARGO_PROJECT>
+  source:
+    repoURL: <SCHNEIDER_PLATFORM_REPO_URL>
+    targetRevision: main
+    path: helm/gamestory-schneider-platform
+    helm:
+      valueFiles:
+        - ../../environments/dev-aws/values.yaml
+  destination:
+    name: <SCHNEIDER_DEV_AWS_EKS_CLUSTER>
+    namespace: <LOGAI_DEV_AWS_NAMESPACE>
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=false

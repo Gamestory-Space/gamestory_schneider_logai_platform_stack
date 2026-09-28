@@ -2,6 +2,7 @@
 compose.yaml|compose.yaml
 helm/gamestory-schneider-platform|helm/gamestory-schneider-platform
 environments/client-local|environments/client-local
+environments/dev-aws|environments/dev-aws
 environments/uat|environments/uat
 environments/prod|environments/prod
 argocd|argocd
