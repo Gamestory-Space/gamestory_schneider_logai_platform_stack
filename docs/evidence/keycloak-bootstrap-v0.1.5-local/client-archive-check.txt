@@ -1,0 +1,1 @@
+PASS: actual allowlisted ZIP generated with Python zipfile and extracted by the repository archive validator. No proprietary Python/TS source or internal administration tools included. Native zip packaging remains covered by CI.

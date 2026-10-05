@@ -1,0 +1,41 @@
+{
+  "identity-api": {
+    "image": "localhost/logai-keycloak/identity-api:v0.1.6",
+    "id": "8ddd51a91c1e458f36beceac5d1d8c31d9dfe95a385f9a14dcbf4e318feb25a6",
+    "labels": {
+      "com.gamestory.license.file": "/licenses/GAMESTORY-LICENSE.txt",
+      "com.gamestory.license.notice": "/licenses/THIRD_PARTY_NOTICES.txt",
+      "com.gamestory.license.scope": "application-code-only",
+      "io.buildah.version": "1.42.1",
+      "org.opencontainers.image.licenses": "LicenseRef-Gamestory-Proprietary",
+      "org.opencontainers.image.vendor": "Gamestory Ltd"
+    },
+    "user": "10001:10001"
+  },
+  "logai-api": {
+    "image": "localhost/logai-keycloak/logai-api:v0.1.6",
+    "id": "3e8cc1c1e6cbfb5e308746640330d22676f027c68baa8bdf278ad5b10240e917",
+    "labels": {
+      "com.gamestory.license.file": "/licenses/GAMESTORY-LICENSE.txt",
+      "com.gamestory.license.notice": "/licenses/THIRD_PARTY_NOTICES.txt",
+      "com.gamestory.license.scope": "application-code-only",
+      "io.buildah.version": "1.42.1",
+      "org.opencontainers.image.licenses": "LicenseRef-Gamestory-Proprietary",
+      "org.opencontainers.image.vendor": "Gamestory Ltd"
+    },
+    "user": "10001:10001"
+  },
+  "logai-ui": {
+    "image": "localhost/logai-keycloak/logai-ui:v0.1.6",
+    "id": "7b65ddedd79167822a8222e93fad4eb5e35bb12dbea5b56386eedf941e6641bf",
+    "labels": {
+      "com.gamestory.license.file": "/licenses/GAMESTORY-LICENSE.txt",
+      "com.gamestory.license.notice": "/licenses/THIRD_PARTY_NOTICES.txt",
+      "com.gamestory.license.scope": "application-code-only",
+      "io.buildah.version": "1.42.1",
+      "org.opencontainers.image.licenses": "LicenseRef-Gamestory-Proprietary",
+      "org.opencontainers.image.vendor": "Gamestory Ltd"
+    },
+    "user": "1000:1000"
+  }
+}

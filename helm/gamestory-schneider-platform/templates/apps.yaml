@@ -2,6 +2,7 @@
 {{- $apps := dict "identity-api" .Values.identityApi "logai-api" .Values.logaiApi "logai-ui" .Values.logaiUi -}}
 {{- range $name, $app := $apps }}
 {{- if $app.enabled }}
+{{- $uid := ternary 1000 10001 (eq $name "logai-ui") }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -22,9 +23,15 @@ spec:
     matchLabels: {{- include "schneider.selectorLabels" (dict "root" $root "component" $name) | nindent 6 }}
   template:
     metadata:
-      annotations: {{- toYaml $root.Values.podAnnotations | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $root.Template.BasePath "/configmap.yaml") $root | sha256sum }}
+        {{- with $root.Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       labels: {{- include "schneider.selectorLabels" (dict "root" $root "component" $name) | nindent 8 }}
     spec:
+      automountServiceAccountToken: false
+      securityContext: {runAsNonRoot: true, runAsUser: {{ $uid }}, runAsGroup: {{ $uid }}, fsGroup: {{ $uid }}, seccompProfile: {type: RuntimeDefault}}
       {{- with $root.Values.global.imagePullSecrets }}
       imagePullSecrets: {{ toYaml . | nindent 8 }}
       {{- end }}
@@ -32,41 +39,29 @@ spec:
         - name: {{ $name }}
           image: {{ include "schneider.image" $app.image | quote }}
           imagePullPolicy: {{ $root.Values.global.imagePullPolicy }}
+          securityContext: {allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: {drop: [ALL]}}
           ports: [{name: http, containerPort: {{ $app.service.port }}}]
           envFrom: [{configMapRef: {name: {{ include "schneider.name" $root }}-config}}]
+          {{- if eq $name "logai-api" }}
           env:
-            - name: NEXT_PUBLIC_IDENTITY_API_BASE_URL
-              value: {{ printf "http://%s-identity-api:8000" (include "schneider.name" $root) | quote }}
-            - name: NEXT_PUBLIC_LOGAI_API_BASE_URL
-              value: {{ printf "http://%s-logai-api:8000" (include "schneider.name" $root) | quote }}
-            - name: KEYCLOAK_ISSUER_URL
-              value: {{ printf "http://%s-keycloak:8080/realms/%s" (include "schneider.name" $root) $root.Values.identity.realm | quote }}
-            - name: KEYCLOAK_JWKS_FETCH_URL
-              value: {{ printf "http://%s-keycloak:8080/realms/%s/protocol/openid-connect/certs" (include "schneider.name" $root) $root.Values.identity.realm | quote }}
-            - name: DB_HOST
-              value: {{ ternary $root.Values.externalDatabase.host (printf "%s-postgres" (include "schneider.name" $root)) $root.Values.externalDatabase.enabled | quote }}
-            - name: DB_PORT
-              value: {{ ternary $root.Values.externalDatabase.port $root.Values.postgres.service.port $root.Values.externalDatabase.enabled | quote }}
-            - name: DB_NAME
-              value: {{ ternary $root.Values.externalDatabase.database $root.Values.postgres.database $root.Values.externalDatabase.enabled | quote }}
-            - name: DB_USER
-              value: {{ ternary $root.Values.externalDatabase.username $root.Values.postgres.username $root.Values.externalDatabase.enabled | quote }}
             - name: DATABASE_URL
               valueFrom: {secretKeyRef: {name: {{ include "schneider.dbSecretName" $root }}, key: {{ ternary $root.Values.externalDatabase.databaseUrlKey $root.Values.postgres.databaseUrlKey $root.Values.externalDatabase.enabled }}}}
-            - name: DB_SSLMODE
-              value: {{ ternary $root.Values.externalDatabase.sslMode $root.Values.postgres.sslMode $root.Values.externalDatabase.enabled | quote }}
-            - name: DB_PASSWORD
-              valueFrom: {secretKeyRef: {name: {{ include "schneider.dbSecretName" $root }}, key: {{ ternary $root.Values.externalDatabase.passwordKey $root.Values.postgres.passwordKey $root.Values.externalDatabase.enabled }}}}
-            {{- if eq $name "logai-api" }}
             - {name: APPLY_DATABASE_SCHEMA_ON_STARTUP, value: {{ $root.Values.logaiApi.applyDatabaseSchemaOnStartup | quote }}}
             - {name: SEED_SAMPLE_DATA_ON_STARTUP, value: {{ $root.Values.logaiApi.seedSampleDataOnStartup | quote }}}
+          {{- else if eq $name "logai-ui" }}
+          env: [{name: HOSTNAME, value: "0.0.0.0"}]
+          {{- end }}
+          volumeMounts:
+            - {name: tmp, mountPath: /tmp}
+            {{- if eq $name "logai-ui" }}
+            - {name: runtime-config, mountPath: /app/runtime-config}
             {{- end }}
           startupProbe:
             httpGet: {path: {{ ternary "/" "/health" (eq $name "logai-ui") }}, port: http}
             periodSeconds: 5
             failureThreshold: 30
           readinessProbe:
-            httpGet: {path: {{ ternary "/" "/health" (eq $name "logai-ui") }}, port: http}
+            httpGet: {path: {{ ternary "/" (ternary "/ready" "/health" (eq $name "logai-api")) (eq $name "logai-ui") }}, port: http}
             periodSeconds: {{ $root.Values.probes.periodSeconds }}
             timeoutSeconds: {{ $root.Values.probes.timeoutSeconds }}
           livenessProbe:
@@ -74,6 +69,11 @@ spec:
             periodSeconds: {{ $root.Values.probes.periodSeconds }}
             failureThreshold: {{ $root.Values.probes.failureThreshold }}
           resources: {{- toYaml $app.resources | nindent 12 }}
+      volumes:
+        - {name: tmp, emptyDir: {medium: Memory, sizeLimit: 64Mi}}
+        {{- if eq $name "logai-ui" }}
+        - {name: runtime-config, emptyDir: {medium: Memory, sizeLimit: 1Mi}}
+        {{- end }}
       nodeSelector: {{- toYaml $root.Values.nodeSelector | nindent 8 }}
       tolerations: {{- toYaml $root.Values.tolerations | nindent 8 }}
       affinity: {{- toYaml $root.Values.affinity | nindent 8 }}

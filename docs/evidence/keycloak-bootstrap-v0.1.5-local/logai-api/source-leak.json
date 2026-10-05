@@ -1,0 +1,10 @@
+{
+  "component": "logai-api",
+  "layers": 8,
+  "members_checked": 7695,
+  "uid": "10001:10001",
+  "compiled_artifacts": [
+    "app/app.cpython-312-x86_64-linux-gnu.so"
+  ],
+  "violations": []
+}

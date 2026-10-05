@@ -18,7 +18,17 @@ while IFS='|' read -r source destination; do
   [[ -n "$source" && "${source:0:1}" != "#" ]] || continue
   [[ -e "$repo_root/$source" ]] || { echo "Allow-listed release input is missing: $source" >&2; exit 1; }
   mkdir -p "$(dirname "$bundle/$destination")"
-  cp -R "$repo_root/$source" "$bundle/$destination"
+  python3 - "$repo_root/$source" "$bundle/$destination" <<'COPY_INPUT'
+import shutil
+import sys
+from pathlib import Path
+source, destination = map(Path, sys.argv[1:])
+if source.is_dir():
+    shutil.copytree(source, destination, dirs_exist_ok=True,
+                    ignore=shutil.ignore_patterns('*.env', '.env', '.env.*', '*:Zone.Identifier'))
+else:
+    shutil.copy2(source, destination)
+COPY_INPUT
 done < "$allowlist"
 printf '%s\n' "$version" > "$bundle/VERSION"
 git -C "$repo_root" rev-parse HEAD > "$bundle/SOURCE_COMMIT"

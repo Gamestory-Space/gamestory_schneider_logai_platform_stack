@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Release version, for example v0.1.4
+        description: Release version, for example v0.1.6
         required: true
         type: string
 
@@ -64,6 +64,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python3 -m pip install --target "${RUNNER_TEMP}/logai-chart-testdeps" PyYAML==6.0.3
+          PYTHONPATH="${RUNNER_TEMP}/logai-chart-testdeps" python3 scripts/test-helm-identity.py
           helm lint ./helm/gamestory-schneider-platform | tee "${EVIDENCE_DIR}/validation/helm-lint.txt"
           for environment in client-local dev-aws uat prod; do
             helm template logai ./helm/gamestory-schneider-platform \
@@ -73,9 +75,45 @@ jobs:
           docker compose --env-file environments/client-local/compose.env.example \
             -f compose.yaml config \
             > "${EVIDENCE_DIR}/validation/compose-client-local.yaml"
+          PYTHONPATH="${RUNNER_TEMP}/logai-chart-testdeps" python3 scripts/identity/test-bootstrap-identity.py
+          python3 scripts/licensing/check-license-contract.py
+          python3 scripts/licensing/test-image-license.py
+          python3 scripts/licensing/test-license-approval.py
+          python3 scripts/identity/check-keycloak-config.py | tee "${EVIDENCE_DIR}/validation/keycloak-contract.txt"
+          python3 scripts/identity/check-bootstrap-credential.py --digest-file identity/forbidden-bootstrap-credential.sha256 identity compose.yaml environments docs/prd/PRD-006-keycloak-user-group-role-bootstrap.md
           bash -n scripts/*.sh scripts/client/*.sh
           ./scripts/validate-client-bundle.sh | tee "${EVIDENCE_DIR}/validation/client-bundle-policy.txt"
           ./scripts/test-client-release-policy.sh | tee "${EVIDENCE_DIR}/validation/client-release-policy-tests.txt"
+      - uses: actions/setup-node@v4
+        if: steps.release.outputs.is_release == 'true'
+        with:
+          node-version: "22"
+      - name: Enforce clean Keycloak login and bootstrap password preservation
+        if: steps.release.outputs.is_release == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          browser_root="${RUNNER_TEMP}/logai-auth-browser"
+          npm install --prefix "$browser_root" --no-save playwright@1.63.0
+          "$browser_root/node_modules/.bin/playwright" install --with-deps chromium
+          set -a
+          source environments/client-local/compose.env.example
+          set +a
+          identity_image="${IDENTITY_API_IMAGE_REPOSITORY}:${IDENTITY_API_IMAGE_TAG}"
+          api_image="${LOGAI_API_IMAGE_REPOSITORY}:${LOGAI_API_IMAGE_TAG}"
+          ui_image="${LOGAI_UI_IMAGE_REPOSITORY}:${LOGAI_UI_IMAGE_TAG}"
+          docker pull "$identity_image"
+          docker pull "$api_image"
+          docker pull "$ui_image"
+          for image in "$identity_image" "$api_image" "$ui_image"; do
+            python3 scripts/licensing/verify-image-license.py "$image" "${EVIDENCE_DIR}/license-review/$(echo "$image" | tr '/:' '__')" --license-file LICENSE --notice-file THIRD_PARTY_NOTICES
+          done
+          python3 scripts/auth/test-keycloak-auth.py --engine docker \
+            --identity-image "$identity_image" --api-image "$api_image" --ui-image "$ui_image" \
+            --playwright-module "$browser_root/node_modules/playwright" \
+            --evidence "${EVIDENCE_DIR}/validation/keycloak-bootstrap"
+          PYTHONPATH="${RUNNER_TEMP}/logai-chart-testdeps" python3 scripts/auth/test-compose-bootstrap.py \
+            --engine docker --identity-image "$identity_image"
       - name: Package client deployment ZIP
         id: package
         shell: bash
@@ -142,6 +180,11 @@ jobs:
           cp "${{ steps.package.outputs.checksum }}" "${EVIDENCE_DIR}/provenance/archive.sha256"
       - uses: sigstore/cosign-installer@v3
         if: steps.release.outputs.is_release == 'true'
+      - name: Require Gamestory approval of the exact licence text before publication
+        if: steps.release.outputs.is_release == 'true'
+        shell: bash
+        run: python3 scripts/licensing/verify-license-approval.py --license-file LICENSE --approval-file licensing/approval.json
+
       - name: Sign archive blob
         if: steps.release.outputs.is_release == 'true'
         shell: bash

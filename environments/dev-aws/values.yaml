@@ -1,17 +1,46 @@
+# Override the domain, registry, ingress and Secret references for the site.
 global:
   environment: dev-aws
   imagePullPolicy: Always
-  imagePullSecrets: [{name: schneider-jfrog-pull-secret}]
+  imagePullSecrets: []
 identityApi:
-  image: {repository: jfrog.example.invalid/schneider/identity-api, tag: "1.0.0", digest: ""}
-  resources: {requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: 500m, memory: 512Mi}}
+  image:
+    repository: docker.io/chrismdgs/gamestory_logai_schneider
+    tag: identity-api-v0.1.6
+    digest: ''
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
 logaiApi:
-  image: {repository: jfrog.example.invalid/schneider/logai-api, tag: "1.0.0", digest: ""}
-  resources: {requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: "1", memory: 1Gi}}
+  image:
+    repository: docker.io/chrismdgs/gamestory_logai_schneider
+    tag: logai-api-v0.1.6
+    digest: ''
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
 logaiUi:
-  image: {repository: jfrog.example.invalid/schneider/logai-ui, tag: "1.0.0", digest: ""}
-  resources: {requests: {cpu: 50m, memory: 128Mi}, limits: {cpu: 500m, memory: 512Mi}}
-postgres: {enabled: false}
+  image:
+    repository: docker.io/chrismdgs/gamestory_logai_schneider
+    tag: logai-ui-v0.1.6
+    digest: ''
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+postgres:
+  enabled: false
 externalDatabase:
   enabled: true
   host: dev-aws-postgres.example.invalid
@@ -22,13 +51,22 @@ externalDatabase:
   databaseUrlKey: databaseUrl
   sslMode: require
 identity:
-  authMode: none
-  publicUrl: https://auth-dev-aws.example.invalid
-  callbackUrl: https://logai-dev-aws.example.invalid/auth/callback
+  authMode: sso
+  domain: example.invalid
 keycloak:
   existingAdminSecret: schneider-managed-dev-aws-keycloak-admin
-  command: ["/opt/keycloak/bin/kc.sh", "start"]
+  command:
+  - /opt/keycloak/bin/kc.sh
+  - start
+  - --import-realm
+  proxyHeaders: xforwarded
 ingress:
   enabled: true
-  className: <SCHNEIDER_DEV_AWS_INGRESS_CLASS>
-  hosts: {ui: logai-dev-aws.example.invalid, api: api-dev-aws.example.invalid, identityApi: identity-dev-aws.example.invalid, keycloak: auth-dev-aws.example.invalid}
+  className: ''
+  hosts:
+    ui: ''
+    api: ''
+    identityApi: ''
+    keycloak: ''
+identityBootstrap:
+  existingSecret: schneider-managed-dev-aws-bootstrap-users

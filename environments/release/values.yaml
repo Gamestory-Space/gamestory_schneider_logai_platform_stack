@@ -1,11 +1,29 @@
-global: {environment: release, imagePullPolicy: Always}
+global:
+  environment: release
+  imagePullPolicy: Always
 identityApi:
-  image: {repository: docker.io/chrismdgs/gamestory_logai_schneider, tag: "identity-api-v0.1.4", digest: ""}
+  image:
+    repository: docker.io/chrismdgs/gamestory_logai_schneider
+    tag: identity-api-v0.1.6
+    digest: ''
 logaiApi:
-  image: {repository: docker.io/chrismdgs/gamestory_logai_schneider, tag: "logai-api-v0.1.4", digest: ""}
+  image:
+    repository: docker.io/chrismdgs/gamestory_logai_schneider
+    tag: logai-api-v0.1.6
+    digest: ''
 logaiUi:
-  image: {repository: docker.io/chrismdgs/gamestory_logai_schneider, tag: "logai-ui-v0.1.4", digest: ""}
-postgres: {enabled: true}
-externalDatabase: {enabled: false}
-identity: {authMode: none}
-ingress: {enabled: false}
+  image:
+    repository: docker.io/chrismdgs/gamestory_logai_schneider
+    tag: logai-ui-v0.1.6
+    digest: ''
+postgres:
+  enabled: true
+  existingSecret: logai-database
+externalDatabase:
+  enabled: false
+identity:
+  authMode: sso
+ingress:
+  enabled: false
+keycloak:
+  existingAdminSecret: logai-keycloak-admin

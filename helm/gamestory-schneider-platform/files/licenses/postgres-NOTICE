@@ -1,0 +1,5 @@
+PostgreSQL 16.15 is licensed under the PostgreSQL License.
+Source: https://github.com/postgres/postgres/blob/REL_16_15/COPYRIGHT
+Official container scripts are licensed under MIT.
+Source: https://github.com/docker-library/postgres/blob/master/LICENSE
+Alpine operating-system packages retain their respective licences.

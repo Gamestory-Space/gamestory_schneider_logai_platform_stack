@@ -1,17 +1,46 @@
+# Override the domain, registry, ingress and Secret references for the site.
 global:
   environment: uat
   imagePullPolicy: Always
-  imagePullSecrets: [{name: schneider-jfrog-pull-secret}]
+  imagePullSecrets: []
 identityApi:
-  image: {repository: jfrog.example.invalid/schneider/identity-api, tag: "1.0.0", digest: ""}
-  resources: {requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: 500m, memory: 512Mi}}
+  image:
+    repository: docker.io/chrismdgs/gamestory_logai_schneider
+    tag: identity-api-v0.1.6
+    digest: ''
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
 logaiApi:
-  image: {repository: jfrog.example.invalid/schneider/logai-api, tag: "1.0.0", digest: ""}
-  resources: {requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: "1", memory: 1Gi}}
+  image:
+    repository: docker.io/chrismdgs/gamestory_logai_schneider
+    tag: logai-api-v0.1.6
+    digest: ''
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: '1'
+      memory: 1Gi
 logaiUi:
-  image: {repository: jfrog.example.invalid/schneider/logai-ui, tag: "1.0.0", digest: ""}
-  resources: {requests: {cpu: 50m, memory: 128Mi}, limits: {cpu: 500m, memory: 512Mi}}
-postgres: {enabled: false}
+  image:
+    repository: docker.io/chrismdgs/gamestory_logai_schneider
+    tag: logai-ui-v0.1.6
+    digest: ''
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+postgres:
+  enabled: false
 externalDatabase:
   enabled: true
   host: uat-postgres.example.invalid
@@ -22,13 +51,24 @@ externalDatabase:
   databaseUrlKey: databaseUrl
   sslMode: require
 identity:
-  authMode: none
-  publicUrl: https://auth-uat.example.invalid
-  callbackUrl: https://logai-uat.example.invalid/auth/callback
+  authMode: sso
+  domain: example.invalid
 keycloak:
   existingAdminSecret: schneider-managed-uat-keycloak-admin
-  command: ["/opt/keycloak/bin/kc.sh", "start"]
+  command:
+  - /opt/keycloak/bin/kc.sh
+  - start
+  - --import-realm
+  proxyHeaders: xforwarded
 ingress:
   enabled: true
-  className: gce
-  hosts: {ui: logai-uat.example.invalid, api: api-uat.example.invalid, identityApi: identity-uat.example.invalid, keycloak: auth-uat.example.invalid}
+  className: ''
+  hosts:
+    ui: ''
+    api: ''
+    identityApi: ''
+    keycloak: ''
+identityBootstrap:
+  # Helm owns the lifecycle; Argo maps these hooks to PostSync.
+  hookMode: helm
+  existingSecret: schneider-managed-uat-bootstrap-users

@@ -1,0 +1,161 @@
+name: gamestory-schneider-logai
+services:
+  identity-api:
+    cap_drop:
+    - ALL
+    depends_on:
+      keycloak:
+        condition: service_healthy
+    environment:
+      API_CORS_ORIGINS: http://localhost:3000
+      ENVIRONMENT: client-local
+      KEYCLOAK_AUDIENCE: logai-api
+      KEYCLOAK_ISSUER_URL: http://localhost:8080/realms/gamestory-sso
+      KEYCLOAK_JWKS_FETCH_URL: http://keycloak:8080/realms/gamestory-sso/protocol/openid-connect/certs
+      KEYCLOAK_PUBLIC_URL: http://localhost:8080
+      KEYCLOAK_REALM: gamestory-sso
+      SERVICE_NAME: gamestory-sso-api
+    healthcheck:
+      interval: 10s
+      retries: 12
+      test:
+      - CMD-SHELL
+      - python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
+      timeout: 5s
+    image: docker.io/chrismdgs/gamestory_logai_schneider:identity-api-v0.1.6
+    ports:
+    - 8000:8000
+    pull_policy: missing
+    read_only: true
+    restart: unless-stopped
+    security_opt:
+    - no-new-privileges:true
+    tmpfs:
+    - /tmp:rw,nosuid,nodev,size=64m,mode=1777
+    user: 10001:10001
+  keycloak:
+    command:
+    - start-dev
+    - --import-realm
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      KC_BOOTSTRAP_ADMIN_PASSWORD: REPLACE_FOR_LOCAL_USE
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_DB: postgres
+      KC_DB_PASSWORD: REPLACE_FOR_LOCAL_USE
+      KC_DB_URL: jdbc:postgresql://postgres:5432/logai
+      KC_DB_USERNAME: logai
+      KC_HEALTH_ENABLED: 'true'
+      KC_HOSTNAME: http://localhost:8080
+      KC_HOSTNAME_STRICT: 'false'
+      KC_HTTP_ENABLED: 'true'
+    healthcheck:
+      interval: 10s
+      retries: 30
+      start_period: 30s
+      test:
+      - CMD-SHELL
+      - exec 3<>/dev/tcp/127.0.0.1/9000; printf 'GET /health/ready HTTP/1.0\r\n\r\n'
+        >&3; grep -q '200' <&3
+      timeout: 5s
+    image: quay.io/keycloak/keycloak:26.0.8@sha256:09a381c715ab0b111835b70f2905955274843a219c6f27efb348e4d9f4086858
+    ports:
+    - 8080:8080
+    restart: unless-stopped
+    volumes:
+    - ./identity/keycloak:/opt/keycloak/data/import:ro
+  logai-api:
+    cap_drop:
+    - ALL
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      API_CORS_ORIGINS: http://localhost:3000
+      APPLY_DATABASE_SCHEMA_ON_STARTUP: 'true'
+      AUTH_MODE: sso
+      DATABASE_URL: postgresql://logai:REPLACE_FOR_LOCAL_USE@postgres:5432/logai
+      ENVIRONMENT: client-local
+      OIDC_AUDIENCE: logai-api
+      OIDC_ISSUER_URL: http://localhost:8080/realms/gamestory-sso
+      OIDC_JWKS_URL: http://keycloak:8080/realms/gamestory-sso/protocol/openid-connect/certs
+      SEED_SAMPLE_DATA_ON_STARTUP: 'false'
+      SERVICE_NAME: gamestory-logai-api
+    healthcheck:
+      interval: 10s
+      retries: 12
+      test:
+      - CMD-SHELL
+      - python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
+      timeout: 5s
+    image: docker.io/chrismdgs/gamestory_logai_schneider:logai-api-v0.1.6
+    ports:
+    - 8010:8000
+    pull_policy: missing
+    read_only: true
+    restart: unless-stopped
+    security_opt:
+    - no-new-privileges:true
+    tmpfs:
+    - /tmp:rw,nosuid,nodev,size=64m,mode=1777
+    user: 10001:10001
+  logai-ui:
+    cap_drop:
+    - ALL
+    depends_on:
+      identity-api:
+        condition: service_healthy
+      logai-api:
+        condition: service_healthy
+    environment:
+      AUTH_CALLBACK_URL: http://localhost:3000/auth/callback
+      AUTH_CLIENT_ID: logai-ui
+      AUTH_IDP_HINT: ''
+      AUTH_MODE: sso
+      AUTH_REALM: gamestory-sso
+      AUTH_URL: http://localhost:8080
+      IDENTITY_API_BASE_URL: http://localhost:8000
+      LOGAI_API_BASE_URL: http://localhost:8010
+      LOGAI_ENV: client-local
+      LOGAI_PUBLIC_URL: http://localhost:3000
+    healthcheck:
+      interval: 10s
+      retries: 12
+      test:
+      - CMD-SHELL
+      - wget -qO- http://${HOSTNAME}:3000/ >/dev/null || exit 1
+      timeout: 5s
+    image: docker.io/chrismdgs/gamestory_logai_schneider:logai-ui-v0.1.6
+    ports:
+    - 3000:3000
+    pull_policy: missing
+    read_only: true
+    restart: unless-stopped
+    security_opt:
+    - no-new-privileges:true
+    tmpfs:
+    - /tmp:rw,nosuid,nodev,size=64m,mode=1777
+    - /app/runtime-config:rw,nosuid,nodev,size=1m,mode=1777
+    user: 1000:1000
+  postgres:
+    environment:
+      POSTGRES_DB: logai
+      POSTGRES_PASSWORD: REPLACE_FOR_LOCAL_USE
+      POSTGRES_USER: logai
+    healthcheck:
+      interval: 10s
+      retries: 10
+      test:
+      - CMD-SHELL
+      - pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+      timeout: 5s
+    image: postgres:16-alpine
+    ports:
+    - 5432:5432
+    restart: unless-stopped
+    volumes:
+    - postgres-data:/var/lib/postgresql/data
+volumes:
+  postgres-data: null

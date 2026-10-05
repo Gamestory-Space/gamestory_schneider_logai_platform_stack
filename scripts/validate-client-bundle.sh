@@ -21,6 +21,8 @@ if grep -RInE 'gamestory-identity-kit|(^|[/\\])logai_ai([/\\]|$)|_BUILD_CONTEXT=
 fi
 if [[ -n "$bundle" ]]; then
   [[ -d "$bundle" ]] || { echo "Client bundle not found: $bundle" >&2; exit 1; }
+  [[ -s "$bundle/LICENSE" && -s "$bundle/THIRD_PARTY_NOTICES" ]] || { echo "Missing licence/notices" >&2; exit 1; }
+  cmp "$repo_root/LICENSE" "$bundle/LICENSE" >/dev/null || { echo "Canonical licence mismatch" >&2; exit 1; }
   for required in client-local dev-aws uat prod; do [[ -d "$bundle/environments/$required" ]] || { echo "Missing $required" >&2; exit 1; }; done
   for forbidden in build release remote-build-dev compose.build.yaml packaging .git .github .ai AGENTS.md; do
     [[ ! -e "$bundle/environments/$forbidden" && ! -e "$bundle/$forbidden" ]] || { echo "Forbidden bundle content: $forbidden" >&2; exit 1; }
@@ -28,7 +30,7 @@ if [[ -n "$bundle" ]]; then
   forbidden_path="$(find "$bundle" -mindepth 1 \( \
     -name .ai -o -name AGENTS.md -o -name PROJECT_STATE.md -o -name DECISIONS.md \
     -o -name DISCUSSIONS.md -o -name OPEN_QUESTIONS.md -o -name LAST_HANDOFF.md \
-    -o -name .git -o -name .github -o -name '.env' -o -name '.env.*' \
+    -o -name .git -o -name .github -o -name '.env' -o -name '.env.*' -o -name '*.env' -o -name '*:Zone.Identifier' \
     -o -name '*.py' -o -name '*.ts' -o -name '*.tsx' -o -name '*.map' \
     -o -name tests -o -name test -o -name __tests__ \
   \) -print -quit)"

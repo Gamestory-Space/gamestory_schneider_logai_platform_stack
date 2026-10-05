@@ -1,0 +1,49 @@
+{
+  "checks": {
+    "noEntraRedirect": true,
+    "firstLoginPasswordChange": true,
+    "passwordPreservedAfterRerun": false,
+    "callback": true,
+    "tokensInMemoryOnly": true,
+    "tokenAudienceIssuerRoles": true,
+    "adminBoundary": true,
+    "protectedEndpoints": true,
+    "identityClaimsPreserved": true,
+    "humanCannotCallTechnicalCallback": true,
+    "applicationTokenPropagation": true,
+    "logout": true,
+    "refreshSessionRevoked": true,
+    "chris": {
+      "role": "logai-admin",
+      "login": true,
+      "passwordChange": true,
+      "api": true,
+      "logout": true
+    },
+    "elvis": {
+      "role": "as-lead",
+      "login": true,
+      "passwordChange": true,
+      "api": true,
+      "logout": true
+    },
+    "beau": {
+      "role": "as-lead",
+      "login": true,
+      "passwordChange": true,
+      "api": true,
+      "logout": true
+    },
+    "sunil": {
+      "role": "as-lead",
+      "login": true,
+      "passwordChange": true,
+      "api": true,
+      "logout": true
+    },
+    "invalidPasswordAndDisabledUser": true,
+    "configFailureClosed": true
+  },
+  "engine": "Chromium",
+  "credentialsLogged": false
+}

@@ -1,0 +1,63 @@
+Gamestory Proprietary Software License
+Copyright © 2026 Gamestory Ltd. All rights reserved.
+
+1. Scope and precedence
+This licence applies to the Gamestory-owned software supplied with this notice
+(the Software). Where the Software is supplied under a separate written
+agreement between Gamestory Ltd and the recipient, that agreement governs to
+the extent of any conflict with this licence.
+
+2. Permitted use
+Subject to the applicable Gamestory agreement, Gamestory Ltd grants the
+recipient a limited, non-exclusive, non-transferable and non-sublicensable
+licence to use the Software solely as authorised by that agreement. Delivery
+of the Software does not grant rights beyond those expressly authorised.
+
+3. Restrictions
+Except as expressly authorised in writing by Gamestory Ltd or permitted by
+applicable law, the recipient must not copy, modify, distribute, sublicense,
+resell or disclose the Software; reverse engineer, decompile, disassemble or
+otherwise derive its source code; or remove or alter proprietary notices.
+These restrictions do not limit rights that cannot lawfully be excluded.
+
+4. Ownership
+The Software is licensed, not sold. Gamestory Ltd and its licensors retain
+all intellectual property rights in the Software. No rights are granted by
+implication, estoppel or otherwise. All rights not expressly granted are reserved.
+
+5. Third-party software
+Third-party and open-source components remain governed by their respective
+licences and notices. This licence does not replace, restrict or modify rights
+granted under those licences. Keycloak and PostgreSQL are not licensed under
+this Gamestory licence. Applicable third-party notices accompany the release
+or remain in the installed components.
+
+6. Confidentiality
+To the extent that the Software or related information is confidential, the
+recipient must protect it against unauthorised access or disclosure and use
+it only for permitted purposes, subject to the applicable agreement and law.
+This obligation does not extend to information lawfully public, independently
+developed without use of confidential information, or lawfully obtained from
+a third party without a duty of confidentiality. Disclosure required by law
+is permitted, subject to any applicable lawful notification obligations.
+
+7. Warranties and liability
+Warranties, remedies and liability are governed by the applicable Gamestory
+agreement. Where that agreement does not provide otherwise, the Software is
+provided "as is" without additional warranties, to the extent permitted by law.
+Nothing in this licence excludes or limits liability for fraud or fraudulent
+misrepresentation, death or personal injury caused by negligence, or any other
+liability that cannot lawfully be excluded or limited. This licence does not
+create or alter any contractual liability cap.
+
+8. Termination
+Termination and its consequences are governed by the applicable Gamestory
+agreement. When the recipient's right to use the Software ends, the recipient
+must cease use and return or delete copies as required by that agreement and
+applicable law. No additional termination rights or obligations override that
+agreement through this notice.
+
+9. Governing law
+Unless the applicable Gamestory agreement provides otherwise, this licence
+is governed by the laws of England and Wales. Nothing in this clause excludes
+mandatory protections or jurisdictional requirements under applicable law.

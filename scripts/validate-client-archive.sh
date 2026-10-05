@@ -12,3 +12,5 @@ unzip -q "$archive" -d "$extracted"
 bundle="$(find "$extracted" -mindepth 1 -maxdepth 1 -type d -name 'schneider-logai-platform-*' -print -quit)"
 [[ -n "$bundle" ]] || { echo "Client archive has no expected bundle root." >&2; exit 1; }
 "$repo_root/scripts/validate-client-bundle.sh" "$bundle"
+
+python3 "$repo_root/scripts/identity/check-bootstrap-credential.py" --digest-file "$repo_root/identity/forbidden-bootstrap-credential.sha256" "$bundle"

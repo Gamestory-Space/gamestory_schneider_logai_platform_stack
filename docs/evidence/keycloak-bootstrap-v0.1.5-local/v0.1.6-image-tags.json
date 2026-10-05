@@ -1,0 +1,10 @@
+{
+  "version": "v0.1.6",
+  "published": false,
+  "images": {
+    "identity-api": "9e33afd3b13b28d33b7408674cd4aa7629c3a0091ae6b803ca7539dca1a3558f",
+    "logai-api": "467db1bfc64ebfbd99f6350e7c0cbc4882e935835ef1f525957c86676ef8a944",
+    "logai-ui": "94e6f0a5f2a4ca5e2c55483ec2b96f4c4ae8224697d0d05d65f11334055bcb41"
+  },
+  "note": "Retagged the tested candidate without rebuilding; v0.1.5 evidence records these same image IDs."
+}

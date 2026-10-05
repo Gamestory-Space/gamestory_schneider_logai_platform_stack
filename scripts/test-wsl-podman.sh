@@ -13,10 +13,8 @@ if [[ ! -f "$env_file" ]]; then
   echo "Create $env_file from compose.env.example and set local passwords first." >&2
   exit 1
 fi
-podman compose --env-file "$env_file" -f "$repo_root/compose.yaml" config >/dev/null
-podman compose --env-file "$env_file" -f "$repo_root/compose.yaml" pull
-podman compose --env-file "$env_file" -f "$repo_root/compose.yaml" up -d --no-build
-for url in http://localhost:8000/health http://localhost:8010/health http://localhost:3000/ http://localhost:8080/health/ready; do
+"$repo_root/scripts/client/deploy-compose.sh" "$env_file"
+for url in http://localhost:8000/health http://localhost:8010/health http://localhost:3000/ http://localhost:8080/realms/gamestory-sso/.well-known/openid-configuration; do
   curl --fail --retry 30 --retry-delay 5 --retry-all-errors "$url" >/dev/null
 done
 podman compose --env-file "$env_file" -f "$repo_root/compose.yaml" ps

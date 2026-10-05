@@ -1,0 +1,2 @@
+PASS: actual client ZIP extracted and checked for source/credential leaks. Python zipfile used because native zip is unavailable.
+PASS: no forbidden bootstrap credential material detected

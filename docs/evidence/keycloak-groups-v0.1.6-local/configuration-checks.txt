@@ -1,0 +1,1 @@
+PASS: real clients, PKCE, canonical roles, no embedded users/secrets, all environment URL generation, isolation, explicit role mapping

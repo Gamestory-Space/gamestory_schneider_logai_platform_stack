@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "license": "LicenseRef-Gamestory-Proprietary",
+  "scope": "application-code-only",
+  "legalApproval": "separate publication gate",
+  "files": {
+    "LICENSE": {
+      "path": "/licenses/GAMESTORY-LICENSE.txt",
+      "sha256": "dafd3a76cda5677df0c4c6ffab0d373c98da972dad40236ea78ce52e44ec4dff"
+    },
+    "NOTICE": {
+      "path": "/licenses/THIRD_PARTY_NOTICES.txt",
+      "sha256": "42697321b7346362bf2953632ba95329cc6837a796dfc3ac541def1fffc95e2b"
+    }
+  }
+}

@@ -13,3 +13,13 @@ docs/schneider-handoff.md|docs/schneider-handoff.md
 docs/deployment-model.md|docs/deployment-model.md
 identity/schneider.identity.env.example|identity/schneider.identity.env.example
 README.client.md|README.md
+identity/keycloak|identity/keycloak
+docs/keycloak-bootstrap-runtime-contract.md|docs/keycloak-bootstrap-runtime-contract.md
+identity/bootstrap-users.example.json|identity/bootstrap-users.example.json
+identity/bootstrap-groups.json|identity/bootstrap-groups.json
+docs/uat-prod-deployment-runbook.md|docs/uat-prod-deployment-runbook.md
+licensing|licensing
+docs/image-licensing.md|docs/image-licensing.md
+LICENSE|LICENSE
+THIRD_PARTY_NOTICES|THIRD_PARTY_NOTICES
+docs/client-uat-prod-configuration.md|docs/client-uat-prod-configuration.md

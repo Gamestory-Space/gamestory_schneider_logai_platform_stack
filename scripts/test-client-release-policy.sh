@@ -25,4 +25,15 @@ if "$repo_root/scripts/validate-client-bundle.sh" "$test_root/leak" >/dev/null 2
   exit 1
 fi
 
+for forbidden_name in compose.env 'compose.env.example:Zone.Identifier'; do
+  leak_bundle="$test_root/runtime-secrets"
+  mkdir -p "$leak_bundle/environments/"{client-local,dev-aws,uat,prod}
+  touch "$leak_bundle/environments/client-local/$forbidden_name"
+  if "$repo_root/scripts/validate-client-bundle.sh" "$leak_bundle" >/dev/null 2>&1; then
+    echo "Runtime env or Windows metadata was incorrectly accepted in a client bundle." >&2
+    exit 1
+  fi
+  mv "$leak_bundle" "$test_root/rejected-${forbidden_name//[^a-zA-Z0-9]/_}"
+done
+
 printf 'Client release policy tests passed.\n'

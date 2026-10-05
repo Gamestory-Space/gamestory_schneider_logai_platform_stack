@@ -1,0 +1,6 @@
+{
+  "localhost/logai-keycloak/identity-api:v0.1.6": "9e33afd3b13b28d33b7408674cd4aa7629c3a0091ae6b803ca7539dca1a3558f",
+  "localhost/logai-keycloak/logai-api:v0.1.6": "462c0982a238b5cdcc572240c4352147df5c88aea065c86dd13c34927f9f714b",
+  "localhost/logai-keycloak/logai-ui:v0.1.6": "20de536ce3507240ef327c239535dd8049feef7baed1ca210ea306467cdff38d",
+  "quay.io/keycloak/keycloak:26.0.8@sha256:09a381c715ab0b111835b70f2905955274843a219c6f27efb348e4d9f4086858": "e447933b6a5015646c24a1b927a40202ce07adbadac839e7a1f99c463d68a224"
+}

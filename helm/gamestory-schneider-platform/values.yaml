@@ -1,78 +1,131 @@
+# Runtime credentials are supplied through existing Secrets; never put their values here.
 global:
   imagePullPolicy: IfNotPresent
   imagePullSecrets: []
-  environment: generic
-
+  environment: client-local
 identityApi:
   enabled: true
   replicas: 1
-  image: {repository: example.invalid/gamestory/identity-api, tag: "0.1.0", digest: ""}
-  service: {port: 8000}
+  image:
+    repository: docker.io/chrismdgs/gamestory_logai_schneider
+    tag: identity-api-v0.1.6
+    digest: ''
+  service:
+    port: 8000
   resources: {}
 logaiApi:
   enabled: true
   replicas: 1
-  image: {repository: example.invalid/gamestory/logai-api, tag: "0.1.0", digest: ""}
-  service: {port: 8000}
+  image:
+    repository: docker.io/chrismdgs/gamestory_logai_schneider
+    tag: logai-api-v0.1.6
+    digest: ''
+  service:
+    port: 8000
   resources: {}
   applyDatabaseSchemaOnStartup: false
   seedSampleDataOnStartup: false
 logaiUi:
   enabled: true
   replicas: 1
-  image: {repository: example.invalid/gamestory/logai-ui, tag: "0.1.0", digest: ""}
-  service: {port: 3000}
+  image:
+    repository: docker.io/chrismdgs/gamestory_logai_schneider
+    tag: logai-ui-v0.1.6
+    digest: ''
+  service:
+    port: 3000
   resources: {}
 keycloak:
   enabled: true
   replicas: 1
-  image: {repository: quay.io/keycloak/keycloak, tag: "26.0.8", digest: "sha256:09a381c715ab0b111835b70f2905955274843a219c6f27efb348e4d9f4086858"}
-  service: {port: 8080, managementPort: 9000}
+  image:
+    repository: quay.io/keycloak/keycloak
+    tag: 26.0.8
+    digest: sha256:09a381c715ab0b111835b70f2905955274843a219c6f27efb348e4d9f4086858
+  service:
+    port: 8080
+    managementPort: 9000
   resources: {}
-  command: ["/opt/keycloak/bin/kc.sh", "start-dev"]
-  existingAdminSecret: ""
+  command:
+  - /opt/keycloak/bin/kc.sh
+  - start-dev
+  - --import-realm
+  existingAdminSecret: logai-keycloak-admin
   adminUserKey: username
   adminPasswordKey: password
   realm: gamestory-sso
 postgres:
   enabled: true
-  image: {repository: postgres, tag: "16-alpine", digest: ""}
-  service: {port: 5432}
+  image:
+    repository: postgres
+    tag: 16-alpine
+    digest: ''
+  service:
+    port: 5432
   database: logai
   username: logai
-  existingSecret: ""
+  existingSecret: logai-database
   passwordKey: password
   databaseUrlKey: databaseUrl
   sslMode: disable
-  persistence: {enabled: true, size: 10Gi, storageClassName: ""}
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClassName: ''
   resources: {}
 externalDatabase:
   enabled: false
-  host: ""
+  host: ''
   port: 5432
-  database: ""
-  username: ""
-  existingSecret: ""
+  database: ''
+  username: ''
+  existingSecret: ''
   passwordKey: password
   databaseUrlKey: databaseUrl
   sslMode: disable
 identity:
-  authMode: none
-  publicUrl: http://localhost:8080
-  internalUrl: ""
+  authMode: sso
+  domain: example.invalid
+  publicUrl: ''
+  publicUiUrl: ''
+  logaiApiUrl: ''
+  identityApiUrl: ''
+  internalUrl: ''
   realm: gamestory-sso
-  clientId: sample-ui
-  idpHint: gamestory-entra
-  callbackUrl: http://localhost:3000/auth/callback
-  entra: {enabled: false, existingSecret: ""}
+  clientId: logai-ui
+  apiAudience: logai-api
+  idpHint: ''
 ingress:
   enabled: false
-  className: ""
+  className: ''
   annotations: {}
   tls: []
-  hosts: {ui: "", api: "", identityApi: "", keycloak: ""}
-probes: {initialDelaySeconds: 10, periodSeconds: 10, timeoutSeconds: 3, failureThreshold: 6}
+  hosts:
+    ui: ''
+    api: ''
+    identityApi: ''
+    keycloak: ''
+probes:
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 6
 podAnnotations: {}
 nodeSelector: {}
 tolerations: []
 affinity: {}
+identityBootstrap:
+  enabled: true
+  existingSecret: logai-bootstrap-users
+  passwordKey: password
+  hookMode: helm
+  backoffLimit: 1
+  activeDeadlineSeconds: 600
+  ttlSecondsAfterFinished: 3600
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi

@@ -19,8 +19,11 @@ spec:
     matchLabels: {{- include "schneider.selectorLabels" (dict "root" . "component" "keycloak") | nindent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/config: {{ include (print .Template.BasePath "/configmap.yaml") . | sha256sum }}
       labels: {{- include "schneider.selectorLabels" (dict "root" . "component" "keycloak") | nindent 8 }}
     spec:
+      automountServiceAccountToken: false
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets: {{ toYaml . | nindent 8 }}
       {{- end }}
@@ -33,10 +36,13 @@ spec:
           env:
             - {name: KC_HEALTH_ENABLED, value: "true"}
             - {name: KC_HTTP_ENABLED, value: "true"}
-            - {name: KC_HOSTNAME_STRICT, value: "false"}
+            - {name: KC_HOSTNAME, value: {{ include "schneider.keycloakUrl" . | quote }}}
+            {{- with .Values.keycloak.proxyHeaders }}
+            - {name: KC_PROXY_HEADERS, value: {{ . | quote }}}
+            {{- end }}
             - {name: KC_DB, value: postgres}
             - name: KC_DB_URL
-              value: {{ printf "jdbc:postgresql://%s:%v/%s" (ternary .Values.externalDatabase.host (printf "%s-postgres" (include "schneider.name" .)) .Values.externalDatabase.enabled) (ternary .Values.externalDatabase.port .Values.postgres.service.port .Values.externalDatabase.enabled) (ternary .Values.externalDatabase.database .Values.postgres.database .Values.externalDatabase.enabled) | quote }}
+              value: {{ printf "jdbc:postgresql://%s:%v/%s?sslmode=%s" (ternary .Values.externalDatabase.host (printf "%s-postgres" (include "schneider.name" .)) .Values.externalDatabase.enabled) (ternary .Values.externalDatabase.port .Values.postgres.service.port .Values.externalDatabase.enabled) (ternary .Values.externalDatabase.database .Values.postgres.database .Values.externalDatabase.enabled) (ternary .Values.externalDatabase.sslMode "disable" .Values.externalDatabase.enabled) | quote }}
             - name: KC_DB_USERNAME
               value: {{ ternary .Values.externalDatabase.username .Values.postgres.username .Values.externalDatabase.enabled | quote }}
             - name: KC_DB_PASSWORD
@@ -45,10 +51,13 @@ spec:
               valueFrom: {secretKeyRef: {name: {{ include "schneider.adminSecretName" . }}, key: {{ .Values.keycloak.adminUserKey }}}}
             - name: KC_BOOTSTRAP_ADMIN_PASSWORD
               valueFrom: {secretKeyRef: {name: {{ include "schneider.adminSecretName" . }}, key: {{ .Values.keycloak.adminPasswordKey }}}}
-            - name: KEYCLOAK_ADMIN
-              valueFrom: {secretKeyRef: {name: {{ include "schneider.adminSecretName" . }}, key: {{ .Values.keycloak.adminUserKey }}}}
-            - name: KEYCLOAK_ADMIN_PASSWORD
-              valueFrom: {secretKeyRef: {name: {{ include "schneider.adminSecretName" . }}, key: {{ .Values.keycloak.adminPasswordKey }}}}
+          volumeMounts:
+            - {name: data, mountPath: /opt/keycloak/data}
+            - {name: tmp, mountPath: /tmp}
+            - {name: upstream-licenses, mountPath: /usr/share/licenses/logai-platform/keycloak, readOnly: true}
+            {{- if .Values.identityBootstrap.enabled }}
+            - {name: realm-import, mountPath: /opt/keycloak/data/import, readOnly: true}
+            {{- end }}
           startupProbe:
             httpGet: {path: /health/started, port: management}
             periodSeconds: 10
@@ -60,4 +69,19 @@ spec:
             httpGet: {path: /health/live, port: management}
             periodSeconds: {{ .Values.probes.periodSeconds }}
           resources: {{- toYaml .Values.keycloak.resources | nindent 12 }}
+      volumes:
+        - name: upstream-licenses
+          configMap:
+            name: {{ include "schneider.name" . }}-upstream-licenses
+            items:
+              - {key: keycloak-LICENSE, path: LICENSE}
+              - {key: keycloak-NOTICE, path: NOTICE}
+        - {name: data, emptyDir: {}}
+        - {name: tmp, emptyDir: {}}
+        {{- if .Values.identityBootstrap.enabled }}
+        - name: realm-import
+          configMap:
+            name: {{ include "schneider.name" . }}-identity-bootstrap
+            items: [{key: realm.json, path: gamestory-sso-realm.json}]
+        {{- end }}
 {{- end }}

@@ -47,17 +47,17 @@ ALLOW_LOCAL_K8S_DEPLOY=yes ./scripts/test-local-kubernetes.sh release
 
 ```bash
 # Gamestory source build
-docker compose -f compose.yaml -f compose.build.yaml --env-file environments/build/compose.env.example up -d --build
+./scripts/client/deploy-compose.sh environments/build/compose.env build
 
 # Pull-only release or client-local
-docker compose -f compose.yaml --env-file environments/release/compose.env up -d --no-build
-docker compose -f compose.yaml --env-file environments/client-local/compose.env up -d --no-build
+./scripts/client/deploy-compose.sh environments/release/compose.env
+./scripts/client/deploy-compose.sh environments/client-local/compose.env
 ```
 
 ## Helm
 
 ```bash
-helm upgrade --install logai ./helm/gamestory-schneider-platform --namespace logai --create-namespace -f environments/client-local/values.yaml
+helm upgrade --install logai ./helm/gamestory-schneider-platform --namespace logai --create-namespace --wait --timeout 10m -f environments/client-local/values.yaml
 ```
 
 See `docs/testing.md`, `docs/platform-bundle.md`, `docs/deployment-model.md`, and `docs/schneider-handoff.md`.
@@ -147,3 +147,5 @@ UAT and production still require Schneider-controlled private values, runtime Se
 - Merge the fix into `client` first, validate it, then promote it to `main` through the normal review gate.
 - If operational urgency requires a direct main-targeting pull request, immediately merge the same fix back into `client` to prevent divergence.
 - Roll back by redeploying the preceding approved `schneider-v*` tag and its recorded immutable application image digests.
+
+Identity reconciliation runs from the same compiled Identity API image in every environment. Use the Compose deployment wrapper for repeatable redeployment; Helm owns the post-install/post-upgrade hook and Argo CD maps that hook to PostSync. See [the runtime contract](docs/keycloak-bootstrap-runtime-contract.md).

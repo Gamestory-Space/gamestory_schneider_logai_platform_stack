@@ -1,0 +1,32 @@
+{
+  "recorded_at": "2026-10-03T13:57:58.312481+00:00",
+  "images": [
+    {
+      "component": "identity-api",
+      "image": "localhost/logai-hardening/identity-api:v0.1.5",
+      "image_id": "67f9d1dc124b549d48b457a306a1d4a37239cfded6b33fb0f41f824b0fad6a4f",
+      "repository": "gamestory-identity-kit",
+      "base_commit": "26d88df8dbe60c587bf8af7f187c0031ceaeb91b",
+      "worktree_changes": true,
+      "published": false
+    },
+    {
+      "component": "logai-api",
+      "image": "localhost/logai-hardening/logai-api:v0.1.5",
+      "image_id": "ff49dbf114a1b30e53b95fc17f26ce0decbeb30efb03e19d8a1e68e583c5ce54",
+      "repository": "gamestory-logai-api",
+      "base_commit": "7bc6d3d631cd10dbcdc9b58123e987993478ce4f",
+      "worktree_changes": true,
+      "published": false
+    },
+    {
+      "component": "logai-ui",
+      "image": "localhost/logai-hardening/logai-ui:v0.1.5",
+      "image_id": "4bf729cbafa8593251e023bc7b980d6c3c9ac7f9fe4486c793df239c32928a99",
+      "repository": "logai_ui",
+      "base_commit": "7c7e375b4559b92ef3e05e69e99cf4ccdc8c983d",
+      "worktree_changes": true,
+      "published": false
+    }
+  ]
+}

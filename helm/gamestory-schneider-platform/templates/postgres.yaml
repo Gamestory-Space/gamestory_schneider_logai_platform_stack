@@ -44,7 +44,20 @@ spec:
             timeoutSeconds: {{ .Values.probes.timeoutSeconds }}
             failureThreshold: {{ .Values.probes.failureThreshold }}
           resources: {{- toYaml .Values.postgres.resources | nindent 12 }}
-          volumeMounts: [{name: data, mountPath: /var/lib/postgresql/data}]
+          volumeMounts:
+            - {name: data, mountPath: /var/lib/postgresql/data}
+            - {name: upstream-licenses, mountPath: /usr/share/licenses/logai-platform/postgres, readOnly: true}
+      volumes:
+        - name: upstream-licenses
+          configMap:
+            name: {{ include "schneider.name" . }}-upstream-licenses
+            items:
+              - {key: postgres-LICENSE, path: LICENSE}
+              - {key: postgres-CONTAINER-LICENSE, path: CONTAINER-LICENSE}
+              - {key: postgres-NOTICE, path: NOTICE}
+        {{- if not .Values.postgres.persistence.enabled }}
+        - {name: data, emptyDir: {}}
+        {{- end }}
   {{- if .Values.postgres.persistence.enabled }}
   volumeClaimTemplates:
     - metadata: {name: data}
@@ -54,7 +67,5 @@ spec:
         storageClassName: {{ . | quote }}
         {{- end }}
         resources: {requests: {storage: {{ .Values.postgres.persistence.size }}}}
-  {{- else }}
-      volumes: [{name: data, emptyDir: {}}]
   {{- end }}
 {{- end }}

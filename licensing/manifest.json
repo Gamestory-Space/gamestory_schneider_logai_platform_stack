@@ -1,0 +1,47 @@
+{
+  "applicationLicense": "LicenseRef-Gamestory-Proprietary",
+  "applicationScope": "LogAI-owned code only; third-party components retain their own licences",
+  "components": {
+    "identity-api": {
+      "license": "LicenseRef-Gamestory-Proprietary",
+      "imageLicenseFile": "/licenses/GAMESTORY-LICENSE.txt"
+    },
+    "identity-bootstrap": {
+      "license": "LicenseRef-Gamestory-Proprietary",
+      "image": "same identity-api image",
+      "imageLicenseFile": "/licenses/GAMESTORY-LICENSE.txt"
+    },
+    "logai-api": {
+      "license": "LicenseRef-Gamestory-Proprietary",
+      "imageLicenseFile": "/licenses/GAMESTORY-LICENSE.txt"
+    },
+    "logai-ui": {
+      "license": "LicenseRef-Gamestory-Proprietary",
+      "imageLicenseFile": "/licenses/GAMESTORY-LICENSE.txt"
+    },
+    "keycloak": {
+      "license": "Apache-2.0",
+      "bundledLicense": "keycloak/LICENSE",
+      "upstreamImageUnmodified": true,
+      "nativeImageLicense": "/opt/keycloak/LICENSE.txt"
+    },
+    "postgres": {
+      "license": "PostgreSQL",
+      "containerScriptsLicense": "MIT",
+      "bundledLicense": "postgres/LICENSE",
+      "bundledContainerLicense": "postgres/CONTAINER-LICENSE",
+      "upstreamImageUnmodified": true
+    }
+  },
+  "licenseFilesSha256": {
+    "postgres/LICENSE": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+    "postgres/CONTAINER-LICENSE": "87ffd2c45e3f90cfa3407b5c40ef8333e87c3e875e4895f8b64df758198deafc",
+    "postgres/NOTICE": "9302b4eafc0945f611191693ff1f5e6d4786ed0487e525f99eda0cc81d95652c",
+    "keycloak/LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "keycloak/NOTICE": "d36707fd78daa448383d50a1c8c9f80fee8b6401246fdd50eca2de6612e89f7c"
+  },
+  "canonicalLicense": "../LICENSE",
+  "approval": "approval.json",
+  "canonicalLicenseSha256": "f033da7ca3ed8001f3e2ef27653c08653a64133b86e0f29b5ed8c42bfa4ca05e",
+  "approvalStatus": "approved"
+}

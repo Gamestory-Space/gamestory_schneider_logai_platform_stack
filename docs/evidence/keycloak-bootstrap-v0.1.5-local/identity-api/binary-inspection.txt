@@ -1,0 +1,65 @@
+app/app.cpython-312-x86_64-linux-gnu.so: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=dd47d19a0f6ec118c4bee1cbf26412352c7712e2, stripped
+There are 27 section headers, starting at offset 0xe5b10:
+
+Section Headers:
+  [Nr] Name              Type             Address           Offset
+       Size              EntSize          Flags  Link  Info  Align
+  [ 0]                   NULL             0000000000000000  00000000
+       0000000000000000  0000000000000000           0     0     0
+  [ 1] .note.gnu.bu[...] NOTE             0000000000000238  00000238
+       0000000000000024  0000000000000000   A       0     0     4
+  [ 2] .gnu.hash         GNU_HASH         0000000000000260  00000260
+       0000000000000024  0000000000000000   A       3     0     8
+  [ 3] .dynsym           DYNSYM           0000000000000288  00000288
+       0000000000001c08  0000000000000018   A       4     1     8
+  [ 4] .dynstr           STRTAB           0000000000001e90  00001e90
+       0000000000001304  0000000000000000   A       0     0     1
+  [ 5] .gnu.version      VERSYM           0000000000003194  00003194
+       0000000000000256  0000000000000002   A       3     0     2
+  [ 6] .gnu.version_r    VERNEED          00000000000033f0  000033f0
+       00000000000000a0  0000000000000000   A       4     2     8
+  [ 7] .rela.dyn         RELA             0000000000003490  00003490
+       0000000000003198  0000000000000018   A       3     0     8
+  [ 8] .rela.plt         RELA             0000000000006628  00006628
+       0000000000001548  0000000000000018  AI       3    22     8
+  [ 9] .init             PROGBITS         0000000000008000  00008000
+       0000000000000017  0000000000000000  AX       0     0     4
+  [10] .plt              PROGBITS         0000000000008020  00008020
+       0000000000000e40  0000000000000010  AX       0     0     16
+  [11] .plt.got          PROGBITS         0000000000008e60  00008e60
+       0000000000000008  0000000000000008  AX       0     0     8
+  [12] .text             PROGBITS         0000000000008e80  00008e80
+       00000000000b0563  0000000000000000  AX       0     0     64
+  [13] .fini             PROGBITS         00000000000b93e4  000b93e4
+       0000000000000009  0000000000000000  AX       0     0     4
+  [14] .rodata           PROGBITS         00000000000ba000  000ba000
+       000000000000ae70  0000000000000000   A       0     0     32
+  [15] .eh_frame_hdr     PROGBITS         00000000000c4e70  000c4e70
+       0000000000003754  0000000000000000   A       0     0     4
+  [16] .eh_frame         PROGBITS         00000000000c85c8  000c85c8
+       0000000000019194  0000000000000000   A       0     0     8
+  [17] .init_array       INIT_ARRAY       00000000000e2ba0  000e1ba0
+       0000000000000008  0000000000000008  WA       0     0     8
+  [18] .fini_array       FINI_ARRAY       00000000000e2ba8  000e1ba8
+       0000000000000008  0000000000000008  WA       0     0     8
+  [19] .data.rel.ro      PROGBITS         00000000000e2bb0  000e1bb0
+       0000000000000038  0000000000000000  WA       0     0     8
+  [20] .dynamic          DYNAMIC          00000000000e2be8  000e1be8
+       00000000000001d0  0000000000000010  WA       4     0     8
+  [21] .got              PROGBITS         00000000000e2db8  000e1db8
+       0000000000000230  0000000000000008  WA       0     0     8
+  [22] .got.plt          PROGBITS         00000000000e2fe8  000e1fe8
+       0000000000000730  0000000000000008  WA       0     0     8
+  [23] .data             PROGBITS         00000000000e3720  000e2720
+       00000000000032e0  0000000000000000  WA       0     0     32
+  [24] .bss              NOBITS           00000000000e6a00  000e5a00
+       0000000000005c70  0000000000000000  WA       0     0     32
+  [25] .comment          PROGBITS         0000000000000000  000e5a00
+       000000000000001f  0000000000000001  MS       0     0     1
+  [26] .shstrtab         STRTAB           0000000000000000  000e5a1f
+       00000000000000ee  0000000000000000           0     0     1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), l (large), p (processor specific)

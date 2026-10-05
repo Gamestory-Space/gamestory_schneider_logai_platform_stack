@@ -1,3 +1,13 @@
+{{- $public := include "schneider.keycloakUrl" . -}}
+{{- $ui := include "schneider.uiUrl" . -}}
+{{- $internal := include "schneider.internalKeycloakUrl" . -}}
+{{- if and (has .Values.global.environment (list "uat" "prod")) (ne .Values.identity.authMode "sso") -}}{{ fail "UAT/prod require identity.authMode=sso" }}{{- end -}}
+{{- if or (ne .Values.identity.realm "gamestory-sso") (ne .Values.identity.clientId "logai-ui") (ne .Values.identity.apiAudience "logai-api") -}}{{ fail "Use the canonical gamestory-sso/logai-ui/logai-api contract" }}{{- end -}}
+{{- if has .Values.global.environment (list "uat" "prod") -}}
+{{- range $url := list $public $ui (include "schneider.apiUrl" .) (include "schneider.identityApiUrl" .) -}}
+{{- if not (regexMatch "^https://[A-Za-z0-9.-]+(:[0-9]+)?$" $url) -}}{{ fail "UAT/prod public URLs must be HTTPS origins without paths, credentials or wildcards" }}{{- end -}}
+{{- end -}}
+{{- end -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,12 +16,19 @@ metadata:
 data:
   ENVIRONMENT: {{ .Values.global.environment | quote }}
   KEYCLOAK_REALM: {{ .Values.identity.realm | quote }}
-  KEYCLOAK_PUBLIC_URL: {{ .Values.identity.publicUrl | quote }}
-  KEYCLOAK_INTERNAL_URL: {{ default (printf "http://%s-keycloak:8080" (include "schneider.name" .)) .Values.identity.internalUrl | quote }}
-  KEYCLOAK_AUDIENCE: {{ .Values.identity.clientId | quote }}
-  NEXT_PUBLIC_AUTH_MODE: {{ .Values.identity.authMode | quote }}
-  NEXT_PUBLIC_AUTH_URL: {{ .Values.identity.publicUrl | quote }}
-  NEXT_PUBLIC_AUTH_REALM: {{ .Values.identity.realm | quote }}
-  NEXT_PUBLIC_AUTH_CLIENT_ID: {{ .Values.identity.clientId | quote }}
-  NEXT_PUBLIC_AUTH_IDP_HINT: {{ .Values.identity.idpHint | quote }}
-  NEXT_PUBLIC_AUTH_CALLBACK_URL: {{ .Values.identity.callbackUrl | quote }}
+  KEYCLOAK_PUBLIC_URL: {{ $public | quote }}
+  KEYCLOAK_ISSUER_URL: {{ printf "%s/realms/%s" $public .Values.identity.realm | quote }}
+  KEYCLOAK_JWKS_FETCH_URL: {{ printf "%s/realms/%s/protocol/openid-connect/certs" $internal .Values.identity.realm | quote }}
+  KEYCLOAK_AUDIENCE: {{ .Values.identity.apiAudience | quote }}
+  API_CORS_ORIGINS: {{ $ui | quote }}
+  AUTH_MODE: {{ .Values.identity.authMode | quote }}
+  OIDC_ISSUER_URL: {{ printf "%s/realms/%s" $public .Values.identity.realm | quote }}
+  OIDC_JWKS_URL: {{ printf "%s/realms/%s/protocol/openid-connect/certs" $internal .Values.identity.realm | quote }}
+  OIDC_AUDIENCE: {{ .Values.identity.apiAudience | quote }}
+  AUTH_URL: {{ $public | quote }}
+  AUTH_REALM: {{ .Values.identity.realm | quote }}
+  AUTH_CLIENT_ID: {{ .Values.identity.clientId | quote }}
+  AUTH_IDP_HINT: {{ .Values.identity.idpHint | quote }}
+  AUTH_CALLBACK_URL: {{ printf "%s/auth/callback" $ui | quote }}
+  IDENTITY_API_BASE_URL: {{ include "schneider.identityApiUrl" . | quote }}
+  LOGAI_API_BASE_URL: {{ include "schneider.apiUrl" . | quote }}

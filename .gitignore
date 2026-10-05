@@ -17,3 +17,8 @@ environments/remote-build-dev/values.yaml
 environments/remote-build-dev/secrets.yaml
 
 dist/
+
+# Generated Python caches and Windows attachment metadata.
+__pycache__/
+*.py[cod]
+*:Zone.Identifier

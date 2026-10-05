@@ -1,0 +1,1 @@
+PASS: exact user-supplied licence wording approval verified; image publication not performed.

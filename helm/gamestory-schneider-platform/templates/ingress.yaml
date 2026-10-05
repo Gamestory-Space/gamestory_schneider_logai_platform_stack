@@ -16,7 +16,8 @@ spec:
   {{- end }}
   rules:
     {{- range $name, $route := $routes }}
-    {{- $host := index $root.Values.ingress.hosts $name }}
+    {{- $defaults := dict "ui" (include "schneider.uiUrl" $root) "api" (include "schneider.apiUrl" $root) "identityApi" (include "schneider.identityApiUrl" $root) "keycloak" (include "schneider.keycloakUrl" $root) }}
+    {{- $host := default ((urlParse (index $defaults $name)).host) (index $root.Values.ingress.hosts $name) }}
     {{- if $host }}
     - host: {{ $host | quote }}
       http:

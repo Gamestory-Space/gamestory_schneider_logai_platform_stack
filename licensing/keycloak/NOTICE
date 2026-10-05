@@ -1,0 +1,4 @@
+Keycloak 26.0.8 is licensed under Apache-2.0.
+Licence copied verbatim from /opt/keycloak/LICENSE.txt in the pinned upstream image.
+Source: https://github.com/keycloak/keycloak/tree/26.0.8
+Third-party dependencies retain their respective licences.

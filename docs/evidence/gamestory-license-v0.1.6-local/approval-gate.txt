@@ -1,0 +1,1 @@
+PASS: draft is locally validated; publication rejected because Gamestory approval is pending.

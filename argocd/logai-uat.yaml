@@ -7,7 +7,7 @@ spec:
   project: <SCHNEIDER_ARGO_PROJECT>
   source:
     repoURL: <SCHNEIDER_PLATFORM_REPO_URL>
-    targetRevision: main
+    targetRevision: v0.1.6
     path: helm/gamestory-schneider-platform
     helm:
       valueFiles:

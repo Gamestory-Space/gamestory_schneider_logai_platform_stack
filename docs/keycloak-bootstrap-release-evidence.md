@@ -1,0 +1,19 @@
+# Combined Keycloak PRD acceptance — local v0.1.6 candidate
+
+Both PRDs are stored in `docs/prd/PRD-004-keycloak-bootstrap-schneider-idp-synq-auth.md` and `PRD-005-keycloak-realm-users-roles-environment-urls.md`. Final runtime contract: [Keycloak bootstrap](keycloak-bootstrap-runtime-contract.md).
+
+Evidence: [browser checks](evidence/keycloak-bootstrap-v0.1.5-local/browser-auth.json), [actual image IDs](evidence/keycloak-bootstrap-v0.1.5-local/tested-images.json), [configuration checks](evidence/keycloak-bootstrap-v0.1.5-local/configuration-checks.txt), [client archive check](evidence/keycloak-bootstrap-v0.1.5-local/client-archive-check.txt).
+
+The real Keycloak/PostgreSQL/Chromium acceptance passed for Elvis, Beau, Sunil and Chris: no upstream IdP, required password change, OIDC callback, issuer/audience/canonical roles, Identity API claims, protected LogAI endpoints, real UI bearer-token propagation and logout with refresh-session revocation. Invalid password and disabled user fail login; missing/malformed tokens fail API access; a human role cannot call technical callbacks; broken UI runtime config fails closed. These tests used disposable identities and random secrets, without touching client database volumes.
+
+The isolated test role mapping is test-only. Deployment role assignment stays explicit in the non-secret bootstrap mapping; no assignments, emails or passwords have been invented for actual users. All environments use the same usernames and role vocabulary. URL generation passed for localhost, UAT and production with rejection of cross-environment callbacks.
+
+Compiled runtime unit tests: 16 LogAI API tests and 9 Identity API tests passed. LogAI tests cover wrong issuer/audience, expired/malformed/missing tokens, insufficient/legacy roles, both canonical roles, technical callbacks, production rejection of anonymous mode, persisted audit context, no human token in downstream requests and independent machine authentication. The new final image builds succeeded, including Next.js production compilation/type validation.
+
+All three final image archives pass inspection of every layer for source leaks, build paths, debug sections and numeric UID. Each has zero fixable HIGH/CRITICAL Trivy findings against the cached local database and a CycloneDX SBOM in its adjacent evidence directory. API acceptance runs UID 10001/read-only root; UI runs UID 1000/read-only root, with explicit tmpfs writable paths. Trivy scan timestamp/database provenance is retained in the JSON results; this is a local scan, not a guarantee of future vulnerability status.
+
+An actual allowlisted client ZIP passed the repository's extracted-archive validator. Native `zip` is absent locally, so the archive was produced using Python's standard library; the production shell packager remains unchanged. Client-local Compose configuration rendering, workflow lint and whitespace checks pass. No Schneider-owned Helm/Argo resources were changed.
+
+Publication, signing, release registry digests and fresh pulls remain deferred. These uncommitted local image IDs replace the earlier hardening candidate for auth validation; previous closed-source evidence remains historical. Actual SynQ service authentication still requires Schneider/SynQ's confirmed mechanism and runtime credentials, using the independent connector boundary.
+
+The updated application images are now tagged v0.1.6 locally to distinguish them from the existing v0.1.5 release. Client-local and release Compose examples reference the component v0.1.6 tags. Retagging preserved the tested image contents/IDs; [tag mapping](evidence/keycloak-bootstrap-v0.1.5-local/v0.1.6-image-tags.json) records the association with the original acceptance evidence. Original PRDs and historical evidence retain their original version names. No image has been published.
