@@ -6,7 +6,7 @@ global:
 identityApi:
   image:
     repository: docker.io/chrismdgs/gamestory_logai_schneider
-    tag: identity-api-v0.1.6
+    tag: identity-api-v0.1.7
     digest: ''
   resources:
     requests:
@@ -18,7 +18,7 @@ identityApi:
 logaiApi:
   image:
     repository: docker.io/chrismdgs/gamestory_logai_schneider
-    tag: logai-api-v0.1.6
+    tag: logai-api-v0.1.7
     digest: ''
   resources:
     requests:
@@ -30,7 +30,7 @@ logaiApi:
 logaiUi:
   image:
     repository: docker.io/chrismdgs/gamestory_logai_schneider
-    tag: logai-ui-v0.1.6
+    tag: logai-ui-v0.1.7
     digest: ''
   resources:
     requests:
@@ -54,7 +54,7 @@ identity:
   authMode: sso
   domain: example.invalid
 keycloak:
-  existingAdminSecret: schneider-managed-uat-keycloak-admin
+  existingAdminSecret: ''
   command:
   - /opt/keycloak/bin/kc.sh
   - start

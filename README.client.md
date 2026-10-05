@@ -1,3 +1,7 @@
+# v0.1.7 credential behavior
+
+See [login defaults](docs/login-defaults.md) for the current default passwords and overrides. The earlier shared temporary-password requirements below apply only when shared mode is selected.
+
 # Schneider LogAI deployment bundle
 
 This client-only release archive contains four environments:

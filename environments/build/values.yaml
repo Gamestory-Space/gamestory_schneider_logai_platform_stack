@@ -4,19 +4,19 @@ global:
 identityApi:
   image:
     repository: docker.io/chrismdgs/gamestory_logai_schneider
-    tag: identity-api-v0.1.6
+    tag: identity-api-v0.1.7
     digest: ''
 logaiApi:
   image:
     repository: docker.io/chrismdgs/gamestory_logai_schneider
-    tag: logai-api-v0.1.6
+    tag: logai-api-v0.1.7
     digest: ''
   applyDatabaseSchemaOnStartup: true
   seedSampleDataOnStartup: true
 logaiUi:
   image:
     repository: docker.io/chrismdgs/gamestory_logai_schneider
-    tag: logai-ui-v0.1.6
+    tag: logai-ui-v0.1.7
     digest: ''
 postgres:
   enabled: true
@@ -28,4 +28,4 @@ identity:
 ingress:
   enabled: false
 keycloak:
-  existingAdminSecret: logai-keycloak-admin
+  existingAdminSecret: ''

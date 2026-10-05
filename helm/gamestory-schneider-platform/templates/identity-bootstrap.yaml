@@ -1,4 +1,7 @@
 {{- if .Values.identityBootstrap.enabled }}
+{{- if not (has .Values.identityBootstrap.passwordMode (list "username" "shared")) -}}
+{{- fail "identityBootstrap.passwordMode must be username or shared" -}}
+{{- end -}}
 {{- $root := . -}}
 {{- $realm := .Files.Get "files/gamestory-sso-realm.json" | fromJson -}}
 {{- $ui := include "schneider.uiUrl" . -}}
@@ -60,12 +63,17 @@ spec:
             - {name: KEYCLOAK_BOOTSTRAP_ALLOW_INTERNAL_HTTP, value: "true"}
             - {name: KEYCLOAK_ADMIN_USERNAME_FILE, value: /runtime-secrets/admin/username}
             - {name: KEYCLOAK_ADMIN_PASSWORD_FILE, value: /runtime-secrets/admin/password}
+            - {name: KEYCLOAK_BOOTSTRAP_PASSWORD_MODE, value: {{ .Values.identityBootstrap.passwordMode | quote }}}
+            {{- if eq .Values.identityBootstrap.passwordMode "shared" }}
             - {name: KEYCLOAK_BOOTSTRAP_PASSWORD_FILE, value: /runtime-secrets/users/password}
+            {{- end }}
           resources: {{- toYaml .Values.identityBootstrap.resources | nindent 12 }}
           volumeMounts:
             - {name: configuration, mountPath: /bootstrap, readOnly: true}
             - {name: admin-secret, mountPath: /runtime-secrets/admin, readOnly: true}
+            {{- if eq .Values.identityBootstrap.passwordMode "shared" }}
             - {name: user-secret, mountPath: /runtime-secrets/users, readOnly: true}
+            {{- end }}
             - {name: tmp, mountPath: /tmp}
       volumes:
         - name: configuration
@@ -77,10 +85,12 @@ spec:
             items:
               - {key: {{ .Values.keycloak.adminUserKey }}, path: username}
               - {key: {{ .Values.keycloak.adminPasswordKey }}, path: password}
+        {{- if eq .Values.identityBootstrap.passwordMode "shared" }}
         - name: user-secret
           secret:
             secretName: {{ required "identityBootstrap.existingSecret must name a runtime initial-user Secret" .Values.identityBootstrap.existingSecret }}
             defaultMode: 0440
             items: [{key: {{ .Values.identityBootstrap.passwordKey }}, path: password}]
+        {{- end }}
         - {name: tmp, emptyDir: {medium: Memory, sizeLimit: 64Mi}}
 {{- end }}

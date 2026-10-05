@@ -7,7 +7,7 @@ identityApi:
   replicas: 2
   image:
     repository: docker.io/chrismdgs/gamestory_logai_schneider
-    tag: identity-api-v0.1.6
+    tag: identity-api-v0.1.7
     digest: ''
   resources:
     requests:
@@ -20,7 +20,7 @@ logaiApi:
   replicas: 2
   image:
     repository: docker.io/chrismdgs/gamestory_logai_schneider
-    tag: logai-api-v0.1.6
+    tag: logai-api-v0.1.7
     digest: ''
   resources:
     requests:
@@ -33,7 +33,7 @@ logaiUi:
   replicas: 2
   image:
     repository: docker.io/chrismdgs/gamestory_logai_schneider
-    tag: logai-ui-v0.1.6
+    tag: logai-ui-v0.1.7
     digest: ''
   resources:
     requests:
@@ -44,7 +44,7 @@ logaiUi:
       memory: 512Mi
 keycloak:
   replicas: 2
-  existingAdminSecret: schneider-managed-prod-keycloak-admin
+  existingAdminSecret: ''
   command:
   - /opt/keycloak/bin/kc.sh
   - start

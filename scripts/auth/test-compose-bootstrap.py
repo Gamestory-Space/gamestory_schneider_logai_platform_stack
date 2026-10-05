@@ -21,7 +21,7 @@ with tempfile.TemporaryDirectory(prefix='logai-compose-parity-') as temporary:
  cfg['services']['keycloak']['volumes']=[str(P/'identity/keycloak')+':/opt/keycloak/data/import:ro',str(P/'licensing/keycloak')+':/usr/share/licenses/logai-platform/keycloak:ro']
  (t/'compose.yaml').write_text(yaml.safe_dump(cfg))
  env=dict(line.split('=',1) for line in (P/'environments/client-local/compose.env.example').read_text().splitlines() if line and not line.startswith('#') and '=' in line)
- env.update({'KEYCLOAK_PORT':str(port),'KEYCLOAK_PUBLIC_URL':public,'POSTGRES_IMAGE_REPOSITORY':'docker.io/library/postgres','POSTGRES_PASSWORD':secrets.token_hex(24),'KEYCLOAK_ADMIN_PASSWORD':secrets.token_urlsafe(24),'KEYCLOAK_LOGAI_BOOTSTRAP_PASSWORD':secrets.token_urlsafe(24),'IDENTITY_API_IMAGE_REPOSITORY':args.identity_image.rsplit(':',1)[0],'IDENTITY_API_IMAGE_TAG':args.identity_image.rsplit(':',1)[1],'APPLICATION_PULL_POLICY':'never'})
+ env.update({'KEYCLOAK_PORT':str(port),'KEYCLOAK_PUBLIC_URL':public,'POSTGRES_IMAGE_REPOSITORY':'docker.io/library/postgres','POSTGRES_PASSWORD':secrets.token_hex(24),'KEYCLOAK_ADMIN_PASSWORD':secrets.token_urlsafe(24),'KEYCLOAK_LOGAI_BOOTSTRAP_PASSWORD':secrets.token_urlsafe(24),'IDENTITY_API_IMAGE_REPOSITORY':args.identity_image.rsplit(':',1)[0],'IDENTITY_API_IMAGE_TAG':args.identity_image.rsplit(':',1)[1],'APPLICATION_PULL_POLICY':'never','KEYCLOAK_BOOTSTRAP_PASSWORD_MODE':'shared'})
  (t/'compose.env').write_text('\n'.join(k+'='+v for k,v in env.items())+'\n');(t/'compose.env').chmod(0o600)
  cmd=(['docker','compose'] if args.engine=='docker' else ['podman-compose'])+['-p',name,'--env-file',str(t/'compose.env'),'-f',str(t/'compose.yaml')]
  def run(*args,check=True):

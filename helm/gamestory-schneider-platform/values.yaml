@@ -8,7 +8,7 @@ identityApi:
   replicas: 1
   image:
     repository: docker.io/chrismdgs/gamestory_logai_schneider
-    tag: identity-api-v0.1.6
+    tag: identity-api-v0.1.7
     digest: ''
   service:
     port: 8000
@@ -18,7 +18,7 @@ logaiApi:
   replicas: 1
   image:
     repository: docker.io/chrismdgs/gamestory_logai_schneider
-    tag: logai-api-v0.1.6
+    tag: logai-api-v0.1.7
     digest: ''
   service:
     port: 8000
@@ -30,7 +30,7 @@ logaiUi:
   replicas: 1
   image:
     repository: docker.io/chrismdgs/gamestory_logai_schneider
-    tag: logai-ui-v0.1.6
+    tag: logai-ui-v0.1.7
     digest: ''
   service:
     port: 3000
@@ -50,7 +50,9 @@ keycloak:
   - /opt/keycloak/bin/kc.sh
   - start-dev
   - --import-realm
-  existingAdminSecret: logai-keycloak-admin
+  existingAdminSecret: ''
+  adminUsername: admin
+  adminPassword: chris
   adminUserKey: username
   adminPasswordKey: password
   realm: gamestory-sso
@@ -116,6 +118,7 @@ tolerations: []
 affinity: {}
 identityBootstrap:
   enabled: true
+  passwordMode: username
   existingSecret: logai-bootstrap-users
   passwordKey: password
   hookMode: helm

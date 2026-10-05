@@ -8,6 +8,10 @@ source_sha="${2:-$(git -C "$repo_root" rev-parse HEAD)}"
 [[ -n "$source_ref" ]] || { echo "Unable to identify the release source ref." >&2; exit 1; }
 
 case "$source_ref" in
+  release/v*|refs/heads/release/v*)
+    [[ "$source_ref" =~ ^(refs/heads/)?release/v[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 1
+    exit 0
+    ;;
   project-direction|refs/heads/project-direction|refs/remotes/origin/project-direction)
     echo "project-direction is internal and can never be a client release source." >&2
     exit 1
