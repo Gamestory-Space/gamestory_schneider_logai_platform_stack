@@ -16,15 +16,18 @@ with tempfile.TemporaryDirectory(prefix='logai-compose-parity-') as temporary:
  cfg=yaml.safe_load((P/'compose.yaml').read_text());cfg['name']=name
  cfg['services']={k:v for k,v in cfg['services'].items() if k in ['postgres','keycloak','identity-bootstrap']}
  cfg['services']['postgres'].pop('ports')
+ cfg['services']['postgres']['volumes']=['postgres-data:/var/lib/postgresql/data',str(P/'licensing/postgres')+':/usr/share/licenses/logai-platform/postgres:ro']
  cfg['services']['identity-bootstrap']['volumes']=[str(P/'identity/keycloak')+':/bootstrap/realm:ro',str(P/'identity/bootstrap-groups.json')+':/bootstrap/users.json:ro']
- cfg['services']['keycloak']['volumes']=[str(P/'identity/keycloak')+':/opt/keycloak/data/import:ro']
+ cfg['services']['keycloak']['volumes']=[str(P/'identity/keycloak')+':/opt/keycloak/data/import:ro',str(P/'licensing/keycloak')+':/usr/share/licenses/logai-platform/keycloak:ro']
  (t/'compose.yaml').write_text(yaml.safe_dump(cfg))
  env=dict(line.split('=',1) for line in (P/'environments/client-local/compose.env.example').read_text().splitlines() if line and not line.startswith('#') and '=' in line)
  env.update({'KEYCLOAK_PORT':str(port),'KEYCLOAK_PUBLIC_URL':public,'POSTGRES_IMAGE_REPOSITORY':'docker.io/library/postgres','POSTGRES_PASSWORD':secrets.token_hex(24),'KEYCLOAK_ADMIN_PASSWORD':secrets.token_urlsafe(24),'KEYCLOAK_LOGAI_BOOTSTRAP_PASSWORD':secrets.token_urlsafe(24),'IDENTITY_API_IMAGE_REPOSITORY':args.identity_image.rsplit(':',1)[0],'IDENTITY_API_IMAGE_TAG':args.identity_image.rsplit(':',1)[1],'APPLICATION_PULL_POLICY':'never'})
  (t/'compose.env').write_text('\n'.join(k+'='+v for k,v in env.items())+'\n');(t/'compose.env').chmod(0o600)
  cmd=(['docker','compose'] if args.engine=='docker' else ['podman-compose'])+['-p',name,'--env-file',str(t/'compose.env'),'-f',str(t/'compose.yaml')]
  def run(*args,check=True):
-  r=subprocess.run(cmd+list(args),capture_output=True,text=True)
+  # Compose shell variables override --env-file; isolate generated test settings.
+  process_env={k:v for k,v in os.environ.items() if k not in env}
+  r=subprocess.run(cmd+list(args),capture_output=True,text=True,env=process_env)
   if check and r.returncode:
    details=r.stdout+r.stderr
    for key in ['POSTGRES_PASSWORD','KEYCLOAK_ADMIN_PASSWORD','KEYCLOAK_LOGAI_BOOTSTRAP_PASSWORD']:

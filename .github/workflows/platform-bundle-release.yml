@@ -141,6 +141,7 @@ jobs:
           format: sarif
           output: ${{ env.EVIDENCE_DIR }}/vulnerability-scan/trivy.sarif
           severity: CRITICAL,HIGH
+          limit-severities-for-sarif: true
           exit-code: ${{ steps.release.outputs.is_release == 'true' && '1' || '0' }}
           ignore-unfixed: true
       - name: Create component inventory and release metadata
@@ -177,7 +178,9 @@ jobs:
             echo '- Authenticity: keyless Sigstore signature for the ZIP on release builds.'
             echo '- Distribution: generic OCI artifact in Docker Hub plus GitHub Release attachments.'
           } > "${EVIDENCE_DIR}/policy-traceability.md"
-          cp "${{ steps.package.outputs.checksum }}" "${EVIDENCE_DIR}/provenance/archive.sha256"
+          if [[ -f "${{ steps.package.outputs.checksum }}" ]]; then
+            cp "${{ steps.package.outputs.checksum }}" "${EVIDENCE_DIR}/provenance/archive.sha256"
+          fi
       - uses: sigstore/cosign-installer@v3
         if: steps.release.outputs.is_release == 'true'
       - name: Require Gamestory approval of the exact licence text before publication
@@ -229,6 +232,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p dist
           evidence_archive="dist/${SERVICE_NAME}-${{ steps.release.outputs.version }}-evidence.zip"
           (cd "${EVIDENCE_DIR}" && zip -X -q -r "${GITHUB_WORKSPACE}/${evidence_archive}" .)
           echo "archive=$evidence_archive" >> "$GITHUB_OUTPUT"
