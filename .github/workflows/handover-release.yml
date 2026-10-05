@@ -8,6 +8,12 @@ on:
         required: true
         type: string
 
+      replace_existing:
+        description: Explicitly replace an existing same-version handover
+        required: false
+        default: false
+        type: boolean
+
 permissions:
   contents: write
   id-token: write
@@ -23,6 +29,8 @@ env:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      REPLACE_EXISTING: ${{ inputs.replace_existing }}
     steps:
       - uses: actions/checkout@v4
       - name: Test handover packaging layout
@@ -51,8 +59,12 @@ jobs:
           printf '%s' "$DOCKERHUB_TOKEN" | oras login docker.io -u "$DOCKERHUB_USERNAME" --password-stdin
           ref="${OCI_REPOSITORY}:platform-handover-${VERSION}"
           if oras manifest fetch --descriptor "$ref" >/dev/null 2>&1; then
-            echo "Refusing to overwrite existing handover: $ref" >&2
-            exit 1
+            if [[ "$REPLACE_EXISTING" != true ]]; then
+              echo "Refusing to overwrite existing handover: $ref" >&2
+              exit 1
+            fi
+            old_digest=$(oras manifest fetch --descriptor "$ref" | jq -r .digest)
+            oras tag "${OCI_REPOSITORY}@${old_digest}" "platform-handover-${VERSION}-previous-${old_digest#sha256:}"
           fi
           cd handover
           archive="schneider-logai-handover-${VERSION}.zip"
@@ -75,7 +87,12 @@ jobs:
       - name: Attach handover signature and publication record
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload "$VERSION" "handover/schneider-logai-handover-${VERSION}.zip.sigstore.json" handover/publication.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          options=()
+          if [[ "$REPLACE_EXISTING" == true ]]; then options+=(--clobber); fi
+          gh release upload "$VERSION" "handover/schneider-logai-handover-${VERSION}.zip.sigstore.json" handover/publication.json "${options[@]}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
