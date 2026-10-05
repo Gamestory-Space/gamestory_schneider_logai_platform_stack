@@ -27,26 +27,31 @@ cosign verify-blob \
   schneider-logai-handover-v0.1.6.zip
 ```
 
+## Local evidence archive
+
+Release evidence is retained in `docs/evidence/release/<version>/` within the platform project. For v0.1.6, this directory contains the published handover ZIP, checksum, signature and publication record; the deployment attachments; and all four evidence packs. Expanded packs are under `evidence/identity-api/`, `evidence/logai-api/`, `evidence/logai-ui/` and `evidence/platform/` for direct access to SBOMs and reports. `manifest.json` records the original artifact digests and checksums.
+
 ## Preparing subsequent releases
 
 After all four releases have completed successfully, a maintainer authenticated to the private source repositories collects their published attachments. This avoids requiring a cross-repository token in platform CI.
 
 ```bash
 version=v0.1.6
+release_dir="docs/evidence/release/$version"
 for repo in gamestory-identity-kit gamestory-logai-api logai_ui; do
   gh release download "$version" --repo "Gamestory-Space/$repo" \
-    --pattern '*-evidence.zip' --dir "handover-inputs/$repo"
+    --pattern '*-evidence.zip' --dir "$release_dir/inputs/$repo"
 done
 gh release download "$version" \
   --repo Gamestory-Space/gamestory_schneider_logai_platform_stack \
   --pattern 'schneider-logai-platform-*' \
   --pattern 'gamestory-schneider-logai-platform-*-evidence.zip' \
-  --dir handover-inputs/gamestory_schneider_logai_platform_stack
-python3 scripts/package-handover.py "$version" --inputs handover-inputs \
-  --archive "dist/schneider-logai-handover-${version}.zip"
+  --dir "$release_dir/inputs/gamestory_schneider_logai_platform_stack"
+python3 scripts/package-handover.py "$version" --inputs "$release_dir/inputs" \
+  --archive "$release_dir/schneider-logai-handover-${version}.zip"
 gh release upload "$version" --repo Gamestory-Space/gamestory_schneider_logai_platform_stack \
-  "dist/schneider-logai-handover-${version}.zip" \
-  "dist/schneider-logai-handover-${version}.zip.sha256"
+  "$release_dir/schneider-logai-handover-${version}.zip" \
+  "$release_dir/schneider-logai-handover-${version}.zip.sha256"
 gh workflow run handover-release.yml --ref master -f "version=$version" \
   --repo Gamestory-Space/gamestory_schneider_logai_platform_stack
 ```

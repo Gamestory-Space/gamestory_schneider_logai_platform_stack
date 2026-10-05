@@ -1,0 +1,15 @@
+{
+  "reference": "docker.io/chrismdgs/gamestory_logai_schneider@sha256:517561fe99c5ef81b519d3d4558c98c3656f603ffacbbac5c1fbf09e484d2ce1",
+  "mediaType": "application/vnd.oci.image.manifest.v1+json",
+  "digest": "sha256:517561fe99c5ef81b519d3d4558c98c3656f603ffacbbac5c1fbf09e484d2ce1",
+  "size": 1204,
+  "annotations": {
+    "org.opencontainers.image.created": "2026-10-05T10:58:00Z",
+    "org.opencontainers.image.revision": "2cdb3ed4c46fc2a88b3c58a91a94356bb25ba16c",
+    "org.opencontainers.image.version": "v0.1.6"
+  },
+  "artifactType": "application/vnd.gamestory.schneider-handover.v1",
+  "referenceAsTags": [
+    "docker.io/chrismdgs/gamestory_logai_schneider:platform-handover-v0.1.6"
+  ]
+}

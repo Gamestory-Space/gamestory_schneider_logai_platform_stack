@@ -1,0 +1,35 @@
+{
+  "version": "v0.1.6",
+  "components": {
+    "identity-api": {
+      "reference": "docker.io/chrismdgs/gamestory_logai_schneider:identity-api-v0.1.6",
+      "digest": "sha256:fbcfff50097147b7e914820561c168733fa3313c7b38084269b1808ecd6d5ff2",
+      "evidence": "evidence/gamestory-sso-api-v0.1.6-evidence.zip"
+    },
+    "logai-api": {
+      "reference": "docker.io/chrismdgs/gamestory_logai_schneider:logai-api-v0.1.6",
+      "digest": "sha256:b22ebc3458678defcf7c2e648385346926416b59231fc205f1e92f5187cecd4a",
+      "evidence": "evidence/gamestory-logai-api-v0.1.6-evidence.zip"
+    },
+    "logai-ui": {
+      "reference": "docker.io/chrismdgs/gamestory_logai_schneider:logai-ui-v0.1.6",
+      "digest": "sha256:d109bec73dc5f794e695e84ed5f067e915d00257a153a3dceb28c946cc2bd6da",
+      "evidence": "evidence/logai-ui-v0.1.6-evidence.zip"
+    },
+    "platform": {
+      "reference": "docker.io/chrismdgs/gamestory_logai_schneider:platform-v0.1.6",
+      "digest": "sha256:e741371548b7ac9955eb4ba4b68705bcd2f7181ab4ce5fad076ff941eaa640b3",
+      "evidence": "evidence/gamestory-schneider-logai-platform-v0.1.6-evidence.zip"
+    }
+  },
+  "files": {
+    "evidence/gamestory-sso-api-v0.1.6-evidence.zip": "8ee5d47e612c0a44a99d63a67c737abc5cbbf95083432affdb8c31232160a421",
+    "evidence/gamestory-logai-api-v0.1.6-evidence.zip": "62dc3f190b34388b1b7b9b7bd9762b4555cfedb1e0c3d212971cd77826cf65b0",
+    "evidence/logai-ui-v0.1.6-evidence.zip": "ee46a15376b68317b3d46ae39169a89a2036928406d6ed7bc46f061a450ed3ec",
+    "evidence/gamestory-schneider-logai-platform-v0.1.6-evidence.zip": "95318cff34d011186d33d47b4fdcdb0192a069d390bdd25692f1b76c42ae7b56",
+    "deployment/schneider-logai-platform-v0.1.6.zip": "765b564e363de1f8ad9336aa662ed4b799f6dedae6b10e9d1e49d62e4acff390",
+    "deployment/schneider-logai-platform-v0.1.6.zip.sha256": "93e2db5323b584ce0e4ddb0f54b5fbad1ee69326cf5e98f117fd7ddbb6c55910",
+    "deployment/schneider-logai-platform-v0.1.6.zip.sigstore.json": "2773c552099185a5420ddcb5489112ff7f2728c7df906dfe6f6ccaa0acf57655",
+    "README.md": "2de2e09dd4b7af3358eee04a81d11873a5242f0231184f71605373856992d2e3"
+  }
+}

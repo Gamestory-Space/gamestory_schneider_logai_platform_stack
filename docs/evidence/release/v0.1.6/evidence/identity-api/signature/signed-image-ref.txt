@@ -1,0 +1,2 @@
+ghcr.io/gamestory-space/gamestory-identity-kit/gamestory-sso-api@sha256:fbcfff50097147b7e914820561c168733fa3313c7b38084269b1808ecd6d5ff2
+docker.io/chrismdgs/gamestory_logai_schneider@sha256:fbcfff50097147b7e914820561c168733fa3313c7b38084269b1808ecd6d5ff2

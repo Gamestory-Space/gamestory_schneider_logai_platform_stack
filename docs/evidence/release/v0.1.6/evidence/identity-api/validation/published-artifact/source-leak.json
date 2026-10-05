@@ -1,0 +1,10 @@
+{
+  "component": "identity-api",
+  "layers": 11,
+  "members_checked": 7459,
+  "uid": "10001:10001",
+  "compiled_artifacts": [
+    "app/app.cpython-312-x86_64-linux-gnu.so"
+  ],
+  "violations": []
+}
