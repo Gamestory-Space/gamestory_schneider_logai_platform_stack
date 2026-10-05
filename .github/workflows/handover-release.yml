@@ -1,0 +1,81 @@
+name: Publish Complete Release Handover
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Completed release version, for example v0.1.6
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: handover-${{ inputs.version }}
+  cancel-in-progress: false
+
+env:
+  VERSION: ${{ inputs.version }}
+  OCI_REPOSITORY: docker.io/chrismdgs/gamestory_logai_schneider
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oras-project/setup-oras@v1
+      - uses: sigstore/cosign-installer@v3
+      - name: Retrieve and validate prepared handover
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9.-]+)?$ ]]
+          mkdir -p handover
+          gh release download "$VERSION" --pattern "schneider-logai-handover-${VERSION}.zip*" --dir handover
+          cd handover
+          sha256sum -c "schneider-logai-handover-${VERSION}.zip.sha256"
+          python3 ../scripts/package-handover.py "$VERSION" --archive "schneider-logai-handover-${VERSION}.zip" --registry
+      - name: Sign and publish complete handover
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s' "$DOCKERHUB_TOKEN" | oras login docker.io -u "$DOCKERHUB_USERNAME" --password-stdin
+          ref="${OCI_REPOSITORY}:platform-handover-${VERSION}"
+          if oras manifest fetch --descriptor "$ref" >/dev/null 2>&1; then
+            echo "Refusing to overwrite existing handover: $ref" >&2
+            exit 1
+          fi
+          cd handover
+          archive="schneider-logai-handover-${VERSION}.zip"
+          cosign sign-blob --yes --bundle "${archive}.sigstore.json" "$archive"
+          oras push "$ref" --artifact-type application/vnd.gamestory.schneider-handover.v1 \
+            --annotation "org.opencontainers.image.version=${VERSION}" \
+            --annotation "org.opencontainers.image.revision=${GITHUB_SHA}" \
+            --format json "$archive:application/zip" "${archive}.sha256:text/plain" \
+            "${archive}.sigstore.json:application/vnd.dev.sigstore.bundle.v0.3+json" > publication.json
+          digest=$(jq -r .digest publication.json)
+          mkdir fresh
+          oras pull "${OCI_REPOSITORY}@${digest}" --output fresh
+          cd fresh
+          sha256sum -c "${archive}.sha256"
+          cosign verify-blob --bundle "${archive}.sigstore.json" \
+            --certificate-identity "https://github.com/${GITHUB_REPOSITORY}/.github/workflows/handover-release.yml@${GITHUB_REF}" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com "$archive"
+          python3 ../../scripts/package-handover.py "$VERSION" --archive "$archive" --registry
+          printf 'Published `%s@%s`\n' "$OCI_REPOSITORY" "$digest" >> "$GITHUB_STEP_SUMMARY"
+      - name: Attach handover signature and publication record
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "$VERSION" "handover/schneider-logai-handover-${VERSION}.zip.sigstore.json" handover/publication.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: complete-handover-${{ inputs.version }}
+          path: handover/

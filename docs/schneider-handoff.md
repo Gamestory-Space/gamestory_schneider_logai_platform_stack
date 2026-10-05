@@ -4,6 +4,8 @@
 
 Schneider receives the signed client deployment ZIP from the generic OCI reference `docker.io/chrismdgs/gamestory_logai_schneider:platform-<version>`. Pull it with ORAS and verify its checksum as described in `docs/platform-bundle.md`. The extracted artifact contains no application source or Gamestory build/release environments.
 
+For a single download containing the deployment ZIP and all four SBOM and release evidence packs, use `docker.io/chrismdgs/gamestory_logai_schneider:platform-handover-<version>`. See [complete release handover](release-handover.md) for pull and signature verification commands.
+
 ## Client-local
 
 Copy `environments/client-local/compose.env.example` to the ignored `compose.env`, replace local password placeholders, and run `scripts/deploy-compose.sh`. This pulls three released application images and Postgres from Docker Hub plus the pinned Keycloak image from Quay.
