@@ -45,6 +45,9 @@ spec:
     metadata:
       labels: {{- include "schneider.selectorLabels" (dict "root" . "component" "identity-bootstrap") | nindent 8 }}
     spec:
+      {{- with .Values.global.serviceAccountName }}
+      serviceAccountName: {{ . | quote }}
+      {{- end }}
       restartPolicy: Never
       automountServiceAccountToken: false
       securityContext: {runAsNonRoot: true, runAsUser: 10001, runAsGroup: 10001, fsGroup: 10001, seccompProfile: {type: RuntimeDefault}}

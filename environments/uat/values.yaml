@@ -1,13 +1,14 @@
 # Override the domain, registry, ingress and Secret references for the site.
 global:
+  serviceAccountName: logai-srv-uat
   environment: uat
   imagePullPolicy: Always
   imagePullSecrets: []
 identityApi:
   image:
-    repository: docker.io/chrismdgs/gamestory_logai_schneider
+    repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
     tag: identity-api-v0.1.7
-    digest: ''
+    digest: sha256:449d3c003f54011a8c6ba3495f27a905822c36f4319fc440e7eb342eed5bdb1e
   resources:
     requests:
       cpu: 100m
@@ -17,9 +18,9 @@ identityApi:
       memory: 512Mi
 logaiApi:
   image:
-    repository: docker.io/chrismdgs/gamestory_logai_schneider
+    repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
     tag: logai-api-v0.1.7
-    digest: ''
+    digest: sha256:d7d4ad92188e6597e75c3c89862f5919c2c28c2ca0f7eae7152e6a3aaa6668e1
   resources:
     requests:
       cpu: 100m
@@ -29,9 +30,9 @@ logaiApi:
       memory: 1Gi
 logaiUi:
   image:
-    repository: docker.io/chrismdgs/gamestory_logai_schneider
+    repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
     tag: logai-ui-v0.1.7
-    digest: ''
+    digest: sha256:4254cae40587d1d1c5f35fa150f48f127169f8c9dc829dda43473a9c214ba53e
   resources:
     requests:
       cpu: 50m

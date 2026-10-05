@@ -18,6 +18,13 @@ def render(env,settings=()):
 
 for env in ['build','release','client-local','dev-aws','uat','prod']:
     resources=render(env)
+    for workload in resources:
+        if workload and workload['kind'] in ('Deployment','StatefulSet','Job'):
+            pod_spec=workload['spec']['template']['spec']
+            if env=='uat':
+                assert pod_spec['serviceAccountName']=='logai-srv-uat'
+            else:
+                assert 'serviceAccountName' not in pod_spec
     admin_secret=next(r for r in resources if r and r['kind']=='Secret')
     assert admin_secret['stringData']=={'username':'admin','password':'chris'}
     config=next(r['data'] for r in resources if r and r['kind']=='ConfigMap' and r['metadata']['name'].endswith('-config'))
@@ -74,3 +81,13 @@ assert not any(r and r['kind']=='Secret' for r in shared)
 job=next(r for r in shared if r and r['kind']=='Job')
 assert sum('secret' in v for v in job['spec']['template']['spec']['volumes'])==2
 print('PASS: six environments, Helm/Argo hooks, domain override, canonical realm/groups/users, secret references, read-only UIDs and invalid-value rejection')
+
+for env in ("client-local", "uat", "prod"):
+    custom=render(env,["--set", "global.serviceAccountName=custom-existing-account"])
+    for workload in custom:
+        if workload and workload["kind"] in ("Deployment", "StatefulSet", "Job"):
+            assert workload["spec"]["template"]["spec"]["serviceAccountName"]=="custom-existing-account"
+    assert not any(r and r["kind"]=="ServiceAccount" for r in custom)
+empty=render("uat",["--set", "global.serviceAccountName="])
+assert all("serviceAccountName" not in r["spec"]["template"]["spec"] for r in empty if r and r["kind"] in ("Deployment", "StatefulSet", "Job"))
+print("PASS: existing service account selection, overrides and empty defaults across workload kinds")

@@ -30,6 +30,9 @@ spec:
         {{- end }}
       labels: {{- include "schneider.selectorLabels" (dict "root" $root "component" $name) | nindent 8 }}
     spec:
+      {{- with $root.Values.global.serviceAccountName }}
+      serviceAccountName: {{ . | quote }}
+      {{- end }}
       automountServiceAccountToken: false
       securityContext: {runAsNonRoot: true, runAsUser: {{ $uid }}, runAsGroup: {{ $uid }}, fsGroup: {{ $uid }}, seccompProfile: {type: RuntimeDefault}}
       {{- with $root.Values.global.imagePullSecrets }}

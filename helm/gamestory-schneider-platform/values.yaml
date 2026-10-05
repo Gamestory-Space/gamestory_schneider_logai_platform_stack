@@ -1,5 +1,7 @@
 # Runtime credentials are supplied through existing Secrets; never put their values here.
 global:
+  # Existing ServiceAccount in the release namespace; empty uses Kubernetes default.
+  serviceAccountName: ""
   imagePullPolicy: IfNotPresent
   imagePullSecrets: []
   environment: client-local
