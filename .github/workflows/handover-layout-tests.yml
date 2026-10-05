@@ -1,0 +1,24 @@
+name: Handover Layout Tests
+
+on:
+  push:
+    branches: [master, main, 'release/**']
+    paths:
+      - 'scripts/package-handover.py'
+      - 'scripts/test-handover-layout.py'
+      - '.github/workflows/handover-layout-tests.yml'
+  pull_request:
+    paths:
+      - 'scripts/package-handover.py'
+      - 'scripts/test-handover-layout.py'
+      - '.github/workflows/handover-layout-tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/test-handover-layout.py

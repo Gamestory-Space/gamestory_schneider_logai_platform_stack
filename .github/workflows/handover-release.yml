@@ -25,6 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Test handover packaging layout
+        run: python3 scripts/test-handover-layout.py
       - uses: oras-project/setup-oras@v1
       - uses: sigstore/cosign-installer@v3
       - name: Retrieve and validate prepared handover
