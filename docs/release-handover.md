@@ -3,12 +3,14 @@
 Clients can retrieve the deployment ZIP and all four evidence packs without GitHub access:
 
 ```bash
-oras pull docker.io/chrismdgs/gamestory_logai_schneider:platform-handover-v0.1.6 --output logai-v0.1.6
-cd logai-v0.1.6
-sha256sum -c schneider-logai-handover-v0.1.6.zip.sha256
+oras pull docker.io/chrismdgs/gamestory_logai_schneider:platform-handover-v0.1.7 --output logai-v0.1.7
+cd logai-v0.1.7
+sha256sum -c schneider-logai-handover-v0.1.7.zip.sha256
 ```
 
-The pull retrieves a handover ZIP, its checksum and its Sigstore signature bundle. The ZIP contains:
+The pull retrieves a handover ZIP, its checksum and its Sigstore signature bundle. Starting with v0.1.7, extraction places deployment files at the project root and release evidence under `associated_artefacts/`, ready for client Git check-in.
+
+The older v0.1.6 ZIP contains:
 
 - `deployment/`: the original deployment ZIP, checksum and signature bundle.
 - `evidence/`: identity API, LogAI API, UI and platform evidence ZIPs, including CycloneDX SBOMs, vulnerability scans, component inventories, validation, signatures and provenance.
@@ -17,19 +19,19 @@ The pull retrieves a handover ZIP, its checksum and its Sigstore signature bundl
 
 Unzip the deployment ZIP separately and follow its README. The existing `platform-v0.1.6` artifact remains available as the deployment-only download. The handover adds evidence without modifying or invalidating the signed deployment ZIP.
 
-Verify the handover signature with Cosign:
+Verify the v0.1.7 handover signature with Cosign:
 
 ```bash
 cosign verify-blob \
-  --bundle schneider-logai-handover-v0.1.6.zip.sigstore.json \
-  --certificate-identity https://github.com/Gamestory-Space/gamestory_schneider_logai_platform_stack/.github/workflows/handover-release.yml@refs/heads/master \
+  --bundle schneider-logai-handover-v0.1.7.zip.sigstore.json \
+  --certificate-identity https://github.com/Gamestory-Space/gamestory_schneider_logai_platform_stack/.github/workflows/handover-release.yml@refs/heads/release/v0.1.7 \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-  schneider-logai-handover-v0.1.6.zip
+  schneider-logai-handover-v0.1.7.zip
 ```
 
 ## Checkout layout for subsequent releases
 
-Future handover ZIPs extract directly into the client platform project, ready to check into its Git repository:
+From v0.1.7, handover ZIPs extract directly into the client platform project, ready to check into its Git repository:
 
 ```text
 compose.yaml
@@ -65,6 +67,8 @@ The generated `.gitignore` excludes private runtime `compose.env` files. Create 
 ## Local evidence archive
 
 Release evidence is retained in `docs/evidence/release/<version>/` within the platform project. For v0.1.6, this directory contains the published handover ZIP, checksum, signature and publication record; the deployment attachments; and all four evidence packs. Expanded packs are under `evidence/identity-api/`, `evidence/logai-api/`, `evidence/logai-ui/` and `evidence/platform/` for direct access to SBOMs and reports. `manifest.json` records the original artifact digests and checksums.
+
+The current v0.1.7 client artifacts are also expanded at the platform project root under `associated_artefacts/`. The complete signed handover and an archived copy of those artifacts are retained in `docs/evidence/release/v0.1.7/`.
 
 ## Preparing subsequent releases
 

@@ -1,0 +1,263 @@
+name: gamestory-schneider-logai
+services:
+  identity-api:
+    cap_drop:
+      - ALL
+    depends_on:
+      identity-bootstrap:
+        condition: service_completed_successfully
+        required: true
+    environment:
+      API_CORS_ORIGINS: http://localhost:3000
+      ENVIRONMENT: client-local
+      KEYCLOAK_AUDIENCE: logai-api
+      KEYCLOAK_ISSUER_URL: http://localhost:8080/realms/gamestory-sso
+      KEYCLOAK_JWKS_FETCH_URL: http://keycloak:8080/realms/gamestory-sso/protocol/openid-connect/certs
+      KEYCLOAK_PUBLIC_URL: http://localhost:8080
+      KEYCLOAK_REALM: gamestory-sso
+      SERVICE_NAME: gamestory-sso-api
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
+      timeout: 5s
+      interval: 10s
+      retries: 12
+    image: docker.io/chrismdgs/gamestory_logai_schneider:identity-api-v0.1.7
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 8000
+        published: "8000"
+        protocol: tcp
+    pull_policy: missing
+    read_only: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=64m,mode=1777
+    user: 10001:10001
+  identity-bootstrap:
+    cap_drop:
+      - ALL
+    command:
+      - python
+      - -c
+      - from app.bootstrap import main; main()
+    depends_on:
+      keycloak:
+        condition: service_healthy
+        required: true
+    environment:
+      KEYCLOAK_ADMIN_PASSWORD: chris
+      KEYCLOAK_ADMIN_USERNAME: admin
+      KEYCLOAK_BOOTSTRAP_ALLOW_INTERNAL_HTTP: "true"
+      KEYCLOAK_BOOTSTRAP_HEALTH_URL: http://keycloak:9000/health/ready
+      KEYCLOAK_BOOTSTRAP_PASSWORD_MODE: username
+      KEYCLOAK_BOOTSTRAP_URL: http://keycloak:8080
+      KEYCLOAK_LOGAI_BOOTSTRAP_PASSWORD: ""
+      KEYCLOAK_PUBLIC_URL: http://localhost:8080
+      KEYCLOAK_REALM_FILE: /bootstrap/realm/gamestory-sso-realm.json
+      LOGAI_PUBLIC_URL: http://localhost:3000
+    image: docker.io/chrismdgs/gamestory_logai_schneider:identity-api-v0.1.7
+    networks:
+      default: null
+    pull_policy: missing
+    read_only: true
+    restart: "no"
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=64m,mode=1777
+    user: 10001:10001
+    volumes:
+      - type: bind
+        source: /home/runner/work/gamestory_schneider_logai_platform_stack/gamestory_schneider_logai_platform_stack/identity/keycloak
+        target: /bootstrap/realm
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /home/runner/work/gamestory_schneider_logai_platform_stack/gamestory_schneider_logai_platform_stack/identity/bootstrap-groups.json
+        target: /bootstrap/users.json
+        read_only: true
+        bind:
+          create_host_path: true
+  keycloak:
+    command:
+      - start-dev
+      - --import-realm
+    depends_on:
+      postgres:
+        condition: service_healthy
+        required: true
+    environment:
+      KC_BOOTSTRAP_ADMIN_PASSWORD: chris
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_DB: postgres
+      KC_DB_PASSWORD: REPLACE_FOR_LOCAL_USE
+      KC_DB_URL: jdbc:postgresql://postgres:5432/logai
+      KC_DB_USERNAME: logai
+      KC_HEALTH_ENABLED: "true"
+      KC_HOSTNAME: http://localhost:8080
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_ENABLED: "true"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - exec 3<>/dev/tcp/127.0.0.1/9000; printf 'GET /health/ready HTTP/1.0\r\n\r\n' >&3; grep -q '200' <&3
+      timeout: 5s
+      interval: 10s
+      retries: 30
+      start_period: 30s
+    image: quay.io/keycloak/keycloak:26.0.8@sha256:09a381c715ab0b111835b70f2905955274843a219c6f27efb348e4d9f4086858
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 8080
+        published: "8080"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /home/runner/work/gamestory_schneider_logai_platform_stack/gamestory_schneider_logai_platform_stack/identity/keycloak
+        target: /opt/keycloak/data/import
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /home/runner/work/gamestory_schneider_logai_platform_stack/gamestory_schneider_logai_platform_stack/licensing/keycloak
+        target: /usr/share/licenses/logai-platform/keycloak
+        read_only: true
+        bind:
+          create_host_path: true
+  logai-api:
+    cap_drop:
+      - ALL
+    depends_on:
+      identity-bootstrap:
+        condition: service_completed_successfully
+        required: true
+      postgres:
+        condition: service_healthy
+        required: true
+    environment:
+      API_CORS_ORIGINS: http://localhost:3000
+      APPLY_DATABASE_SCHEMA_ON_STARTUP: "true"
+      AUTH_MODE: sso
+      DATABASE_URL: postgresql://logai:REPLACE_FOR_LOCAL_USE@postgres:5432/logai
+      ENVIRONMENT: client-local
+      OIDC_AUDIENCE: logai-api
+      OIDC_ISSUER_URL: http://localhost:8080/realms/gamestory-sso
+      OIDC_JWKS_URL: http://keycloak:8080/realms/gamestory-sso/protocol/openid-connect/certs
+      SEED_SAMPLE_DATA_ON_STARTUP: "false"
+      SERVICE_NAME: gamestory-logai-api
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
+      timeout: 5s
+      interval: 10s
+      retries: 12
+    image: docker.io/chrismdgs/gamestory_logai_schneider:logai-api-v0.1.7
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 8000
+        published: "8010"
+        protocol: tcp
+    pull_policy: missing
+    read_only: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=64m,mode=1777
+    user: 10001:10001
+  logai-ui:
+    cap_drop:
+      - ALL
+    depends_on:
+      identity-api:
+        condition: service_healthy
+        required: true
+      logai-api:
+        condition: service_healthy
+        required: true
+    environment:
+      AUTH_CALLBACK_URL: http://localhost:3000/auth/callback
+      AUTH_CLIENT_ID: logai-ui
+      AUTH_IDP_HINT: ""
+      AUTH_MODE: sso
+      AUTH_REALM: gamestory-sso
+      AUTH_URL: http://localhost:8080
+      IDENTITY_API_BASE_URL: http://localhost:8000
+      LOGAI_API_BASE_URL: http://localhost:8010
+      LOGAI_ENV: client-local
+      LOGAI_PUBLIC_URL: http://localhost:3000
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - wget -qO- http://$${HOSTNAME}:3000/ >/dev/null || exit 1
+      timeout: 5s
+      interval: 10s
+      retries: 12
+    image: docker.io/chrismdgs/gamestory_logai_schneider:logai-ui-v0.1.7
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 3000
+        published: "3000"
+        protocol: tcp
+    pull_policy: missing
+    read_only: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=64m,mode=1777
+      - /app/runtime-config:rw,nosuid,nodev,size=1m,mode=1777
+    user: 1000:1000
+  postgres:
+    environment:
+      POSTGRES_DB: logai
+      POSTGRES_PASSWORD: REPLACE_FOR_LOCAL_USE
+      POSTGRES_USER: logai
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}
+      timeout: 5s
+      interval: 10s
+      retries: 10
+    image: postgres:16-alpine
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 5432
+        published: "5432"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: postgres-data
+        target: /var/lib/postgresql/data
+        volume: {}
+      - type: bind
+        source: /home/runner/work/gamestory_schneider_logai_platform_stack/gamestory_schneider_logai_platform_stack/licensing/postgres
+        target: /usr/share/licenses/logai-platform/postgres
+        read_only: true
+        bind:
+          create_host_path: true
+networks:
+  default:
+    name: gamestory-schneider-logai_default
+volumes:
+  postgres-data:
+    name: gamestory-schneider-logai_postgres-data

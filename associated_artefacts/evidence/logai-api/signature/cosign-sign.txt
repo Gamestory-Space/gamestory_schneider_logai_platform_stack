@@ -1,0 +1,2 @@
+Signing ghcr.io/gamestory-space/gamestory-logai-api@sha256:d7d4ad92188e6597e75c3c89862f5919c2c28c2ca0f7eae7152e6a3aaa6668e1
+Signing docker.io/chrismdgs/gamestory_logai_schneider@sha256:d7d4ad92188e6597e75c3c89862f5919c2c28c2ca0f7eae7152e6a3aaa6668e1

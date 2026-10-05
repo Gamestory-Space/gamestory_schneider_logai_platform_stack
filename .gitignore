@@ -25,3 +25,6 @@ __pycache__/
 
 # Retain published validation logs as release evidence.
 !docs/evidence/release/**/*.log
+
+# Published client handover validation logs.
+!associated_artefacts/**/*.log
