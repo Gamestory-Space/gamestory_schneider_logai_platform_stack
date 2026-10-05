@@ -166,7 +166,7 @@ spec:
       securityContext: {runAsNonRoot: true, runAsUser: 10001, runAsGroup: 10001, fsGroup: 10001, seccompProfile: {type: RuntimeDefault}}
       containers:
         - name: identity-api
-          image: "docker.io/chrismdgs/gamestory_logai_schneider:identity-api-v0.1.7"
+          image: "global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider@sha256:449d3c003f54011a8c6ba3495f27a905822c36f4319fc440e7eb342eed5bdb1e"
           imagePullPolicy: IfNotPresent
           securityContext: {allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: {drop: [ALL]}}
           ports: [{name: http, containerPort: 8000}]
@@ -229,7 +229,7 @@ spec:
       securityContext: {runAsNonRoot: true, runAsUser: 10001, runAsGroup: 10001, fsGroup: 10001, seccompProfile: {type: RuntimeDefault}}
       containers:
         - name: logai-api
-          image: "docker.io/chrismdgs/gamestory_logai_schneider:logai-api-v0.1.7"
+          image: "global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider@sha256:d7d4ad92188e6597e75c3c89862f5919c2c28c2ca0f7eae7152e6a3aaa6668e1"
           imagePullPolicy: IfNotPresent
           securityContext: {allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: {drop: [ALL]}}
           ports: [{name: http, containerPort: 8000}]
@@ -297,7 +297,7 @@ spec:
       securityContext: {runAsNonRoot: true, runAsUser: 1000, runAsGroup: 1000, fsGroup: 1000, seccompProfile: {type: RuntimeDefault}}
       containers:
         - name: logai-ui
-          image: "docker.io/chrismdgs/gamestory_logai_schneider:logai-ui-v0.1.7"
+          image: "global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider@sha256:4254cae40587d1d1c5f35fa150f48f127169f8c9dc829dda43473a9c214ba53e"
           imagePullPolicy: IfNotPresent
           securityContext: {allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: {drop: [ALL]}}
           ports: [{name: http, containerPort: 3000}]
@@ -504,7 +504,7 @@ spec:
       securityContext: {runAsNonRoot: true, runAsUser: 10001, runAsGroup: 10001, fsGroup: 10001, seccompProfile: {type: RuntimeDefault}}
       containers:
         - name: identity-bootstrap
-          image: "docker.io/chrismdgs/gamestory_logai_schneider:identity-api-v0.1.7"
+          image: "global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider@sha256:449d3c003f54011a8c6ba3495f27a905822c36f4319fc440e7eb342eed5bdb1e"
           imagePullPolicy: IfNotPresent
           command: [python, -c, "from app.bootstrap import main; main()"]
           securityContext: {allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: {drop: [ALL]}}

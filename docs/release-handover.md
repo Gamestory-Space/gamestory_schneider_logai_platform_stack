@@ -96,4 +96,8 @@ gh workflow run handover-release.yml --ref "$release_ref" -f "version=$version" 
   --repo Gamestory-Space/gamestory_schneider_logai_platform_stack
 ```
 
-The workflow validates evidence completeness and versions, matches all four recorded digests against Docker Hub, signs the handover, publishes it under `platform-handover-<version>`, and fresh-pulls it to verify checksums, signature and evidence. Existing handover tags cannot be overwritten.
+The workflow validates evidence completeness and versions, matches all four recorded digests against Docker Hub, signs the handover, publishes it under `platform-handover-<version>`, and fresh-pulls it to verify checksums, signature and evidence. Existing handover tags are protected by default. For an explicitly requested same-version update, dispatch with `replace_existing=true`; the workflow retains the previous handover under a digest-based tag before replacement.
+
+## Same-version v0.1.7 configuration update
+
+The updated platform payload was built from commit `118600a`, including the Schneider Git/Argo configuration, JFrog application references and configurable service accounts. Platform publication run `37386056164` and handover publication run `37386385866` passed. Application images are unchanged. The current handover OCI digest is `sha256:738242f273d106be1c6613d0e919e8df21c6829698c9ae12a2f084b7357fb58e`. The previous signed handover and publication record are retained under `docs/evidence/release/v0.1.7/previous-publication/`. Existing downloaded packages must be pulled again to receive these configuration updates.

@@ -2,8 +2,8 @@
 
 - Service: gamestory-schneider-logai-platform
 - Version: v0.1.7
-- Commit: f5013a7589ccf329f7e08f84a40b9a4ed624a53f
+- Commit: 118600a74b90041fd43d75883a32ff7d7cfd74a8
 - Source: https://github.com/Gamestory-Space/gamestory_schneider_logai_platform_stack
-- Workflow run: https://github.com/Gamestory-Space/gamestory_schneider_logai_platform_stack/actions/runs/37341994624
+- Workflow run: https://github.com/Gamestory-Space/gamestory_schneider_logai_platform_stack/actions/runs/37386056164
 - Release build: true
 - Payload: client-only deployment ZIP; no runnable container image
