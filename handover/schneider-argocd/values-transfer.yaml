@@ -1,0 +1,30 @@
+# Merge into Schneider values.yaml; this is an overlay, not a replacement chart.
+identityApi:
+  image:
+    tag: identity-api-v0.1.7
+logaiApi:
+  image:
+    tag: logai-api-v0.1.7
+  applyDatabaseSchemaOnStartup: false
+  seedSampleDataOnStartup: false
+logaiUi:
+  image:
+    tag: logai-ui-v0.1.7
+identity:
+  authMode: sso
+  realm: gamestory-sso
+  clientId: logai-ui
+  idpHint: ""
+identityBootstrap:
+  enabled: true
+  # Existing reference behavior. Schneider must confirm initial-user policy.
+  # username creates logai_<username> passwords without a forced change.
+  # shared uses the externally managed Secret below and forces initial change.
+  passwordMode: username
+  existingSecret: logai-bootstrap-users
+  passwordKey: password
+  backoffLimit: 1
+  activeDeadlineSeconds: 600
+  resources:
+    requests: {cpu: 100m, memory: 128Mi}
+    limits: {cpu: 500m, memory: 512Mi}

@@ -1,0 +1,95 @@
+{{- if .Values.identityBootstrap.enabled }}
+{{- if not (has .Values.identityBootstrap.passwordMode (list "username" "shared")) -}}
+{{- fail "identityBootstrap.passwordMode must be username or shared" -}}
+{{- end -}}
+{{- if not .Values.keycloak.enabled }}{{ fail "identityBootstrap requires keycloak.enabled=true" }}{{ end }}
+{{- if or (ne .Values.identity.realm "gamestory-sso") (ne .Values.identity.clientId "logai-ui") (ne .Values.identity.authMode "sso") }}{{ fail "Use identity realm gamestory-sso, clientId logai-ui and authMode sso" }}{{ end }}
+{{- range $name := list "ui" "api" "identity" "auth" }}
+{{- $host := required (printf "hosts.%s is required" $name) (index $.Values.hosts $name) }}
+{{- if not (regexMatch "^[A-Za-z0-9]([A-Za-z0-9.-]*[A-Za-z0-9])?$" $host) }}{{ fail "hosts must contain DNS hostnames without schemes, paths or wildcards" }}{{ end }}
+{{- end }}
+{{- $_ := required "database.host is required" .Values.database.host }}
+{{- $realm := .Files.Get "files/gamestory-sso-realm.json" | fromJson -}}
+{{- $ui := printf "https://%s" .Values.hosts.ui -}}
+{{- range $client := $realm.clients -}}
+{{- if eq $client.clientId "logai-ui" -}}
+{{- $_ := set $client "redirectUris" (list (printf "%s/auth/callback" $ui)) -}}
+{{- $_ := set $client "webOrigins" (list $ui) -}}
+{{- $_ := set $client.attributes "post.logout.redirect.uris" (printf "%s/" $ui) -}}
+{{- end -}}
+{{- end -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logai-identity-bootstrap
+  namespace: {{ required "namespace is required" .Values.namespace | quote }}
+data:
+  realm.json: {{ $realm | toJson | quote }}
+  users.json: {{ .Files.Get "files/bootstrap-groups.json" | quote }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: logai-identity-bootstrap
+  namespace: {{ required "namespace is required" .Values.namespace | quote }}
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: {{ .Values.identityBootstrap.backoffLimit }}
+  activeDeadlineSeconds: {{ .Values.identityBootstrap.activeDeadlineSeconds }}
+  template:
+    metadata:
+      labels: {app: logai-identity-bootstrap}
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      securityContext: {runAsNonRoot: true, runAsUser: 10001, runAsGroup: 10001, fsGroup: 10001, seccompProfile: {type: RuntimeDefault}}
+      {{- with .Values.imagePullSecret }}
+      imagePullSecrets: [{name: {{ . | quote }}}]
+      {{- end }}
+      containers:
+        - name: identity-bootstrap
+          image: {{ printf "%s:%s" .Values.identityApi.image.repository .Values.identityApi.image.tag | quote }}
+          imagePullPolicy: {{ .Values.identityApi.image.pullPolicy }}
+          command: [python, -c, "from app.bootstrap import main; main()"]
+          securityContext: {allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: {drop: [ALL]}}
+          env:
+            - {name: KEYCLOAK_BOOTSTRAP_URL, value: {{ printf "http://keycloak:80" | quote }}}
+            - {name: KEYCLOAK_BOOTSTRAP_HEALTH_URL, value: "http://keycloak:9000/health/ready"}
+            - {name: LOGAI_PUBLIC_URL, value: {{ printf "https://%s" .Values.hosts.ui | quote }}}
+            - {name: KEYCLOAK_PUBLIC_URL, value: {{ printf "https://%s" .Values.hosts.auth | quote }}}
+            - {name: KEYCLOAK_BOOTSTRAP_ALLOW_INTERNAL_HTTP, value: "true"}
+            - {name: KEYCLOAK_ADMIN_USERNAME_FILE, value: /runtime-secrets/admin/username}
+            - {name: KEYCLOAK_ADMIN_PASSWORD_FILE, value: /runtime-secrets/admin/password}
+            - {name: KEYCLOAK_BOOTSTRAP_PASSWORD_MODE, value: {{ .Values.identityBootstrap.passwordMode | quote }}}
+            {{- if eq .Values.identityBootstrap.passwordMode "shared" }}
+            - {name: KEYCLOAK_BOOTSTRAP_PASSWORD_FILE, value: /runtime-secrets/users/password}
+            {{- end }}
+          resources: {{- toYaml .Values.identityBootstrap.resources | nindent 12 }}
+          volumeMounts:
+            - {name: configuration, mountPath: /bootstrap, readOnly: true}
+            - {name: admin-secret, mountPath: /runtime-secrets/admin, readOnly: true}
+            {{- if eq .Values.identityBootstrap.passwordMode "shared" }}
+            - {name: user-secret, mountPath: /runtime-secrets/users, readOnly: true}
+            {{- end }}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: configuration
+          configMap: {name: logai-identity-bootstrap}
+        - name: admin-secret
+          secret:
+            secretName: {{ required "keycloak.secretName is required" .Values.keycloak.secretName }}
+            defaultMode: 0440
+            items:
+              - {key: admin-username, path: username}
+              - {key: admin-password, path: password}
+        {{- if eq .Values.identityBootstrap.passwordMode "shared" }}
+        - name: user-secret
+          secret:
+            secretName: {{ required "identityBootstrap.existingSecret must name a runtime initial-user Secret" .Values.identityBootstrap.existingSecret }}
+            defaultMode: 0440
+            items: [{key: {{ .Values.identityBootstrap.passwordKey }}, path: password}]
+        {{- end }}
+        - {name: tmp, emptyDir: {medium: Memory, sizeLimit: 64Mi}}
+{{- end }}

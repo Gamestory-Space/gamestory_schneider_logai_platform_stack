@@ -65,6 +65,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m pip install --target "${RUNNER_TEMP}/logai-chart-testdeps" PyYAML==6.0.3
+          PYTHONPATH="${RUNNER_TEMP}/logai-chart-testdeps" python3 scripts/test-schneider-argocd-transfer.py | tee "${EVIDENCE_DIR}/validation/schneider-argocd-transfer.txt"
           PYTHONPATH="${RUNNER_TEMP}/logai-chart-testdeps" python3 scripts/test-helm-identity.py
           helm lint ./helm/gamestory-schneider-platform | tee "${EVIDENCE_DIR}/validation/helm-lint.txt"
           for environment in client-local dev-aws uat prod; do

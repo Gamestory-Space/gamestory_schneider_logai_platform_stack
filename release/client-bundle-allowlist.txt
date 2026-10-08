@@ -24,3 +24,4 @@ LICENSE|LICENSE
 THIRD_PARTY_NOTICES|THIRD_PARTY_NOTICES
 docs/client-uat-prod-configuration.md|docs/client-uat-prod-configuration.md
 docs/login-defaults.md|docs/login-defaults.md
+handover/schneider-argocd|handover/schneider-argocd

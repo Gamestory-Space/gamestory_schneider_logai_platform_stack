@@ -14,6 +14,15 @@ if command -v zip >/dev/null; then
   "$repo_root/scripts/package-client-release.sh" v0.0.0-policy-test "$test_root/dist"
   archive="$test_root/dist/schneider-logai-platform-v0.0.0-policy-test.zip"
   "$repo_root/scripts/validate-client-archive.sh" "$archive"
+  python3 - "$archive" <<'CHECK_TRANSFER'
+import sys
+import zipfile
+with zipfile.ZipFile(sys.argv[1]) as archive:
+    prefix = 'schneider-logai-platform-v0.0.0-policy-test/handover/schneider-argocd/'
+    for name in ['README.md', 'values-transfer.yaml', 'templates/45-identity-bootstrap.yaml',
+                 'files/gamestory-sso-realm.json', 'files/bootstrap-groups.json']:
+        assert prefix + name in archive.namelist(), 'Missing transfer payload: ' + name
+CHECK_TRANSFER
 else
   echo "SKIP: final ZIP test requires zip; CI runners execute this check."
 fi

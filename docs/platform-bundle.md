@@ -2,21 +2,21 @@
 
 CI publishes a client-only ZIP for each platform release. It is not a runnable container image.
 
-For release `v0.1.5`, the Docker Hub generic OCI reference is:
+For platform release `v0.1.8`, the Docker Hub generic OCI reference is:
 
 ```text
-docker.io/chrismdgs/gamestory_logai_schneider:platform-v0.1.5
+docker.io/chrismdgs/gamestory_logai_schneider:platform-v0.1.8
 ```
 
 The artifact contains the deployment ZIP, its SHA-256 checksum, and its Sigstore bundle. Pull it with ORAS:
 
 ```bash
-oras pull docker.io/chrismdgs/gamestory_logai_schneider:platform-v0.1.5
-sha256sum --check schneider-logai-platform-v0.1.5.zip.sha256
-unzip schneider-logai-platform-v0.1.5.zip
+oras pull docker.io/chrismdgs/gamestory_logai_schneider:platform-v0.1.8
+sha256sum --check schneider-logai-platform-v0.1.8.zip.sha256
+unzip schneider-logai-platform-v0.1.8.zip
 ```
 
-The same files and a separate evidence ZIP are attached to the GitHub `v0.1.5` release.
+The same files and a separate evidence ZIP are attached to the GitHub `v0.1.8` release.
 
 The deployment ZIP contains only:
 
@@ -30,3 +30,9 @@ The deployment ZIP contains only:
 It excludes the Gamestory `build` and `release` environments, source-build Compose override, source repositories, application source, Git metadata, and CI configuration.
 
 CI evidence includes Helm and Compose validation, shell checks, a CycloneDX filesystem SBOM, component/license inventory, Trivy SARIF, checksum/provenance, policy traceability, and a keyless Sigstore signature.
+
+Platform v0.1.8 adds `handover/schneider-argocd/`, containing the Schneider chart
+transfer guide, bootstrap template, values delta and canonical JSON files.
+Application images remain v0.1.7; this is a platform-only release. Read the
+handover guide before transfer: actual Schneider integration is still to be
+validated, and database schema preparation remains separately controlled.
