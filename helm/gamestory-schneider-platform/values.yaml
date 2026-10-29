@@ -27,6 +27,11 @@ logaiApi:
   resources: {}
   applyDatabaseSchemaOnStartup: false
   seedSampleDataOnStartup: false
+  databaseCredentials:
+    # Enable only with an API image containing credential recovery support.
+    enabled: false
+    refreshBackoffSeconds: 5
+    refreshMaxWaitSeconds: 10
 logaiUi:
   enabled: true
   replicas: 1

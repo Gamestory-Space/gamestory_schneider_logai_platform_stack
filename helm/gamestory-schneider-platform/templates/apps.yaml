@@ -51,11 +51,20 @@ spec:
               valueFrom: {secretKeyRef: {name: {{ include "schneider.dbSecretName" $root }}, key: {{ ternary $root.Values.externalDatabase.databaseUrlKey $root.Values.postgres.databaseUrlKey $root.Values.externalDatabase.enabled }}}}
             - {name: APPLY_DATABASE_SCHEMA_ON_STARTUP, value: {{ $root.Values.logaiApi.applyDatabaseSchemaOnStartup | quote }}}
             - {name: SEED_SAMPLE_DATA_ON_STARTUP, value: {{ $root.Values.logaiApi.seedSampleDataOnStartup | quote }}}
+            - {name: DB_CREDENTIAL_REFRESH_ENABLED, value: {{ $root.Values.logaiApi.databaseCredentials.enabled | quote }}}
+            {{- if $root.Values.logaiApi.databaseCredentials.enabled }}
+            - {name: DATABASE_PASSWORD_FILE, value: /var/run/secrets/logai-db/password}
+            - {name: DB_CREDENTIAL_REFRESH_BACKOFF_SECONDS, value: {{ $root.Values.logaiApi.databaseCredentials.refreshBackoffSeconds | quote }}}
+            - {name: DB_CREDENTIAL_REFRESH_MAX_WAIT_SECONDS, value: {{ $root.Values.logaiApi.databaseCredentials.refreshMaxWaitSeconds | quote }}}
+            {{- end }}
           {{- else if eq $name "logai-ui" }}
           env: [{name: HOSTNAME, value: "0.0.0.0"}]
           {{- end }}
           volumeMounts:
             - {name: tmp, mountPath: /tmp}
+            {{- if and (eq $name "logai-api") $root.Values.logaiApi.databaseCredentials.enabled }}
+            - {name: db-credentials, mountPath: /var/run/secrets/logai-db, readOnly: true}
+            {{- end }}
             {{- if eq $name "logai-ui" }}
             - {name: runtime-config, mountPath: /app/runtime-config}
             {{- end }}
@@ -74,6 +83,15 @@ spec:
           resources: {{- toYaml $app.resources | nindent 12 }}
       volumes:
         - {name: tmp, emptyDir: {medium: Memory, sizeLimit: 64Mi}}
+        {{- if and (eq $name "logai-api") $root.Values.logaiApi.databaseCredentials.enabled }}
+        - name: db-credentials
+          secret:
+            secretName: {{ include "schneider.dbSecretName" $root }}
+            defaultMode: 0440
+            items:
+              - key: {{ ternary $root.Values.externalDatabase.passwordKey $root.Values.postgres.passwordKey $root.Values.externalDatabase.enabled }}
+                path: password
+        {{- end }}
         {{- if eq $name "logai-ui" }}
         - {name: runtime-config, emptyDir: {medium: Memory, sizeLimit: 1Mi}}
         {{- end }}
