@@ -67,6 +67,14 @@ jobs:
           python3 -m pip install --target "${RUNNER_TEMP}/logai-chart-testdeps" PyYAML==6.0.3
           PYTHONPATH="${RUNNER_TEMP}/logai-chart-testdeps" python3 scripts/test-schneider-argocd-transfer.py | tee "${EVIDENCE_DIR}/validation/schneider-argocd-transfer.txt"
           PYTHONPATH="${RUNNER_TEMP}/logai-chart-testdeps" python3 scripts/test-helm-identity.py
+          helm lint applications/logai -f applications/logai/values-eu-west-3-eks-shared-dev.yaml | tee "${EVIDENCE_DIR}/validation/central-helm-lint.txt"
+          helm template logai applications/logai --namespace 68225-logai-uat \
+            -f applications/logai/values-eu-west-3-eks-shared-dev.yaml \
+            > "${EVIDENCE_DIR}/validation/central-helm-template-uat.yaml"
+          helm template logai applications/logai --namespace 68225-logai-uat \
+            -f applications/logai/values-eu-west-3-eks-shared-dev.yaml \
+            --set logaiApi.databaseCredentials.enabled=false \
+            > "${EVIDENCE_DIR}/validation/central-helm-template-recovery-disabled.yaml"
           helm lint ./helm/gamestory-schneider-platform | tee "${EVIDENCE_DIR}/validation/helm-lint.txt"
           for environment in client-local dev-aws uat prod; do
             helm template logai ./helm/gamestory-schneider-platform \

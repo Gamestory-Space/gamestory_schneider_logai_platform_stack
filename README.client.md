@@ -25,5 +25,7 @@ For Schneider site configuration, see [UAT/production configuration requirements
 
 For Schneider's shared EKS chart, follow
 [the Argo CD transfer guide](handover/schneider-argocd/README.md).
-Platform v0.1.8 includes the additive transfer files; application images remain
-v0.1.7. Platform inputs and controlled schema preparation are still required.
+Platform v0.1.9 includes the supplied central-chart files and pins LogAI API
+v0.1.8; Identity API and UI remain v0.1.7. Merge the central-chart delta described
+in [transfer_To_schneider.readme](transfer_To_schneider.readme) into the complete
+remote chart. Platform inputs and controlled schema preparation are still required.
