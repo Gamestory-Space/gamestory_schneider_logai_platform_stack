@@ -1,0 +1,17 @@
+# Schneider transfer summary
+
+Merge these three files into the remote project under applications/logai/:
+
+- values.yaml — add recovery settings, disabled by default.
+- values-eu-west-3-eks-shared-dev.yaml — enable recovery for UAT.
+- templates/20-logai-api.yaml — add recovery environment variables and the
+  read-only database password Secret mount.
+
+Chart.yaml and templates/_helpers.tpl need no changes.
+No apps.yaml is required in this chart.
+
+Before deployment, publish the new API image and update its tag and digest.
+Schneider must confirm the Secret password is synchronized.
+
+Helm validation and 63 API tests passed, including preservation of active
+transactions during password rotation.

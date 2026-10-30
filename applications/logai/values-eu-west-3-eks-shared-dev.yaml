@@ -1,0 +1,85 @@
+# eu-west-3-eks-shared-dev (uat). ArgoCD loads values-<cluster>.yaml, so the
+# file name must match the cluster name.
+# Ported from environments/uat/values.yaml into the central-team LogAI chart.
+namespace: 68225-logai-uat
+environment: uat
+rancherProjectId: local:p-9bdbw
+
+hosts:
+  ui: logai-uat.se.com
+  api: logai-api-uat.se.com
+  identity: logai-identity-uat.se.com
+  auth: logai-auth-uat.se.com
+
+database:
+  host: eu-west-3-rds-logai-dev.coznr3nnslek.eu-west-3.rds.amazonaws.com
+  port: 5432
+  name: logai_dev
+  username: logai_dev_adm
+  sslMode: require
+  secretName: logai-db-secret
+
+gateway:
+  acmCertificateArn: arn:aws:acm:eu-west-3:716501719225:certificate/a162d922-d6c2-4d80-8be0-d891eb6d14c1
+
+imagePullPolicy: Always
+imagePullSecret: logai-jfrog-secret
+
+identityApi:
+  image:
+    repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
+    tag: identity-api-v0.1.7
+    digest: sha256:449d3c003f54011a8c6ba3495f27a905822c36f4319fc440e7eb342eed5bdb1e
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+logaiApi:
+  image:
+    repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
+    tag: logai-api-v0.1.7
+    digest: sha256:d7d4ad92188e6597e75c3c89862f5919c2c28c2ca0f7eae7152e6a3aaa6668e1
+  #Turn off after first deploy, will seed schema
+  applyDatabaseSchemaOnStartup: false
+  #Turn off after first deploy, will seed data
+  seedSampleDataOnStartup: false
+  # Deployment prerequisite: replace the v0.1.7 image tag/digest above with a
+  # recovery-capable release and update the central API Deployment template to
+  # mount database.secretName/password at /var/run/secrets/logai-db/password.
+  databaseCredentials:
+    enabled: true
+    refreshBackoffSeconds: 5
+    refreshMaxWaitSeconds: 10
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+logaiUi:
+  image:
+    repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
+    tag: logai-ui-v0.1.7
+    digest: sha256:4254cae40587d1d1c5f35fa150f48f127169f8c9dc829dda43473a9c214ba53e
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# Source value global.serviceAccountName=logai-srv-uat has no confirmed target
+# in the supplied central-team values/templates inspected so far.
+# serviceAccountName: "<central chart mapping for logai-srv-uat not yet confirmed>"
+
+# Keycloak realm import/bootstrap cannot currently be expressed through 40-keycloak.yaml.
+# Original UAT used: kc.sh start --import-realm.
+# identityBootstrap used Secret schneider-managed-uat-bootstrap-users and also requires
+# a central-chart/template implementation before it can be ported safely.
