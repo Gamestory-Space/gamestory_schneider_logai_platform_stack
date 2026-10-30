@@ -41,15 +41,14 @@ identityApi:
 logaiApi:
   image:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
-    tag: logai-api-v0.1.7
-    digest: sha256:d7d4ad92188e6597e75c3c89862f5919c2c28c2ca0f7eae7152e6a3aaa6668e1
+    tag: logai-api-v0.1.8
+    digest: sha256:14a1b3e6a36def12e1553e9bae2bee2b91317b989d54338a0aeb7e7f99b90357
   #Turn off after first deploy, will seed schema
   applyDatabaseSchemaOnStartup: false
   #Turn off after first deploy, will seed data
   seedSampleDataOnStartup: false
-  # Deployment prerequisite: replace the v0.1.7 image tag/digest above with a
-  # recovery-capable release and update the central API Deployment template to
-  # mount database.secretName/password at /var/run/secrets/logai-db/password.
+  # Promote the pinned Docker Hub API release into the JFrog repository above
+  # before deployment. ESO must synchronize database.secretName/password.
   databaseCredentials:
     enabled: true
     refreshBackoffSeconds: 5

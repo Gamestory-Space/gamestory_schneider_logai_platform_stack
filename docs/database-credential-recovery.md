@@ -11,10 +11,10 @@ for lifecycle, transaction, and timeout semantics.
 
 The actual local Deployment is `helm/gamestory-schneider-platform/templates/apps.yaml`.
 Enable `logaiApi.databaseCredentials.enabled` with the provided
-`environments/uat/database-credential-recovery.yaml` overlay **after building and
-selecting an API image containing the companion source change**. Existing pinned
-v0.1.7 images do not implement recovery, so base values retain disabled behavior.
-No release tag/digest has been invented or replaced by this change.
+`environments/uat/database-credential-recovery.yaml` overlay. Active API image
+references now pin the published `logai-api-v0.1.8` release and its verified
+digest. Base values retain disabled recovery until a cluster opts in. Promote
+the image into JFrog before deploying environments configured to pull there.
 
 The selected existing Secret comes from `externalDatabase.existingSecret` or
 `postgres.existingSecret`. The password key follows the corresponding
@@ -30,7 +30,7 @@ service account, and container restrictions remain. No password checksum is
 added to the pod template, so subsequent Secret updates do not request rollouts.
 Introducing the mount and the new image causes a one-time rolling rollout.
 
-Example render using a separately supplied image tag/digest:
+Example render using the pinned API image tag/digest:
 
 ```sh
 helm template logai helm/gamestory-schneider-platform \
@@ -44,11 +44,11 @@ environment. Do not deploy without its actual existing Secret and image values.
 
 ## Schneider chart transfer
 
-The PRD's `applications/logai/templates/20-logai-api.yaml` is absent locally.
-Use the additive snippets in
-`handover/schneider-argocd/database-credential-recovery.md` when adapting that
-chart; do not replace the Schneider Deployment with the reference chart.
-Render the real chart with actual UAT values before deployment. Confirmation
+The supplied central-chart files are now captured under `applications/logai`,
+including `templates/20-logai-api.yaml`, the actual helpers, chart metadata,
+shared values and UAT override. `transfer_To_schneider.readme` records the merge
+delta. The local central chart contains only the supplied API workload; merge
+the delta into the complete Schneider chart and render it before deployment. Confirmation
 of ESO synchronization into `logai-db-secret/password`, namespace, current
 database topology and username, and the scheduled initial rollout belongs to
 Schneider. AWS/ESO/IAM and Keycloak resources are outside this change.
@@ -72,5 +72,7 @@ be resumed automatically. Separate external effects already completed before
 acquisition remain subject to existing audit/reconciliation behavior.
 
 Local automated evidence does not certify Schneider deployment or independent
-validator acceptance. A new API image must pass the existing release/SBOM gates
-before UAT deployment; this change does not publish or deploy one.
+validator acceptance. API v0.1.8 passed the existing build, compiled-artifact,
+runtime, SBOM, vulnerability and signing gates before publication. Release evidence:
+https://github.com/Gamestory-Space/gamestory-logai-api/releases/tag/v0.1.8.
+Image publication does not deploy the platform or promote images into JFrog.

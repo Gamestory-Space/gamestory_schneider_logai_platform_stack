@@ -4,7 +4,8 @@ identityApi:
     tag: identity-api-v0.1.7
 logaiApi:
   image:
-    tag: logai-api-v0.1.7
+    tag: logai-api-v0.1.8
+    digest: sha256:14a1b3e6a36def12e1553e9bae2bee2b91317b989d54338a0aeb7e7f99b90357
   applyDatabaseSchemaOnStartup: false
   seedSampleDataOnStartup: false
 logaiUi:

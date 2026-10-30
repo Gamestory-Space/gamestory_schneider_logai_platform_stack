@@ -20,8 +20,8 @@ logaiApi:
   replicas: 2
   image:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
-    tag: logai-api-v0.1.7
-    digest: sha256:d7d4ad92188e6597e75c3c89862f5919c2c28c2ca0f7eae7152e6a3aaa6668e1
+    tag: logai-api-v0.1.8
+    digest: sha256:14a1b3e6a36def12e1553e9bae2bee2b91317b989d54338a0aeb7e7f99b90357
   resources:
     requests:
       cpu: 250m
