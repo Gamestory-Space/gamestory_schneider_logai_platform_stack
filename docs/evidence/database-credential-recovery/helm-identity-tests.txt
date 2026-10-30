@@ -1,0 +1,2 @@
+PASS: six environments, Helm/Argo hooks, domain override, canonical realm/groups/users, secret references, read-only UIDs and invalid-value rejection
+PASS: existing service account selection, overrides and empty defaults across workload kinds

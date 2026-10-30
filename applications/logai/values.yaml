@@ -1,0 +1,177 @@
+# Environment-agnostic defaults. Everything that differs between clusters lives
+# in values-<cluster>.yaml (selected by the ApplicationSet entry in
+# SE-IaC-argocd-shared, which resolves values-{{name}}.yaml from the cluster
+# secret name); keep anything cluster-specific OUT of this file.
+# The shared database/user below match the agreed setup; override per cluster
+# where different.
+
+namespace: logai
+
+# Namespace-ownership metadata required by the platform Gatekeeper pack.
+stacId: "68225"
+notificationEmail: elwis.johnsonfernando@se.com
+
+# Rancher Project: <cluster-id>:<project-id>.
+# Set in values-<cluster>.yaml.
+rancherProjectId: ""
+
+environment: ""
+
+# Public hostnames, all covered by the gateway TLS certificate.
+# Set in values-<cluster>.yaml.
+hosts:
+  ui: ""
+  api: ""
+  identity: ""
+  auth: ""
+
+# Externally managed image pull Secret.
+imagePullSecret: ""
+
+securityContext:
+  api:
+    runAsUser: 10001
+    runAsGroup: 10001
+  ui:
+    runAsUser: 1000
+    runAsGroup: 1000
+
+identityApi:
+  image:
+    repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
+    tag: identity-api-v01.7
+    pullPolicy: IfNotPresent
+  replicas: 2
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+logaiApi:
+  image:
+    repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
+    tag: logai-api-v01.7
+    pullPolicy: IfNotPresent
+  replicas: 2
+  applyDatabaseSchemaOnStartup: false
+  seedSampleDataOnStartup: false
+  # Requires a recovery-capable API image and Deployment template support for
+  # the password-file environment variables and read-only Secret directory mount.
+  # Enable per cluster after those changes are available.
+  databaseCredentials:
+    enabled: false
+    refreshBackoffSeconds: 5
+    refreshMaxWaitSeconds: 10
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: "2"
+      memory: 2Gi
+
+logaiUi:
+  image:
+    repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
+    tag: logai-ui-v01.7
+    pullPolicy: IfNotPresent
+  replicas: 2
+  # Writable directory used to render config.json at startup.
+  # Mounted as an emptyDir because the root filesystem is read-only.
+  runtimeConfigDir: /app/runtime-config
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# Shared PostgreSQL database used by LogAI API and Keycloak.
+# Database, user and Secret are provisioned externally.
+database:
+  # Set the RDS hostname in values-<cluster>.yaml.
+  host: ""
+  port: 5432
+  name: logai_dev
+  username: logai_dev_adm
+  sslMode: require
+  # Externally managed Secret containing:
+  # password: raw database password
+  # database-url: complete PostgreSQL URL with URL-encoded credentials
+  secretName: logai-db-secret
+
+identity:
+  # none | sso
+  authMode: sso
+  realm: gamestory-sso
+  clientId: logai-ui
+  idpHint: ""
+
+identityBootstrap:
+  enabled: true
+  # username creates logai_<username> passwords without a forced change.
+  # shared uses the externally managed Secret below and forces initial change.
+  passwordMode: username
+  existingSecret: logai-bootstrap-users
+  passwordKey: password
+  backoffLimit: 1
+  activeDeadlineSeconds: 600
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+keycloak:
+  enabled: true
+  image:
+    repository: quay.io/keycloak/keycloak
+    tag: "26.0.8"
+    digest: sha256:09a381c715ab0b111835b70f2905955274843a219c6f27efb348e4d9f4086858
+    pullPolicy: IfNotPresent
+  # More than one replica requires distributed cache configuration.
+  replicas: 1
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 2Gi
+
+  # Keycloak shares the LogAI database and database user.
+  db:
+    name: logai_dev
+    username: logai_dev_adm
+
+  # Externally managed admin Secret containing:
+  # admin-username
+  # admin-password
+  # Database password comes from database.secretName, key password.
+  secretName: logai-keycloak
+
+# Exposure through the platform-managed multi-tenant Istio.
+gateway:
+  name: logai-ingressgateway
+  replicas: 2
+  # Externally managed TLS Secret covering all four public hosts.
+  tlsSecretName: logai-tls
+  # ACM certificate ARN. When set, TLS terminates on the NLB (443 only) and
+  # tlsSecretName is not used.
+  acmCertificateArn: ""
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: "1"
+      memory: 512Mi
+
+podDisruptionBudget:
+  minAvailable: 1
