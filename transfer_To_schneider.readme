@@ -7,10 +7,13 @@ Merge these three files into the remote project under applications/logai/:
 - templates/20-logai-api.yaml — add recovery environment variables and the
   read-only database password Secret mount.
 
+The shared and UAT values now pin logai-api-v0.1.8 and its published digest.
+
 Chart.yaml and templates/_helpers.tpl need no changes.
 No apps.yaml is required in this chart.
 
-Before deployment, publish the new API image and update its tag and digest.
+API image published: docker.io/chrismdgs/gamestory_logai_schneider:logai-api-v0.1.8.
+Promote it into Schneider's configured JFrog repository before deployment.
 Schneider must confirm the Secret password is synchronized.
 
 Helm validation and 63 API tests passed, including preservation of active
