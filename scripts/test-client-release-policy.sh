@@ -22,6 +22,11 @@ with zipfile.ZipFile(sys.argv[1]) as archive:
     for name in ['README.md', 'values-transfer.yaml', 'templates/45-identity-bootstrap.yaml',
                  'files/gamestory-sso-realm.json', 'files/bootstrap-groups.json']:
         assert prefix + name in archive.namelist(), 'Missing transfer payload: ' + name
+    central = 'schneider-logai-platform-v0.0.0-policy-test/applications/logai/'
+    for name in ['Chart.yaml', 'values.yaml', 'values-eu-west-3-eks-shared-dev.yaml',
+                 'templates/20-logai-api.yaml', 'templates/_helpers.tpl']:
+        assert central + name in archive.namelist(), 'Missing central chart payload: ' + name
+    assert 'schneider-logai-platform-v0.0.0-policy-test/transfer_To_schneider.readme' in archive.namelist()
 CHECK_TRANSFER
 else
   echo "SKIP: final ZIP test requires zip; CI runners execute this check."
