@@ -6,8 +6,8 @@ metadata:
 spec:
   project: <SCHNEIDER_ARGO_PROJECT>
   source:
-    repoURL: <SCHNEIDER_PLATFORM_REPO_URL>
-    targetRevision: v0.1.6
+    repoURL: https://github.schneider-electric.com/gamestory/gamestory_schneider_logai_platform_stack.git
+    targetRevision: rel2_v0.1.7
     path: helm/gamestory-schneider-platform
     helm:
       valueFiles:

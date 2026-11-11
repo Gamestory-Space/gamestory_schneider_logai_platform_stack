@@ -1,3 +1,7 @@
+# v0.1.7 credential behavior
+
+See [login defaults](login-defaults.md) for the current default passwords and overrides. The earlier shared temporary-password requirements below apply only when shared mode is selected.
+
 # Keycloak bootstrap runtime contract — v0.1.6
 
 One desired-state reconciler runs from the compiled Identity API image: `python -c "from app.bootstrap import main; main()"`. Compose executes a finite `identity-bootstrap` service; standalone Helm executes the chart's post-install/post-upgrade Job; Argo CD interprets that same chart-defined Job as PostSync. No separate Argo hook or manual Keycloak console setup is required. Supply runtime credentials and site configuration before deployment.

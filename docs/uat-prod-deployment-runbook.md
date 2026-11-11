@@ -1,3 +1,7 @@
+# v0.1.7 credential behavior
+
+See [login defaults](login-defaults.md) for the current default passwords and overrides. The earlier shared temporary-password requirements below apply only when shared mode is selected.
+
 # LogAI v0.1.6: UAT and production deployment
 
 Send this runbook with the approved platform release, its image digest manifest, and the site's reviewed Helm overrides. Images must be published or mirrored before the client can deploy. The current local implementation does not publish images or apply anything to a client cluster.

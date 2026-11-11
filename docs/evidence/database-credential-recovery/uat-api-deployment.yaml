@@ -1,0 +1,113 @@
+# Reference chart render with placeholder UAT settings and the recovery overlay.
+# Select a newly built recovery-capable API image before deployment.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logai-gamestory-schneider-platform-logai-api
+  labels:
+    app.kubernetes.io/part-of: gamestory-schneider-platform
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: gamestory-schneider-platform-0.1.8
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: logai-gamestory-schneider-platform-logai-api
+      app.kubernetes.io/instance: logai
+  template:
+    metadata:
+      annotations:
+        checksum/config: 3db7ba43e0824ec3eabd94fa4cef01e898990d48954e21bf787687a73df7e984
+      labels:
+        app.kubernetes.io/name: logai-gamestory-schneider-platform-logai-api
+        app.kubernetes.io/instance: logai
+    spec:
+      serviceAccountName: logai-srv-uat
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: logai-api
+        image: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider@sha256:d7d4ad92188e6597e75c3c89862f5919c2c28c2ca0f7eae7152e6a3aaa6668e1
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        ports:
+        - name: http
+          containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: logai-gamestory-schneider-platform-config
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: schneider-managed-uat-database
+              key: databaseUrl
+        - name: APPLY_DATABASE_SCHEMA_ON_STARTUP
+          value: 'false'
+        - name: SEED_SAMPLE_DATA_ON_STARTUP
+          value: 'false'
+        - name: DB_CREDENTIAL_REFRESH_ENABLED
+          value: 'true'
+        - name: DATABASE_PASSWORD_FILE
+          value: /var/run/secrets/logai-db/password
+        - name: DB_CREDENTIAL_REFRESH_BACKOFF_SECONDS
+          value: '5'
+        - name: DB_CREDENTIAL_REFRESH_MAX_WAIT_SECONDS
+          value: '10'
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: db-credentials
+          mountPath: /var/run/secrets/logai-db
+          readOnly: true
+        startupProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds: 5
+          failureThreshold: 30
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http
+          periodSeconds: 10
+          timeoutSeconds: 3
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds: 10
+          failureThreshold: 6
+        resources:
+          limits:
+            cpu: '1'
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+      volumes:
+      - name: tmp
+        emptyDir:
+          medium: Memory
+          sizeLimit: 64Mi
+      - name: db-credentials
+        secret:
+          secretName: schneider-managed-uat-database
+          defaultMode: 288
+          items:
+          - key: password
+            path: password
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}

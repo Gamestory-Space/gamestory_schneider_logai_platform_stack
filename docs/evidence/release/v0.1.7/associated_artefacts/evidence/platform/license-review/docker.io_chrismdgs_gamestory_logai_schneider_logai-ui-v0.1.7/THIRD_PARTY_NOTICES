@@ -1,0 +1,15 @@
+THIRD-PARTY SOFTWARE NOTICES
+
+The Gamestory Proprietary Software License applies to Gamestory-owned code
+only. Third-party and open-source software remains governed by its respective
+licences. This notice does not replace those licences or their copyright notices.
+
+The release evidence includes a CycloneDX SBOM and a component inventory with
+licence declarations derived from that SBOM. Package-specific licence and
+copyright files remain in the installed third-party packages and base image.
+SBOM entries with an unknown licence require follow-up; no attribution is inferred.
+
+Keycloak is licensed under Apache-2.0. PostgreSQL is licensed under the PostgreSQL
+License; the official PostgreSQL container scripts are licensed under MIT.
+Their exact upstream texts are supplied separately in the platform licence pack.
+Neither Keycloak nor PostgreSQL is covered by the Gamestory proprietary licence.

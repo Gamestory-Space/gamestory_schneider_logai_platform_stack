@@ -1,3 +1,7 @@
+# v0.1.7 credential behavior
+
+See [login defaults](login-defaults.md) for the current default passwords and overrides. The earlier shared temporary-password requirements below apply only when shared mode is selected.
+
 # Schneider client-local deployment
 
 Client-local runs five permanent containers: Postgres, Keycloak, Identity API, LogAI API, and LogAI UI, plus a finite identity-bootstrap job on each deployment. Application images come from Docker Hub; Keycloak is pinned by Quay digest.

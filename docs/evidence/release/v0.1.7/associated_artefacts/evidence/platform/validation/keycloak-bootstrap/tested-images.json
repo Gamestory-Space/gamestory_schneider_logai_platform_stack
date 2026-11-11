@@ -1,0 +1,6 @@
+{
+  "docker.io/chrismdgs/gamestory_logai_schneider:identity-api-v0.1.7": "sha256:8215ca2c30560b7b9a52ec4cdc4184e7fae600abd49b0930b63ad37e347dece6",
+  "docker.io/chrismdgs/gamestory_logai_schneider:logai-api-v0.1.7": "sha256:55af3b4f4c4d8833820de1f23d231e5956b167fbdf24911b2aa4ce158a5ec47a",
+  "docker.io/chrismdgs/gamestory_logai_schneider:logai-ui-v0.1.7": "sha256:5b4b9dae712faad14114166a86a5c0e8830d20e2de8914883c7e55d13c6916f8",
+  "quay.io/keycloak/keycloak:26.0.8@sha256:09a381c715ab0b111835b70f2905955274843a219c6f27efb348e4d9f4086858": "sha256:e447933b6a5015646c24a1b927a40202ce07adbadac839e7a1f99c463d68a224"
+}

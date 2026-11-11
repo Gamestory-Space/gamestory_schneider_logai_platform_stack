@@ -1,0 +1,13 @@
+apiVersion: v2
+name: logai
+description: >-
+  LogAI (UI, LogAI API, Identity API and Keycloak) on the KaaS shared EKS
+  clusters, deployed by the shared (application) ArgoCD. Environment-specific
+  configuration comes from values-<cluster>.yaml; which git ref each
+  environment deploys is decided by the ApplicationSet entries in
+  GitOps/SE-IaC-argocd-shared.
+type: application
+# Nominal: the chart is consumed from git by ArgoCD, never packaged. The
+# deployed version is the environment tag, not this field.
+version: 0.1.0
+appVersion: "0.1.4"

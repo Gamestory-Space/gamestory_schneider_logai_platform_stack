@@ -1,0 +1,10 @@
+{
+  "version": "v0.1.8",
+  "image": "docker.io/chrismdgs/gamestory_logai_schneider:logai-api-v0.1.8",
+  "digest": "sha256:14a1b3e6a36def12e1553e9bae2bee2b91317b989d54338a0aeb7e7f99b90357",
+  "source_commit": "49a2c0da4750ad16501fb4591387d09cd80a6b72",
+  "workflow": "https://github.com/Gamestory-Space/gamestory-logai-api/actions/runs/40982547712",
+  "conclusion": "success",
+  "release": "https://github.com/Gamestory-Space/gamestory-logai-api/releases/tag/v0.1.8",
+  "jfrog_promotion": "Not performed; Schneider registry references require promotion before deployment."
+}

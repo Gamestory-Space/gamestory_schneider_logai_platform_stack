@@ -1,0 +1,1 @@
+PASS: six environments, disabled/enabled modes, Secret/key overrides, read-only directory mounts, fsGroup access, preserved probes/security and non-API workloads

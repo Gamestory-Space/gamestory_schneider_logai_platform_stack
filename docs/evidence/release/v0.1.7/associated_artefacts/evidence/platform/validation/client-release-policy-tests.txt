@@ -1,0 +1,3 @@
+PASS: no forbidden bootstrap credential material detected
+PASS: no forbidden bootstrap credential material detected
+Client release policy tests passed.

@@ -1,0 +1,23 @@
+name: Database credential recovery chart tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: azure/setup-helm@v4
+        with:
+          version: v3.16.4
+      - run: python -m pip install PyYAML==6.0.2
+      - run: python scripts/test-database-credential-recovery.py
+      - run: python scripts/test-helm-identity.py

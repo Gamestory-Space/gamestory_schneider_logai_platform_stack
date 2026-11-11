@@ -20,3 +20,7 @@ helm upgrade --install logai ./helm/gamestory-schneider-platform \
 ```
 
 Use CI/CD `--set` or an additional private values file for deployment-specific references. Never store credentials in an environment values file. `remote-build-dev` is deprecated and retained only as migration history.
+
+## Existing service account
+
+Set `global.serviceAccountName` to an existing Kubernetes ServiceAccount in the release namespace. It applies to the application Deployments, Keycloak, the PostgreSQL StatefulSet when enabled, and the identity bootstrap Job. An empty value omits `serviceAccountName`, retaining the Kubernetes default. The chart does not create or annotate the account or grant AWS permissions. UAT selects `logai-srv-uat`; production remains unset pending its account name. Existing token automount settings are preserved. Selecting an account alone does not fetch Secrets Manager values or synchronize a Kubernetes Secret; configure that integration separately.

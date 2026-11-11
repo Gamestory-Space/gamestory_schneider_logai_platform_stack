@@ -1,3 +1,7 @@
+# v0.1.7 credential behavior
+
+See [login defaults](docs/login-defaults.md) for the current default passwords and overrides. The earlier shared temporary-password requirements below apply only when shared mode is selected.
+
 # Schneider LogAI deployment bundle
 
 This client-only release archive contains four environments:
@@ -18,3 +22,10 @@ For UAT and production rollout, follow [the deployment runbook](docs/uat-prod-de
 See [image licensing](docs/image-licensing.md): LogAI-owned code uses the proprietary licence; Keycloak, PostgreSQL and dependencies retain their upstream licences.
 
 For Schneider site configuration, see [UAT/production configuration requirements](docs/client-uat-prod-configuration.md).
+
+For Schneider's shared EKS chart, follow
+[the Argo CD transfer guide](handover/schneider-argocd/README.md).
+Platform v0.1.9 includes the supplied central-chart files and pins LogAI API
+v0.1.8; Identity API and UI remain v0.1.7. Merge the central-chart delta described
+in [transfer_To_schneider.readme](transfer_To_schneider.readme) into the complete
+remote chart. Platform inputs and controlled schema preparation are still required.

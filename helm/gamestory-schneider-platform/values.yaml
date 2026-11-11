@@ -1,5 +1,7 @@
 # Runtime credentials are supplied through existing Secrets; never put their values here.
 global:
+  # Existing ServiceAccount in the release namespace; empty uses Kubernetes default.
+  serviceAccountName: ""
   imagePullPolicy: IfNotPresent
   imagePullSecrets: []
   environment: client-local
@@ -8,7 +10,7 @@ identityApi:
   replicas: 1
   image:
     repository: docker.io/chrismdgs/gamestory_logai_schneider
-    tag: identity-api-v0.1.6
+    tag: identity-api-v0.1.7
     digest: ''
   service:
     port: 8000
@@ -18,19 +20,24 @@ logaiApi:
   replicas: 1
   image:
     repository: docker.io/chrismdgs/gamestory_logai_schneider
-    tag: logai-api-v0.1.6
-    digest: ''
+    tag: logai-api-v0.1.8
+    digest: sha256:14a1b3e6a36def12e1553e9bae2bee2b91317b989d54338a0aeb7e7f99b90357
   service:
     port: 8000
   resources: {}
   applyDatabaseSchemaOnStartup: false
   seedSampleDataOnStartup: false
+  databaseCredentials:
+    # Enable only with an API image containing credential recovery support.
+    enabled: false
+    refreshBackoffSeconds: 5
+    refreshMaxWaitSeconds: 10
 logaiUi:
   enabled: true
   replicas: 1
   image:
     repository: docker.io/chrismdgs/gamestory_logai_schneider
-    tag: logai-ui-v0.1.6
+    tag: logai-ui-v0.1.7
     digest: ''
   service:
     port: 3000
@@ -50,7 +57,9 @@ keycloak:
   - /opt/keycloak/bin/kc.sh
   - start-dev
   - --import-realm
-  existingAdminSecret: logai-keycloak-admin
+  existingAdminSecret: ''
+  adminUsername: admin
+  adminPassword: chris
   adminUserKey: username
   adminPasswordKey: password
   realm: gamestory-sso
@@ -116,6 +125,7 @@ tolerations: []
 affinity: {}
 identityBootstrap:
   enabled: true
+  passwordMode: username
   existingSecret: logai-bootstrap-users
   passwordKey: password
   hookMode: helm

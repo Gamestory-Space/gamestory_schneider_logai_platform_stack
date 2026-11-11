@@ -21,6 +21,7 @@ def module(path, name):
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--engine',default='docker')
+    parser.add_argument('--password-mode',choices=['username','shared'],default='username')
     parser.add_argument('--identity-image',required=True)
     parser.add_argument('--api-image',required=True)
     parser.add_argument('--ui-image',required=True)
@@ -88,6 +89,7 @@ def main():
                     '-e','KEYCLOAK_PUBLIC_URL='+kcurl,'-e','KEYCLOAK_BOOTSTRAP_ALLOW_INTERNAL_HTTP=true',
                     '-e','KEYCLOAK_ADMIN_USERNAME_FILE=/job-secrets/username',
                     '-e','KEYCLOAK_ADMIN_PASSWORD_FILE=/job-secrets/admin-password',
+                    '-e','KEYCLOAK_BOOTSTRAP_PASSWORD_MODE='+args.password_mode,
                     '-e','KEYCLOAK_BOOTSTRAP_PASSWORD_FILE=/job-secrets/user-password',
                     '--entrypoint','python',args.identity_image,'-c','from app.bootstrap import main; main()')
                 return json.loads(result.stdout)
@@ -98,12 +100,12 @@ def main():
             test_users=[]
             for username in model:
                 role='logai-admin' if 'logai_admin' in model[username] else 'as-lead'
-                test_users.append({'username':username,'password':password,'newPassword':secrets.token_urlsafe(24),'role':role})
+                test_users.append({'username':username,'password':('logai_'+username if args.password_mode=='username' else password),'newPassword':secrets.token_urlsafe(24),'role':role,'temporary':args.password_mode=='shared'})
             for username in model:
                 user=admin.request('GET','realms/gamestory-sso/users?username='+username+'&exact=true')[0]
                 membership=admin.request('GET','realms/gamestory-sso/users/'+user['id']+'/groups')
                 assert {g['name'] for g in membership} >= set(model[username])
-                assert 'UPDATE_PASSWORD' in user['requiredActions']
+                assert ('UPDATE_PASSWORD' in user['requiredActions'])==(args.password_mode=='shared')
                 assert not admin.request('GET','realms/gamestory-sso/users/'+user['id']+'/role-mappings/realm') or not any(r['name'] in ('logai-admin','as-lead') for r in admin.request('GET','realms/gamestory-sso/users/'+user['id']+'/role-mappings/realm'))
             disabled_id=admin.create_or_reset('gamestory-sso','disabled-test',password,['as-lead'])
             admin.request('PUT','realms/gamestory-sso/users/'+disabled_id,{'enabled':False})
@@ -124,6 +126,10 @@ def main():
             result=subprocess.run(['node',str(Path(__file__).with_name('keycloak-browser-test.mjs'))],env=env,text=True,capture_output=True)
             args.evidence.joinpath('browser-test.log').write_text(result.stdout+result.stderr)
             if result.returncode:raise RuntimeError('Browser acceptance failed; see sanitized browser-test.log')
+            if args.password_mode=='username':
+                for user in test_users:
+                    found=admin.request('GET','realms/gamestory-sso/users?username='+user['username']+'&exact=true')[0]
+                    admin.request('PUT','realms/gamestory-sso/users/'+found['id']+'/reset-password',{'type':'password','value':user['newPassword'],'temporary':False})
             assert compiled_bootstrap()['created']==0
             # A second browser pass uses each private changed password, with no UPDATE_PASSWORD step.
             env['LOGAI_AUTH_TEST_CONFIG']=json.dumps({**config,'rerun':True})

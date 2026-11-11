@@ -18,7 +18,15 @@ def render(env,settings=()):
 
 for env in ['build','release','client-local','dev-aws','uat','prod']:
     resources=render(env)
-    assert not any(r and r['kind']=='Secret' for r in resources), 'Rendered credentials or random Secrets'
+    for workload in resources:
+        if workload and workload['kind'] in ('Deployment','StatefulSet','Job'):
+            pod_spec=workload['spec']['template']['spec']
+            if env=='uat':
+                assert pod_spec['serviceAccountName']=='logai-srv-uat'
+            else:
+                assert 'serviceAccountName' not in pod_spec
+    admin_secret=next(r for r in resources if r and r['kind']=='Secret')
+    assert admin_secret['stringData']=={'username':'admin','password':'chris'}
     config=next(r['data'] for r in resources if r and r['kind']=='ConfigMap' and r['metadata']['name'].endswith('-config'))
     assert config['AUTH_MODE']=='sso' and config['AUTH_CLIENT_ID']=='logai-ui' and config['OIDC_AUDIENCE']=='logai-api'
     assert 'sample-' not in json.dumps(resources)
@@ -43,7 +51,8 @@ for env in ['build','release','client-local','dev-aws','uat','prod']:
     assert pod['securityContext']['runAsUser']==10001
     container=pod['containers'][0];assert container['securityContext']['readOnlyRootFilesystem']
     assert container['command']==['python','-c','from app.bootstrap import main; main()']
-    assert sum('secret' in volume for volume in pod['volumes'])==2
+    assert sum('secret' in volume for volume in pod['volumes'])==1
+    assert next(item['value'] for item in container['env'] if item['name']=='KEYCLOAK_BOOTSTRAP_PASSWORD_MODE')=='username'
     data=next(r['data'] for r in resources if r and r['kind']=='ConfigMap' and r['metadata']['name'].endswith('-identity-bootstrap'))
     realm=json.loads(data['realm.json']);users=json.loads(data['users.json'])
     ui=next(c for c in realm['clients'] if c['clientId']=='logai-ui')
@@ -64,7 +73,21 @@ assert config['AUTH_CALLBACK_URL']=='https://logai-uat.customer.example/auth/cal
 assert config['KEYCLOAK_PUBLIC_URL']=='https://keycloak-uat.customer.example'
 argo=render('uat',['--set','identityBootstrap.hookMode=argo'])
 job=next(r for r in argo if r and r['kind']=='Job');assert job['metadata']['annotations']['argocd.argoproj.io/hook']=='PostSync'
-for setting in ['identity.authMode=none','identity.publicUiUrl=http://localhost:3000','identity.publicUiUrl=https://bad.example/path','identityBootstrap.existingSecret=','keycloak.existingAdminSecret=','identityBootstrap.hookMode=invalid']:
+for setting in ['identity.authMode=none','identity.publicUiUrl=http://localhost:3000','identity.publicUiUrl=https://bad.example/path','identityBootstrap.passwordMode=invalid','identityBootstrap.hookMode=invalid']:
     result=subprocess.run([args.helm,'template','logai',str(chart),'-f',str(ROOT/'environments/uat/values.yaml'),'--set',setting],capture_output=True,text=True)
     assert result.returncode!=0,'Unsafe/incomplete values rendered successfully'
+shared=render('uat',['--set','identityBootstrap.passwordMode=shared','--set','keycloak.existingAdminSecret=external-admin'])
+assert not any(r and r['kind']=='Secret' for r in shared)
+job=next(r for r in shared if r and r['kind']=='Job')
+assert sum('secret' in v for v in job['spec']['template']['spec']['volumes'])==2
 print('PASS: six environments, Helm/Argo hooks, domain override, canonical realm/groups/users, secret references, read-only UIDs and invalid-value rejection')
+
+for env in ("client-local", "uat", "prod"):
+    custom=render(env,["--set", "global.serviceAccountName=custom-existing-account"])
+    for workload in custom:
+        if workload and workload["kind"] in ("Deployment", "StatefulSet", "Job"):
+            assert workload["spec"]["template"]["spec"]["serviceAccountName"]=="custom-existing-account"
+    assert not any(r and r["kind"]=="ServiceAccount" for r in custom)
+empty=render("uat",["--set", "global.serviceAccountName="])
+assert all("serviceAccountName" not in r["spec"]["template"]["spec"] for r in empty if r and r["kind"] in ("Deployment", "StatefulSet", "Job"))
+print("PASS: existing service account selection, overrides and empty defaults across workload kinds")

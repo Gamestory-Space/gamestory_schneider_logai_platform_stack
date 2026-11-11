@@ -1,0 +1,21 @@
+INFO:     172.18.0.1:52342 - "GET /health HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59488 - "GET /me HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59488 - "GET /me HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59494 - "GET /me HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59494 - "GET /me HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59502 - "GET /me HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59502 - "GET /me HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59514 - "GET /me HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59514 - "GET /me HTTP/1.1" 200 OK
+INFO:     172.18.0.1:55452 - "GET /me HTTP/1.1" 200 OK
+INFO:     172.18.0.1:55452 - "GET /me HTTP/1.1" 200 OK
+INFO:     172.18.0.1:55460 - "GET /me HTTP/1.1" 200 OK
+INFO:     172.18.0.1:55460 - "GET /me HTTP/1.1" 200 OK
+INFO:     172.18.0.1:55476 - "GET /me HTTP/1.1" 200 OK
+INFO:     172.18.0.1:55476 - "GET /me HTTP/1.1" 200 OK
+INFO:     172.18.0.1:55488 - "GET /me HTTP/1.1" 200 OK
+INFO:     172.18.0.1:55488 - "GET /me HTTP/1.1" 200 OK
+INFO:     Started server process [1]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)

@@ -35,13 +35,13 @@ try {
   await page.locator('#username').fill(user.username);
   await page.locator('#password').fill(config.rerun ? user.newPassword : user.password);
   await page.locator('#kc-login').click();
-  if (!config.rerun) {
+  if (!config.rerun && user.temporary !== false) {
     await page.locator('#password-new').waitFor({timeout:30000});
     await page.locator('#password-new').fill(user.newPassword);
     await page.locator('#password-confirm').fill(user.newPassword);
     await page.locator('input[type=submit], button[type=submit]').first().click();
   }
-  checks.firstLoginPasswordChange = true;
+  checks.initialPasswordPolicy = true;
   checks.passwordPreservedAfterRerun = Boolean(config.rerun);
   phase = 'OIDC callback and authenticated UI';
   await page.getByRole('button',{name:'Logout',exact:true}).waitFor({timeout:45000});
@@ -97,11 +97,11 @@ try {
   assert.equal(refresh.status(),400);
   checks.logout = true;
   checks.refreshSessionRevoked = true;
-  checks[user.username] = {role:user.role,login:true,passwordChange:true,api:true,logout:true};
+  checks[user.username] = {role:user.role,login:true,passwordChange:user.temporary !== false,api:true,logout:true};
   await context.close();
   }
   phase = 'invalid password and disabled user';
-  for (const credentials of [{username:'chris',password:config.users.find(u=>u.username==='chris').password},{username:config.disabledUsername,password:config.disabledPassword}]) {
+  for (const credentials of [{username:'chris',password:config.users.find(u=>u.username==='chris').password+'-invalid'},{username:config.disabledUsername,password:config.disabledPassword}]) {
     phase = credentials.username==='chris' ? 'invalid password rejection' : 'disabled user rejection';
     const deniedContext=await browser.newContext();
     const deniedPage=await deniedContext.newPage();

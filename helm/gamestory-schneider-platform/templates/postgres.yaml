@@ -25,6 +25,9 @@ spec:
     metadata:
       labels: {{- include "schneider.selectorLabels" (dict "root" . "component" "postgres") | nindent 8 }}
     spec:
+      {{- with .Values.global.serviceAccountName }}
+      serviceAccountName: {{ . | quote }}
+      {{- end }}
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets: {{ toYaml . | nindent 8 }}
       {{- end }}

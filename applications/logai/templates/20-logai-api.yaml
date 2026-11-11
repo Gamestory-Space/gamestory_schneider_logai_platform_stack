@@ -1,0 +1,133 @@
+{{- $credentials := .Values.logaiApi.databaseCredentials | default dict -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: logai-api
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: logai-api
+spec:
+  type: ClusterIP
+  selector:
+    app: logai-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logai-api
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: logai-api
+spec:
+  replicas: {{ .Values.logaiApi.replicas }}
+  selector:
+    matchLabels:
+      app: logai-api
+  template:
+    metadata:
+      labels:
+        app: logai-api
+    spec:
+      {{- include "logai.imagePullSecrets" . | nindent 6 }}
+      {{- include "logai.podSecurityContext" .Values.securityContext.api | nindent 6 }}
+      {{- include "logai.spread" "logai-api" | nindent 6 }}
+      containers:
+        - name: logai-api
+          image: {{ include "logai.image" .Values.logaiApi.image }}
+          imagePullPolicy: {{ .Values.logaiApi.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8000
+          env:
+            - name: AUTH_MODE
+              value: {{ .Values.identity.authMode | quote }}
+            - name: OIDC_ISSUER_URL
+              value: {{ printf "https://%s/realms/%s" .Values.hosts.auth .Values.identity.realm | quote }}
+            - name: OIDC_JWKS_URL
+              value: {{ printf "http://keycloak:80/realms/%s/protocol/openid-connect/certs" .Values.identity.realm | quote }}
+            - name: OIDC_AUDIENCE
+              value: "logai-api"
+            - name: SERVICE_NAME
+              value: gamestory-logai-api
+            - name: ENVIRONMENT
+              value: {{ required "environment must be set in values-<cluster>.yaml" .Values.environment | quote }}
+            - name: API_CORS_ORIGINS
+              value: {{ include "logai.url" (dict "root" . "name" "ui") | quote }}
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.secretName }}
+                  key: database-url
+            - name: DB_CREDENTIAL_REFRESH_ENABLED
+              value: {{ $credentials.enabled | default false | quote }}
+            {{- if $credentials.enabled }}
+            - name: DATABASE_PASSWORD_FILE
+              value: /var/run/secrets/logai-db/password
+            - name: DB_CREDENTIAL_REFRESH_BACKOFF_SECONDS
+              value: {{ $credentials.refreshBackoffSeconds | default 5 | quote }}
+            - name: DB_CREDENTIAL_REFRESH_MAX_WAIT_SECONDS
+              value: {{ $credentials.refreshMaxWaitSeconds | default 10 | quote }}
+            {{- end }}
+            - name: DB_HOST
+              value: {{ required "database.host is cluster-specific and must be set in values-<cluster>.yaml" .Values.database.host | quote }}
+            - name: DB_PORT
+              value: {{ .Values.database.port | quote }}
+            - name: DB_NAME
+              value: {{ .Values.database.name | quote }}
+            - name: DB_USER
+              value: {{ .Values.database.username | quote }}
+            - name: DB_SSLMODE
+              value: {{ .Values.database.sslMode | quote }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.secretName }}
+                  key: password
+            - name: APPLY_DATABASE_SCHEMA_ON_STARTUP
+              value: {{ .Values.logaiApi.applyDatabaseSchemaOnStartup | quote }}
+            - name: SEED_SAMPLE_DATA_ON_STARTUP
+              value: {{ .Values.logaiApi.seedSampleDataOnStartup | quote }}
+          {{- include "logai.containerSecurityContext" . | nindent 10 }}
+          resources:
+            {{- toYaml .Values.logaiApi.resources | nindent 12 }}
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 5
+            failureThreshold: 24
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 20
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            {{- if $credentials.enabled }}
+            - name: db-credentials
+              mountPath: /var/run/secrets/logai-db
+              readOnly: true
+            {{- end }}
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        {{- if $credentials.enabled }}
+        - name: db-credentials
+          secret:
+            secretName: {{ .Values.database.secretName }}
+            # The pod security helper sets fsGroup to the API's runAsGroup.
+            defaultMode: 0440
+            items:
+              - key: password
+                path: password
+        {{- end }}

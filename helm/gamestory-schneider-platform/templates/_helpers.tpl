@@ -10,7 +10,7 @@ app.kubernetes.io/instance: {{ .root.Release.Name }}
 {{- end }}
 {{- define "schneider.image" -}}{{- if .digest -}}{{ printf "%s@%s" .repository .digest }}{{- else -}}{{ printf "%s:%s" .repository .tag }}{{- end -}}{{- end }}
 {{- define "schneider.dbSecretName" -}}{{- if .Values.externalDatabase.enabled -}}{{ required "externalDatabase.existingSecret is required" .Values.externalDatabase.existingSecret }}{{- else -}}{{ required "postgres.existingSecret is required; supply a runtime database Secret" .Values.postgres.existingSecret }}{{- end -}}{{- end }}
-{{- define "schneider.adminSecretName" -}}{{ required "keycloak.existingAdminSecret is required; supply a runtime admin Secret" .Values.keycloak.existingAdminSecret }}{{- end }}
+{{- define "schneider.adminSecretName" -}}{{ .Values.keycloak.existingAdminSecret | default (printf "%s-keycloak-admin" (include "schneider.name" .)) }}{{- end }}
 {{- define "schneider.uiUrl" -}}
 {{- if .Values.identity.publicUiUrl -}}{{ .Values.identity.publicUiUrl | trimSuffix "/" }}{{- else if has .Values.global.environment (list "client-local" "build" "release") -}}http://localhost:3000{{- else -}}{{ printf "https://logai-%s.%s" .Values.global.environment .Values.identity.domain }}{{- end -}}
 {{- end }}
