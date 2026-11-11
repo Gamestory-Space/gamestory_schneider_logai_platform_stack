@@ -44,7 +44,7 @@ jobs:
             version="${{ inputs.version }}"
             is_release=true
           else
-            version="pr-${GITHUB_SHA::12}"
+            version="v0.0.0-pr-${GITHUB_SHA::12}"
             is_release=false
           fi
           if [[ "$is_release" == true && ! "$version" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9.-]+)?$ ]]; then
