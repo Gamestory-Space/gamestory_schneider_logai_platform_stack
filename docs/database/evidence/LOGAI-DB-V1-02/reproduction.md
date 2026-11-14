@@ -56,7 +56,7 @@ python3 docs/database/evidence/LOGAI-DB-V1-02/verify-migrations.py \
 ```
 
 For deterministic committed DDL, remove only pg_dump's random psql restriction
-wrapper, leaving every SQL statement intact (the 16.15 tool emits these wrappers):
+wrapper and trailing blank lines, leaving every SQL statement intact (the 16.15 tool emits these wrappers):
 
 ```sh
 python3 - <<'PY'
@@ -65,7 +65,7 @@ source = Path('/tmp/logai-keycloak-reference-ddl.sql').read_text()
 lines = [line for line in source.splitlines()
          if not line.startswith(('\\restrict ', '\\unrestrict '))]
 Path('docs/database/evidence/LOGAI-DB-V1-02/reference-schema.sql').write_text(
-    '\n'.join(lines) + '\n')
+    '\n'.join(lines).rstrip() + '\n')
 PY
 python3 docs/database/evidence/LOGAI-DB-V1-02/generate-erd.py
 python3 docs/database/evidence/LOGAI-DB-V1-02/validate-coverage.py \
