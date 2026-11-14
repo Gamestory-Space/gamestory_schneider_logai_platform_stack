@@ -1,0 +1,20 @@
+{
+  "result": "PASS",
+  "tables": 87,
+  "columns": 499,
+  "primary_keys": 86,
+  "unique_constraints": 18,
+  "foreign_keys": 67,
+  "indexes": 195,
+  "checked": [
+    "exact entity and ordered column coverage",
+    "PostgreSQL type encoding",
+    "nullability",
+    "PK/FK/single-column UK memberships",
+    "FK names and targets",
+    "nullability/uniqueness cardinalities",
+    "identifying vs non-identifying physical FKs"
+  ],
+  "catalogue_sha256": "7132f573dfd8410d2b4ea773d83f5e0ab9a09fe7a03c64a955b351a5409432c0",
+  "diagram_sha256": "0fe7a16b4c99208de8b40d7f98787a061a2f0949b9863e30a5fb94f2aa527983"
+}
