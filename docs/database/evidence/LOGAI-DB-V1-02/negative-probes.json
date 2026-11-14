@@ -1,0 +1,7 @@
+{
+  "type": "correctly rejected",
+  "nullability": "correctly rejected",
+  "fk_marker": "correctly rejected",
+  "fk_cardinality": "correctly rejected",
+  "table": "correctly rejected"
+}
