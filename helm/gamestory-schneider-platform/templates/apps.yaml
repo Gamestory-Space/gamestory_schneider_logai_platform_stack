@@ -49,6 +49,17 @@ spec:
           env:
             - name: DATABASE_URL
               valueFrom: {secretKeyRef: {name: {{ include "schneider.dbSecretName" $root }}, key: {{ ternary $root.Values.externalDatabase.databaseUrlKey $root.Values.postgres.databaseUrlKey $root.Values.externalDatabase.enabled }}}}
+            {{- if $root.Values.logaiApi.policyConfigMap }}
+            {{- $policyConfigMap := $root.Values.logaiApi.policyConfigMap }}
+            {{- range $key := list "POLICY_STORAGE_BACKEND" "POLICY_S3_BUCKET" "POLICY_S3_REGION" "POLICY_S3_PREFIX" "POLICY_S3_KMS_KEY_ID" "POLICY_S3_EXPECTED_ACCOUNT_ID" "POLICY_S3_CREDENTIALS_SOURCE" "POLICY_S3_RETENTION_DAYS" "POLICY_LIFECYCLE_ACTIVATION_ENABLED" "POLICY_RUNTIME_TEMPLATE_VERIFIED" }}
+            - name: {{ $key }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $policyConfigMap }}
+                  key: {{ $key }}
+                  optional: true
+            {{- end }}
+            {{- end }}
             - {name: APPLY_DATABASE_SCHEMA_ON_STARTUP, value: {{ $root.Values.logaiApi.applyDatabaseSchemaOnStartup | quote }}}
             - {name: SEED_SAMPLE_DATA_ON_STARTUP, value: {{ $root.Values.logaiApi.seedSampleDataOnStartup | quote }}}
             - {name: DB_CREDENTIAL_REFRESH_ENABLED, value: {{ $root.Values.logaiApi.databaseCredentials.enabled | quote }}}

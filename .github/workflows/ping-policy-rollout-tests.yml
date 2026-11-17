@@ -1,0 +1,54 @@
+name: Ping and Policy Studio rollout rehearsal
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rehearse:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        postgres: ['16', '17']
+    services:
+      postgres:
+        image: postgres:${{ matrix.postgres }}
+        env:
+          POSTGRES_DB: policy_rollout_test
+          POSTGRES_USER: rollout
+          POSTGRES_PASSWORD: isolated-rollout-tests-only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U rollout -d policy_rollout_test"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: '5432'
+      PGDATABASE: policy_rollout_test
+      PGUSER: rollout
+      PGPASSWORD: isolated-rollout-tests-only
+      POLICY_ROLLOUT_TEST_PSQL: psql
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+      - name: Install test tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client jq zip
+          python3 -m pip install --target "$RUNNER_TEMP/logai-rollout-testdeps" PyYAML==6.0.3
+          echo "PYTHONPATH=$RUNNER_TEMP/logai-rollout-testdeps" >> "$GITHUB_ENV"
+      - name: Check schema and public deployment tools
+        run: |
+          scripts/client/verify-policy-schema.sh
+          bash -n scripts/*.sh scripts/client/*.sh
+          python3 scripts/test-ping-policy-assets.py
+      - name: Rehearse against existing and incompatible tables
+        run: python3 scripts/test-policy-studio-rollout.py
+      - name: Verify final client archive and private-file exclusions
+        run: scripts/test-client-release-policy.sh

@@ -1,0 +1,57 @@
+{
+  "status": "prepared-not-deployed",
+  "api_source_commit": "dde5d6b86050a359d30690c94ba7d45b706b6b41",
+  "policy_content_schema": 4,
+  "generator": "four-section-policy-v5",
+  "api_release_image": null,
+  "ui_release_image": null,
+  "migration_order": [
+    "schema/001_release_and_chutes_read_models.sql",
+    "schema/003_order_orchestration_runs.sql",
+    "schema/004_policy_persistence.sql",
+    "schema/005_policy_lifecycle.sql",
+    "schema/006_fixed_policy_snapshots.sql",
+    "schema/007_dictionary_versions.sql",
+    "schema/008_dictionary_setting_terms.sql",
+    "schema/009_shared_dictionary.sql",
+    "schema/010_policy_use_case_details.sql",
+    "schema/011_four_section_policy.sql"
+  ],
+  "excluded": [
+    "002_seed_schneider_sample_read_models.sql",
+    "004_policy_persistence.down.sql",
+    "005_policy_lifecycle.down.sql"
+  ],
+  "policy_tables": [
+    "logai_current_snapshot",
+    "logai_definition_revisions",
+    "logai_dictionary_members",
+    "logai_dictionary_versions",
+    "logai_global_snapshots",
+    "logai_policies",
+    "logai_policy_approvals",
+    "logai_policy_audit",
+    "logai_policy_categories",
+    "logai_policy_definition_versions",
+    "logai_policy_definitions",
+    "logai_policy_objectives",
+    "logai_policy_rules",
+    "logai_policy_settings",
+    "logai_policy_snapshot_uses",
+    "logai_policy_storage",
+    "logai_policy_strategies",
+    "logai_policy_use_case_details",
+    "logai_policy_versions",
+    "logai_policy_write_intents",
+    "logai_selection_reviews",
+    "logai_shared_dictionary_terms",
+    "logai_shared_dictionary_versions",
+    "logai_snapshot_approvals",
+    "logai_snapshot_members"
+  ],
+  "preservation_targets": [
+    "logai_release_shipments",
+    "logai_chutes",
+    "logai_order_orchestration_runs"
+  ]
+}

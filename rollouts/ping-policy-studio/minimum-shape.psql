@@ -1,0 +1,69 @@
+-- Read-only compatibility guards. Missing tables are created by the migration.
+-- This is an early collision check, not certification of every client customization.
+DO $$
+DECLARE item record; actual text; kind "char"; occupied boolean; registered boolean; incompatible boolean;
+BEGIN
+ IF to_regclass(format('%I.user_entity',current_schema())) IS NOT NULL
+ AND to_regclass(format('%I.realm',current_schema())) IS NOT NULL
+ AND to_regclass(format('%I.logai_release_shipments',current_schema())) IS NULL THEN
+ RAISE EXCEPTION 'Target appears to be a Keycloak schema; select the LogAI application database/schema'; END IF;
+ IF NOT EXISTS(SELECT 1 FROM pg_catalog.pg_class c JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+  WHERE n.nspname=current_schema() AND c.relname IN ('logai_release_shipments','logai_chutes','logai_policies'))
+ AND EXISTS(SELECT 1 FROM pg_catalog.pg_class c JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+  WHERE n.nspname NOT IN (current_schema(),'pg_catalog','information_schema') AND c.relname IN ('logai_release_shipments','logai_chutes','logai_policies')) THEN
+ RAISE EXCEPTION 'LogAI tables exist in another schema; verify the application search_path before continuing'; END IF;
+ FOR item IN SELECT * FROM (VALUES
+ ('logai_release_shipments','id','uuid'),
+ ('logai_release_shipments','tenant_id','text'),
+ ('logai_release_shipments','shipment_id','text'),
+ ('logai_chutes','id','uuid'), ('logai_chutes','chute_number','int4'),
+ ('logai_order_orchestration_runs','id','uuid'), ('logai_order_orchestration_runs','ai_mode','text'),
+ ('logai_policy_storage','backend','text'), ('logai_policy_storage','location_hash','bpchar'),
+ ('logai_policies','id','text'), ('logai_policies','head_revision','int8'), ('logai_policies','created_by','text'),
+ ('logai_policy_versions','policy_id','text'), ('logai_policy_versions','revision','int8'),
+ ('logai_policy_versions','backend','text'), ('logai_policy_versions','yaml_text','text'),
+ ('logai_policy_versions','checksum','bpchar'),
+ ('logai_policy_definitions','policy_id','text'), ('logai_policy_definitions','stable_key','text'),
+ ('logai_policy_write_intents','policy_id','text'), ('logai_policy_write_intents','request_key','text'),
+ ('logai_policy_approvals','id','uuid'), ('logai_policy_audit','id','int8'),
+ ('logai_policy_settings','policy_id','text'), ('logai_policy_settings','revision','int8'),
+ ('logai_policy_rules','policy_id','text'), ('logai_policy_objectives','policy_id','text'),
+ ('logai_policy_categories','policy_id','text'), ('logai_policy_strategies','policy_id','text'),
+ ('logai_shared_dictionary_versions','version','int8'),
+ ('logai_shared_dictionary_terms','term_id','text'),
+ ('logai_policy_use_case_details','purpose','text'), ('logai_policy_use_case_details','revision','int8')
+ ) AS expected(table_name,column_name,udt_name)
+ LOOP
+  SELECT c.relkind INTO kind FROM pg_catalog.pg_class c JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+   WHERE n.nspname=current_schema() AND c.relname=item.table_name;
+  IF NOT FOUND THEN CONTINUE; END IF;
+  IF kind NOT IN ('r','p') THEN RAISE EXCEPTION 'Existing % must be a table; stop for DBA review',item.table_name; END IF;
+  SELECT udt_name INTO actual FROM information_schema.columns
+   WHERE table_schema=current_schema() AND table_name=item.table_name AND column_name=item.column_name;
+  IF actual IS DISTINCT FROM item.udt_name THEN
+   RAISE EXCEPTION 'Existing %.% has incompatible or missing type; stop for DBA review',item.table_name,item.column_name;
+  END IF;
+ END LOOP;
+ IF to_regclass(format('%I.logai_policies',current_schema())) IS NOT NULL THEN
+  EXECUTE format('SELECT EXISTS(SELECT 1 FROM %I.logai_policies)',current_schema()) INTO occupied;
+  IF occupied THEN
+   IF EXISTS(SELECT 1 FROM information_schema.columns WHERE table_schema=current_schema() AND table_name='logai_policies' AND column_name='use_case') THEN
+    EXECUTE format($check$SELECT EXISTS(SELECT 1 FROM %I.logai_policies p JOIN (VALUES ('chute-allocation','chute_allocation'),('order-release','order_release'),('order-orchestration','order_orchestration'),('sample_chute_allocation','chute_allocation')) AS expected(id,use_case) ON p.id=expected.id WHERE p.use_case IS DISTINCT FROM expected.use_case)$check$,current_schema()) INTO incompatible;
+   ELSE
+    EXECUTE format('SELECT EXISTS(SELECT 1 FROM %I.logai_policies WHERE id IN (''order-release'',''order-orchestration''))',current_schema()) INTO incompatible;
+   END IF;
+   IF incompatible THEN RAISE EXCEPTION 'Reserved policy identities need reviewed use-case reconciliation before migration'; END IF;
+   IF EXISTS(SELECT 1 FROM information_schema.columns WHERE table_schema=current_schema() AND table_name='logai_policies' AND column_name='classification') THEN
+    EXECUTE format($check$SELECT EXISTS(SELECT 1 FROM %I.logai_policies WHERE (id='sample_chute_allocation' AND classification IS DISTINCT FROM 'SAMPLE') OR (id IN ('chute-allocation','order-release','order-orchestration') AND classification IS DISTINCT FROM 'CUSTOMER'))$check$,current_schema()) INTO incompatible;
+   ELSE
+    EXECUTE format('SELECT EXISTS(SELECT 1 FROM %I.logai_policies WHERE id=''sample_chute_allocation'')',current_schema()) INTO incompatible;
+   END IF;
+   IF incompatible THEN RAISE EXCEPTION 'Reserved policy identities need reviewed classification reconciliation before migration'; END IF;
+   IF to_regclass(format('%I.logai_policy_storage',current_schema())) IS NULL THEN
+    RAISE EXCEPTION 'Existing policy data has no backend registry; stop for storage-profile review';
+   END IF;
+   EXECUTE format('SELECT EXISTS(SELECT 1 FROM %I.logai_policy_storage WHERE singleton=true)',current_schema()) INTO registered;
+   IF NOT registered THEN RAISE EXCEPTION 'Existing policy data has no registered backend; stop for storage-profile review'; END IF;
+  END IF;
+ END IF;
+END $$;

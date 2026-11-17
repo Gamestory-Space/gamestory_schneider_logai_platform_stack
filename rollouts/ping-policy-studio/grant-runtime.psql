@@ -1,0 +1,36 @@
+\ir target.psql
+\if :{?runtime_role}
+\else
+  \echo 'Required: -v runtime_role=<existing approved LogAI runtime role>'
+  DO $$ BEGIN RAISE EXCEPTION 'Rollout precondition failed; nothing applied'; END $$;
+\endif
+SELECT EXISTS(SELECT 1 FROM pg_catalog.pg_roles WHERE rolname=:'runtime_role') AS runtime_exists \gset
+\if :runtime_exists
+\else
+  \echo 'Runtime role does not exist. No privileges changed.'
+  DO $$ BEGIN RAISE EXCEPTION 'Rollout precondition failed; nothing applied'; END $$;
+\endif
+BEGIN;
+SET LOCAL lock_timeout='5s';
+SET LOCAL statement_timeout='5min';
+SELECT pg_catalog.set_config('search_path',pg_catalog.quote_ident(:'target_schema')||', pg_catalog',true);
+GRANT USAGE ON SCHEMA :"target_schema" TO :"runtime_role";
+GRANT SELECT,INSERT ON
+ logai_policy_storage,logai_policies,logai_policy_versions,logai_policy_definitions,
+ logai_policy_write_intents,logai_policy_approvals,logai_policy_audit,
+ logai_global_snapshots,logai_snapshot_members,logai_current_snapshot,
+ logai_selection_reviews,logai_policy_definition_versions,logai_policy_settings,
+ logai_policy_rules,logai_policy_objectives,logai_policy_categories,logai_policy_strategies,
+ logai_policy_snapshot_uses,logai_snapshot_approvals,logai_definition_revisions,
+ logai_dictionary_versions,logai_dictionary_members,logai_shared_dictionary_versions,
+ logai_shared_dictionary_terms,logai_policy_use_case_details TO :"runtime_role";
+GRANT UPDATE(backend,location_hash) ON logai_policy_storage TO :"runtime_role";
+GRANT UPDATE(head_revision,active_revision) ON logai_policies TO :"runtime_role";
+GRANT UPDATE(state,result_revision) ON logai_policy_write_intents TO :"runtime_role";
+GRANT UPDATE(consumed_revision) ON logai_policy_approvals TO :"runtime_role";
+GRANT UPDATE(snapshot_id) ON logai_current_snapshot TO :"runtime_role";
+GRANT UPDATE(ended_at,closed_by) ON logai_policy_snapshot_uses TO :"runtime_role";
+GRANT UPDATE(consumed_use) ON logai_snapshot_approvals TO :"runtime_role";
+GRANT USAGE,SELECT ON SEQUENCE logai_policy_audit_id_seq,logai_global_snapshots_sequence_seq TO :"runtime_role";
+COMMIT;
+\echo 'Policy runtime grants applied; existing base-table grants and ownership were not changed.'

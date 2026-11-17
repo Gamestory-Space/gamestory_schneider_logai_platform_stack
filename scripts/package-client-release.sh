@@ -45,5 +45,5 @@ else
   echo "zip is required." >&2
   exit 1
 fi
-sha256sum "$archive" > "$archive.sha256"
+(cd "$output_path" && sha256sum "$(basename "$archive")" > "$(basename "$archive").sha256")
 "$repo_root/scripts/validate-client-archive.sh" "$archive"

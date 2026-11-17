@@ -1,0 +1,195 @@
+# Ping + Policy Studio: UAT rollout preparation
+
+**Prepared, not deployed.** This package contains an additive schema plan and public
+Ping configuration tools. It does not merge implementation PRs, publish service
+releases, promote images, change image pins or connect to the client's database.
+The bundled default values still pin the previous API/UI. Do not deploy them as the
+Policy Studio rollout: first obtain the approved new API/UI release images and digests.
+
+## Release inputs and boundaries
+
+1. Review/merge API PR #6 and UI PR #6 through normal owner control. The four-section
+   implementation passed CI at API `dde5d6b86050a359d30690c94ba7d45b706b6b41` and UI
+   `cfd4ff294d21793e0afc0c7a6f46a43715b20eea`. No implementation is merged by this plan.
+2. Publish approved release images and promote the exact digests to the client registry.
+   Set both API/UI references in Schneider's private values; retain Identity API and
+   Keycloak pins unless independently approved. Update the rollout image record in
+   `manifest.json` when release provenance is available. Never substitute an old API
+   image merely because a newer UI image exists.
+3. Verify the signed client archive and schema checksums. Extract `/app/schema` from
+   the approved API image without starting it and compare the ten listed files:
+
+   ```bash
+   ./scripts/verify-policy-schema.sh /secure/extracted-api-schema
+   ```
+
+   The checked-in SQL is from the reviewed API candidate; matching the exact released
+   image is mandatory. Changed SQL requires a reviewed updated manifest and rehearsal.
+4. Have the client provide the actual LogAI database, schema/search_path, current
+   deployment versions, DDL owner, runtime role, secret references and restored backup
+   evidence. Repository placeholders and local tests are not live UAT inventory.
+5. The secret for Ping stays at the client site. Its client authentication method
+   (Basic or POST) and client-approved scopes remain client-specific inputs. Discovery
+   confirms capabilities, not that client's assigned method or grants.
+
+Policy Studio provides configuration and a versioned intelligence preference; it does
+not implement Self-hosted/Enterprise AI adapters or a deterministic execution engine.
+Snapshot-use flags remain disabled unless the separately governed readiness checks pass.
+
+## A. Read-only database preflight
+
+Use the **LogAI application database**, not Keycloak's database. Preserve its existing
+schema and connection options. Run as the approved migration/DDL owner, not by giving
+DDL rights to the service's runtime role. Credentials stay in the client's protected
+PostgreSQL service/password files; do not put a DSN/password into command arguments,
+Git, Helm values or shared logs. Use a PostgreSQL client with access from the approved
+operator network. Example commands are relative to this extracted rollout directory:
+
+```bash
+export PGSERVICEFILE=/secure/logai-uat.pg_service.conf
+export PGSERVICE=logai-uat-migration
+psql -X -v expected_database=ACTUAL_DB -v target_schema=ACTUAL_SCHEMA \
+  -f preflight.psql > /secure/evidence/logai-preflight.txt
+```
+
+The report lists relations, owners, columns and constraints without warehouse rows or
+credentials. It also rejects a Keycloak-only target schema. Guards reject wrong database/schema, common incompatible table layouts,
+LogAI tables found only in another schema, conflicting reserved policy identities,
+and policy data without a backend registry.
+A successful preflight is **not** a complete proof of custom-schema compatibility.
+Review the report and restore/rehearse against a fresh, appropriately protected clone.
+Do not automatically rename existing tables, coerce unknown columns, disable guards,
+truncate data, re-import a realm or execute a down migration.
+
+Existing S3 or PostgreSQL policy metadata, YAML/versioned objects, revisions, approvals,
+audits and usage periods must be preserved. If policy history exists, retain its exact
+backend/location configuration. The API deliberately refuses an unverified backend
+switch. New policy writes are relational; that does not remove the need to read legacy
+S3 content. Retain applicable IRSA/IAM/KMS/network access as well as its non-secret settings.
+
+## B. Backup, quiesce and migrate
+
+- Arrange the client maintenance window; stop/quiesce API writers and drain active
+  transactions normally. Record original replicas/configuration and keep the UI in
+  maintenance. Coordinate this application's GitOps/HPA controls so reconciliation
+  cannot restart old writers during migration. Do not terminate database connections
+  as a shortcut.
+- Take the agreed database backup/snapshot, verify restoration on a clone and record
+  its reference. Retain existing S3 object versions too if that backend is present.
+- Run `counts.psql` before DDL, with writers stopped, and keep the output private.
+  Exact counts time out rather than scanning indefinitely. Use the client's approved
+  backup/dataset comparison tooling where counts alone are insufficient.
+- Apply the reviewed plan **once**, using the DDL owner. It runs the listed numbered
+  migrations in a single transaction with an advisory lock, bounded lock/statement
+  timeouts and ON_ERROR_STOP. A failure rolls back the DDL in that transaction. Fix
+  the cause/rehearse and retry; do not bypass the failed constraint.
+
+```bash
+psql -X -v expected_database=ACTUAL_DB -v target_schema=ACTUAL_SCHEMA \
+  -v backup_reference=VERIFIED_BACKUP_ID -f migrate.psql \
+  > /secure/evidence/logai-migrate.txt 2>&1
+```
+
+The backup argument records the operator prerequisite; this script cannot certify a
+backup or restoration. Demo seed 002 and all down scripts are excluded. Existing
+operational tables use their reviewed original DDL and data is retained; policy
+migrations add tables/columns and replace compatible constraints/functions/triggers.
+These take locks even when a table already exists, hence the maintenance window.
+
+Repeat `counts.psql` immediately after DDL, before restarting the API. Compare every
+pre-existing table count and the restored-clone checksums/legacy history. New tables
+should be empty; no customer policy, Dictionary default or snapshot is seeded.
+The local rehearsal additionally fingerprints all original columns and proves rollback
+on early layout errors and a later constraint failure. It is not acceptance of the
+unseen remote database.
+
+## C. Runtime permissions and configuration
+
+Review/apply the minimal policy grants for the existing approved runtime role:
+
+```bash
+psql -X -v expected_database=ACTUAL_DB -v target_schema=ACTUAL_SCHEMA \
+  -v runtime_role=ACTUAL_RUNTIME_ROLE -f grant-runtime.psql
+```
+
+This adds policy SELECT/INSERT, column-specific updates on mutable heads/intents/
+approvals/pointers/use closures, and required sequence access. It grants no table
+ownership, schema CREATE, DELETE/TRUNCATE or history UPDATE, and does not revoke or
+change existing base-table rights. Audit the role's inherited/existing privileges too.
+If it already owns tables, this additive grant script does not remove that ownership.
+
+Before application startup, run `runtime-check.psql` through a PostgreSQL service
+entry using the **actual runtime role and connection options/search_path**, with the
+same expected_database/target_schema arguments. It performs no DDL and refuses missing
+policy privileges or unqualified relations resolving to a different schema. The same
+check as the DDL owner would not validate runtime permissions. Retain existing core-table
+rights; this plan adds only policy rights.
+
+Use the new API/UI images together. Keep both
+`logaiApi.applyDatabaseSchemaOnStartup: false` and
+`logaiApi.seedSampleDataOnStartup: false` in the private final values. Run DDL through
+this plan, not concurrent service replicas. Restore the reviewed replica count after
+normal deployment verification. The separate explicit admin Sample action may append
+a guide revision; that must not populate the three customer slots.
+
+Both supplied charts accept optional `logaiApi.policyConfigMap` referring to a
+client-managed **non-secret** ConfigMap. Only the explicit policy storage/activation
+keys are read from it. Use it to preserve an existing backend profile; do not put AWS
+keys, database passwords or Ping secrets there. If no profile exists, default PostgreSQL
+storage applies. Do not change these activation flags just to make a button work:
+`POLICY_LIFECYCLE_ACTIVATION_ENABLED`, `POLICY_RUNTIME_TEMPLATE_VERIFIED`.
+Configured policy readiness is not proof of a connected decision engine.
+
+The supplied `applications/logai` central chart is partial. Merge the reviewed template/
+value additions into the client's complete chart; do not replace that chart with this
+local subset. Render/diff the complete remote chart with its private values before sync.
+
+## D. Ping enablement — separate from database migration
+
+Follow `docs/ping-uat-integration.md` in the extracted client bundle. Render the provider
+with the client-site secret file and confirmed Basic/POST method/scopes, using
+`./scripts/render-ping-provider.sh`. The generated private JSON stays outside Git and
+the release archive. Inspect/back up the existing `schneider-main` provider, preserve
+its mappers, pass the protected backup with `--existing-provider-file`, and perform a targeted update. Keep local administrator login available;
+do not enable automatic Ping redirection during the initial test. No realm-wide import.
+
+Verify the registered broker redirect, signature validation, trusted-email setting and
+assigned test user. Test Ping login, Keycloak-issued application token, approved role,
+unassigned-user denial, explicit account-link behaviour and agreed logout. Successful
+upstream authentication alone must not grant application administrator privileges.
+
+## E. Acceptance and rollback
+
+- Verify the rendered and running API/UI image digests, startup/seed flags, database
+  connectivity, read-model endpoints and existing operational data. A basic /health
+  response alone is not a database test.
+- Test assigned-user Ping login and the existing local administrator route separately.
+- Policy Studio: four fixed tabs, shared Dictionary, four sections, blank new customer
+  slots, add/edit/version/save/reload, Must/Prefer priority and all strategy defaults.
+  Inspect existing fixed-slot legacy revisions and arbitrary-ID prototype history on
+  the clone; old IDs are retained but are not new paid policy products.
+- A new shared Dictionary is not silently filled from old policy-local dictionaries.
+  Reconcile/register legacy terms explicitly before saving new versions, resolving
+  conflicting names/meanings with the customer. No legacy policy is auto-activated.
+- Where an old active snapshot exists, review its generator compatibility. New v5
+  bundles require complete selected revisions and normal approval/use controls; never
+  rewrite old fingerprints. No decision-engine readiness is claimed here.
+- Perform one approved test save/reload and verify runtime permission boundaries and
+  credential rotation without interrupting existing transactions. Record resulting
+  changes in the client acceptance evidence.
+
+If Ping fails, disable only that provider or restore its reviewed prior configuration;
+retain the secret's secure source because exported secrets may be masked. If application
+acceptance fails, stop new policy writes and use the rehearsed application rollback
+with startup DDL/seeding still off. Keep the additive schema/history. Do not run down
+scripts or blindly restore the whole database after new operational writes; database
+restoration needs its own reviewed recovery window and reconciliation. Prefer a
+verified forward fix when new-format policy data has already been written.
+
+## Go/no-go record (client-owned)
+
+Record approved API/UI digests and promotion evidence; target DB/schema and preflight;
+restored backup reference; migration/count/grant results; preserved backend profile;
+private-value diff; Ping client method/scopes and test user; local admin recovery;
+functional/SSO/permission acceptance; and the rehearsed rollback owner/window.
+Unconfirmed items keep the rollout in preparation, not declared ready for live sync.

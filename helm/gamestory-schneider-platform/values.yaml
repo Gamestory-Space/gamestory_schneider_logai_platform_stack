@@ -16,6 +16,8 @@ identityApi:
     port: 8000
   resources: {}
 logaiApi:
+  # Existing policy storage profile and approved policy flags only; never credentials.
+  policyConfigMap: ""
   enabled: true
   replicas: 1
   image:

@@ -1,5 +1,12 @@
 # v0.1.7 credential behavior
 
+For the Ping + Policy Studio upgrade of an **existing** database, first follow
+[the staged rollout plan](../rollouts/ping-policy-studio/README.md). Keep startup
+DDL and demo seeding off; use its reviewed, transactional migration with the DDL
+owner and validate runtime grants/search_path separately. Fresh-database bootstrap
+instructions below are not the procedure for upgrading an occupied database.
+
+
 See [login defaults](login-defaults.md) for the current default passwords and overrides. The earlier shared temporary-password requirements below apply only when shared mode is selected.
 
 # LogAI v0.1.6: UAT and production deployment

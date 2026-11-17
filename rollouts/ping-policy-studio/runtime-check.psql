@@ -1,0 +1,52 @@
+\ir target.psql
+BEGIN READ ONLY;
+SET LOCAL statement_timeout='60s';
+-- Run with the runtime service credentials and its actual connection/search_path.
+-- Do not override search_path here: detect an application resolving the wrong schema.
+SELECT current_database(),current_user,current_schema(),current_setting('search_path');
+WITH required(name) AS (VALUES
+ ('logai_current_snapshot'),
+ ('logai_definition_revisions'),
+ ('logai_dictionary_members'),
+ ('logai_dictionary_versions'),
+ ('logai_global_snapshots'),
+ ('logai_policies'),
+ ('logai_policy_approvals'),
+ ('logai_policy_audit'),
+ ('logai_policy_categories'),
+ ('logai_policy_definition_versions'),
+ ('logai_policy_definitions'),
+ ('logai_policy_objectives'),
+ ('logai_policy_rules'),
+ ('logai_policy_settings'),
+ ('logai_policy_snapshot_uses'),
+ ('logai_policy_storage'),
+ ('logai_policy_strategies'),
+ ('logai_policy_use_case_details'),
+ ('logai_policy_versions'),
+ ('logai_policy_write_intents'),
+ ('logai_selection_reviews'),
+ ('logai_shared_dictionary_terms'),
+ ('logai_shared_dictionary_versions'),
+ ('logai_snapshot_approvals'),
+ ('logai_snapshot_members'))
+SELECT bool_and(
+ coalesce(to_regclass(name)=to_regclass(format('%I.%I',:'target_schema',name)),false)
+ AND coalesce(has_table_privilege(current_user,to_regclass(format('%I.%I',:'target_schema',name)),'SELECT'),false)
+ AND coalesce(has_table_privilege(current_user,to_regclass(format('%I.%I',:'target_schema',name)),'INSERT'),false)
+) AS policy_runtime_ready FROM required \gset
+\if :policy_runtime_ready
+\else
+ DO $$ BEGIN RAISE EXCEPTION 'Runtime policy tables/permissions/search_path do not match the reviewed target'; END $$;
+\endif
+WITH required(name) AS (VALUES ('logai_release_shipments'),('logai_chutes'),('logai_order_orchestration_runs'))
+SELECT bool_and(
+ coalesce(to_regclass(name)=to_regclass(format('%I.%I',:'target_schema',name)),false)
+ AND coalesce(has_table_privilege(current_user,to_regclass(format('%I.%I',:'target_schema',name)),'SELECT'),false)
+) AS core_runtime_ready FROM required \gset
+\if :core_runtime_ready
+\else
+ DO $$ BEGIN RAISE EXCEPTION 'Runtime base tables/permissions/search_path do not match the reviewed target'; END $$;
+\endif
+COMMIT;
+\echo 'Runtime schema resolution and minimum table privileges verified; audit existing/inherited broad grants separately.'

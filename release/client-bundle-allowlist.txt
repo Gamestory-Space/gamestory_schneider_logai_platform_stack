@@ -27,3 +27,7 @@ docs/login-defaults.md|docs/login-defaults.md
 handover/schneider-argocd|handover/schneider-argocd
 applications/logai|applications/logai
 transfer_To_schneider.readme|transfer_To_schneider.readme
+
+identity/ping-uat.json|identity/ping-uat.json
+docs/ping-uat-integration.md|docs/ping-uat-integration.md
+rollouts/ping-policy-studio|rollouts/ping-policy-studio
