@@ -1,0 +1,26 @@
+{
+  "alias": "schneider-main",
+  "displayName": "Schneider Electric SSO",
+  "providerId": "oidc",
+  "enabled": false,
+  "trustEmail": false,
+  "storeToken": false,
+  "addReadTokenRoleOnCreate": false,
+  "authenticateByDefault": false,
+  "linkOnly": false,
+  "firstBrokerLoginFlowAlias": "first broker login",
+  "config": {
+    "issuer": "https://ping-sso-uat.schneider-electric.com",
+    "authorizationUrl": "https://ping-sso-uat.schneider-electric.com/as/authorization.oauth2",
+    "tokenUrl": "https://ping-sso-uat.schneider-electric.com/as/token.oauth2",
+    "userInfoUrl": "https://ping-sso-uat.schneider-electric.com/idp/userinfo.openid",
+    "jwksUrl": "https://ping-sso-uat.schneider-electric.com/pf/JWKS",
+    "clientId": "logai_68225_uat",
+    "defaultScope": "",
+    "clientAuthMethod": "",
+    "syncMode": "IMPORT",
+    "useJwksUrl": "true",
+    "validateSignature": "true",
+    "hideOnLoginPage": "false"
+  }
+}

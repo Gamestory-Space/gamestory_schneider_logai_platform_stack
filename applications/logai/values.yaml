@@ -51,6 +51,8 @@ identityApi:
       memory: 1Gi
 
 logaiApi:
+  # Existing policy storage profile and approved policy flags only; never credentials.
+  policyConfigMap: ""
   image:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
     tag: logai-api-v0.1.8

@@ -38,3 +38,10 @@ contains only the API workload templates received so far. Merge the three-file
 delta described in `transfer_To_schneider.readme` into the complete remote chart;
 do not replace that chart with this partial local copy. JFrog image promotion,
 ESO verification and actual Schneider deployment acceptance remain separate.
+
+
+The rollout-preparation branch adds public Ping configuration, shell-only client
+helpers and the reviewed Policy Studio DDL/runbook under `rollouts/ping-policy-studio`.
+No application Python/TypeScript source or generated credential files are included.
+Its manifest identifies the API candidate and SQL checksums; released API/UI image
+references remain prerequisites rather than invented pins. See the rollout runbook.

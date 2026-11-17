@@ -1,0 +1,30 @@
+\set ON_ERROR_STOP on
+\if :{?target_schema}
+\else
+  \echo 'Required: -v target_schema=<existing reviewed LogAI schema>'
+  DO $$ BEGIN RAISE EXCEPTION 'Rollout precondition failed; nothing applied'; END $$;
+\endif
+\if :{?expected_database}
+\else
+  \echo 'Required: -v expected_database=<reviewed LogAI database>'
+  DO $$ BEGIN RAISE EXCEPTION 'Rollout precondition failed; nothing applied'; END $$;
+\endif
+SELECT current_database() = :'expected_database' AS correct_database,
+       EXISTS(SELECT 1 FROM pg_catalog.pg_namespace WHERE nspname=:'target_schema') AS correct_schema \gset
+\if :correct_database
+\else
+  \echo 'Wrong database. Nothing applied.'
+  DO $$ BEGIN RAISE EXCEPTION 'Rollout precondition failed; nothing applied'; END $$;
+\endif
+\if :correct_schema
+\else
+  \echo 'Target schema does not exist. Nothing applied.'
+  DO $$ BEGIN RAISE EXCEPTION 'Rollout precondition failed; nothing applied'; END $$;
+\endif
+
+SELECT has_schema_privilege(current_user,:'target_schema','USAGE') AS schema_access \gset
+\if :schema_access
+\else
+  \echo 'Operator lacks schema USAGE. Nothing applied.'
+  DO $$ BEGIN RAISE EXCEPTION 'Rollout precondition failed; nothing applied'; END $$;
+\endif

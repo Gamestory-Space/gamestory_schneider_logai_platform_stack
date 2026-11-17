@@ -32,6 +32,8 @@ if [[ -n "$bundle" ]]; then
     -o -name DISCUSSIONS.md -o -name OPEN_QUESTIONS.md -o -name LAST_HANDOFF.md \
     -o -name .git -o -name .github -o -name '.env' -o -name '.env.*' -o -name '*.env' -o -name '*:Zone.Identifier' \
     -o -name '*.py' -o -name '*.ts' -o -name '*.tsx' -o -name '*.map' \
+    -o -name '*.private.json' -o -name '*.pgpass' -o -name pg_service.conf -o -name '.pg_service.conf' \
+    -o -path '*/identity/generated' \
     -o -name tests -o -name test -o -name __tests__ \
   \) -print -quit)"
   [[ -z "$forbidden_path" ]] || { echo "Forbidden internal or source material in client bundle: $forbidden_path" >&2; exit 1; }
