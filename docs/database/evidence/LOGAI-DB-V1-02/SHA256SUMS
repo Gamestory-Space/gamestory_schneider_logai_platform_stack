@@ -1,0 +1,16 @@
+0fe7a16b4c99208de8b40d7f98787a061a2f0949b9863e30a5fb94f2aa527983  docs/database/keycloak-db.mmd
+7132f573dfd8410d2b4ea773d83f5e0ab9a09fe7a03c64a955b351a5409432c0  docs/database/evidence/LOGAI-DB-V1-02/catalogue.json
+d157e3f7208d1267f64251ec74ec107f69264061f3ba6a4f95f8ffbaa6567b0f  docs/database/evidence/LOGAI-DB-V1-02/catalogue.sql
+ccb56414c312b790a97847f85e41d4296c7323592a8b9f086d81240b8fbe77c8  docs/database/evidence/LOGAI-DB-V1-02/coverage.json
+4ce40fa96caba64582160a9969f69a99c1379238d1cf2fd8b66b1dac44756816  docs/database/evidence/LOGAI-DB-V1-02/generate-erd.py
+0e0a1b0a7909aa7a8f5ae7533bb4bc402e36bbd932aaeccf951c6716f58d018b  docs/database/evidence/LOGAI-DB-V1-02/inventory.md
+a0f4c78930fa4f1cbed96e91f9f414836851931016e6d99b338ab3c143377415  docs/database/evidence/LOGAI-DB-V1-02/keycloak-db.svg
+7a1fcebae892bf8430af30e016dbcbc122cd88f382434d351e995e899d4bf326  docs/database/evidence/LOGAI-DB-V1-02/negative-probes.json
+e380a8d4624c353825f24d71449a46c16aa36fabb0865c282da80393b3933b48  docs/database/evidence/LOGAI-DB-V1-02/reference-schema.sql
+e59df4aff66462dcd2c8b3fd9b7acd96fa18b3f7e29c9d4ee2eb5804ae862bef  docs/database/evidence/LOGAI-DB-V1-02/reproduction.md
+5d4923fc3af5a30885bb2d4d69c09e6c95c6d527c1f71c559e18ed300ce7f9eb  docs/database/evidence/LOGAI-DB-V1-02/source-provenance.json
+ff4cf176cabf2993a827b88e6242cc801df1e242d2276f00b3a320691e4aefe3  docs/database/evidence/LOGAI-DB-V1-02/table-sources.json
+f6b5301c78c4bc2bd0b51b5153e5711e0fe6cac61e750ba2d0558eb3429f7d2b  docs/database/evidence/LOGAI-DB-V1-02/test-negative-probes.py
+697d38771f24d1680ef409276efde037292aba479fb948c1f9cd5377123eb823  docs/database/evidence/LOGAI-DB-V1-02/validate-coverage.py
+7bdbf4b7178da50fda0c6cfd51f9f60409a3e295163e18a0b574a6c0a9a30645  docs/database/evidence/LOGAI-DB-V1-02/validation.md
+af071f37aaefbd82bc6258b61133242a5d05f3907f65d6ab794e70baf2d9a0c4  docs/database/evidence/LOGAI-DB-V1-02/verify-migrations.py

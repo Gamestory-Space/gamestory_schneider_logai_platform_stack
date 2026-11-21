@@ -1,0 +1,754 @@
+erDiagram
+    direction TB
+    %% Keycloak 26.0.8 exact-image PostgreSQL 16 reference; deployed drift unverified.
+    %% Only declared physical FKs are edges. Dashed = non-identifying physical FK.
+    %% PK/UK groups and exact PostgreSQL type spelling: keycloak-db-notes.md and evidence.
+    %% Authentication flows and required actions
+    authentication_execution {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) alias "NULL"
+        character_varying(36) authenticator "NULL"
+        character_varying(36) realm_id FK "NULL"
+        character_varying(36) flow_id FK "NULL"
+        integer requirement "NULL"
+        integer priority "NULL"
+        boolean authenticator_flow "NOT NULL"
+        character_varying(36) auth_flow_id "NULL"
+        character_varying(36) auth_config "NULL"
+    }
+    authentication_flow {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) alias "NULL"
+        character_varying(255) description "NULL"
+        character_varying(36) realm_id FK "NULL"
+        character_varying(36) provider_id "NOT NULL"
+        boolean top_level "NOT NULL"
+        boolean built_in "NOT NULL"
+    }
+    authenticator_config {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) alias "NULL"
+        character_varying(36) realm_id FK "NULL"
+    }
+    authenticator_config_entry {
+        character_varying(36) authenticator_id PK "NOT NULL"
+        text value "NULL"
+        character_varying(255) name PK "NOT NULL"
+    }
+    required_action_config {
+        character_varying(36) required_action_id PK "NOT NULL"
+        text value "NULL"
+        character_varying(255) name PK "NOT NULL"
+    }
+    required_action_provider {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) alias "NULL"
+        character_varying(255) name "NULL"
+        character_varying(36) realm_id FK "NULL"
+        boolean enabled "NOT NULL"
+        boolean default_action "NOT NULL"
+        character_varying(255) provider_id "NULL"
+        integer priority "NULL"
+    }
+    %% Authorization services
+    associated_policy {
+        character_varying(36) policy_id PK, FK "NOT NULL"
+        character_varying(36) associated_policy_id PK, FK "NOT NULL"
+    }
+    policy_config {
+        character_varying(36) policy_id PK, FK "NOT NULL"
+        character_varying(255) name PK "NOT NULL"
+        text value "NULL"
+    }
+    resource_attribute {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) name "NOT NULL"
+        character_varying(255) value "NULL"
+        character_varying(36) resource_id FK "NOT NULL"
+    }
+    resource_policy {
+        character_varying(36) resource_id PK, FK "NOT NULL"
+        character_varying(36) policy_id PK, FK "NOT NULL"
+    }
+    resource_scope {
+        character_varying(36) resource_id PK, FK "NOT NULL"
+        character_varying(36) scope_id PK, FK "NOT NULL"
+    }
+    resource_server {
+        character_varying(36) id PK "NOT NULL"
+        boolean allow_rs_remote_mgmt "NOT NULL"
+        smallint policy_enforce_mode "NOT NULL"
+        smallint decision_strategy "NOT NULL"
+    }
+    resource_server_perm_ticket {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) owner "NOT NULL"
+        character_varying(255) requester "NOT NULL"
+        bigint created_timestamp "NOT NULL"
+        bigint granted_timestamp "NULL"
+        character_varying(36) resource_id FK "NOT NULL"
+        character_varying(36) scope_id FK "NULL"
+        character_varying(36) resource_server_id FK "NOT NULL"
+        character_varying(36) policy_id FK "NULL"
+    }
+    resource_server_policy {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) name "NOT NULL"
+        character_varying(255) description "NULL"
+        character_varying(255) type "NOT NULL"
+        smallint decision_strategy "NULL"
+        smallint logic "NULL"
+        character_varying(36) resource_server_id FK "NOT NULL"
+        character_varying(255) owner "NULL"
+    }
+    resource_server_resource {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) name "NOT NULL"
+        character_varying(255) type "NULL"
+        character_varying(255) icon_uri "NULL"
+        character_varying(255) owner "NOT NULL"
+        character_varying(36) resource_server_id FK "NOT NULL"
+        boolean owner_managed_access "NOT NULL"
+        character_varying(255) display_name "NULL"
+    }
+    resource_server_scope {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) name "NOT NULL"
+        character_varying(255) icon_uri "NULL"
+        character_varying(36) resource_server_id FK "NOT NULL"
+        character_varying(255) display_name "NULL"
+    }
+    resource_uris {
+        character_varying(36) resource_id PK, FK "NOT NULL"
+        character_varying(255) value PK "NOT NULL"
+    }
+    scope_policy {
+        character_varying(36) scope_id PK, FK "NOT NULL"
+        character_varying(36) policy_id PK, FK "NOT NULL"
+    }
+    %% Clients and client scopes
+    client {
+        character_varying(36) id PK "NOT NULL"
+        boolean enabled "NOT NULL"
+        boolean full_scope_allowed "NOT NULL"
+        character_varying(255) client_id "NULL"
+        integer not_before "NULL"
+        boolean public_client "NOT NULL"
+        character_varying(255) secret "NULL"
+        character_varying(255) base_url "NULL"
+        boolean bearer_only "NOT NULL"
+        character_varying(255) management_url "NULL"
+        boolean surrogate_auth_required "NOT NULL"
+        character_varying(36) realm_id "NULL"
+        character_varying(255) protocol "NULL"
+        integer node_rereg_timeout "NULL"
+        boolean frontchannel_logout "NOT NULL"
+        boolean consent_required "NOT NULL"
+        character_varying(255) name "NULL"
+        boolean service_accounts_enabled "NOT NULL"
+        character_varying(255) client_authenticator_type "NULL"
+        character_varying(255) root_url "NULL"
+        character_varying(255) description "NULL"
+        character_varying(255) registration_token "NULL"
+        boolean standard_flow_enabled "NOT NULL"
+        boolean implicit_flow_enabled "NOT NULL"
+        boolean direct_access_grants_enabled "NOT NULL"
+        boolean always_display_in_console "NOT NULL"
+    }
+    client_attributes {
+        character_varying(36) client_id PK, FK "NOT NULL"
+        character_varying(255) name PK "NOT NULL"
+        text value "NULL"
+    }
+    client_auth_flow_bindings {
+        character_varying(36) client_id PK "NOT NULL"
+        character_varying(36) flow_id "NULL"
+        character_varying(255) binding_name PK "NOT NULL"
+    }
+    client_initial_access {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(36) realm_id FK "NOT NULL"
+        integer timestamp "NULL"
+        integer expiration "NULL"
+        integer count "NULL"
+        integer remaining_count "NULL"
+    }
+    client_node_registrations {
+        character_varying(36) client_id PK, FK "NOT NULL"
+        integer value "NULL"
+        character_varying(255) name PK "NOT NULL"
+    }
+    client_scope {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) name "NULL"
+        character_varying(36) realm_id "NULL"
+        character_varying(255) description "NULL"
+        character_varying(255) protocol "NULL"
+    }
+    client_scope_attributes {
+        character_varying(36) scope_id PK, FK "NOT NULL"
+        character_varying(2048) value "NULL"
+        character_varying(255) name PK "NOT NULL"
+    }
+    client_scope_client {
+        character_varying(255) client_id PK "NOT NULL"
+        character_varying(255) scope_id PK "NOT NULL"
+        boolean default_scope "NOT NULL"
+    }
+    client_scope_role_mapping {
+        character_varying(36) scope_id PK, FK "NOT NULL"
+        character_varying(36) role_id PK "NOT NULL"
+    }
+    default_client_scope {
+        character_varying(36) realm_id PK, FK "NOT NULL"
+        character_varying(36) scope_id PK "NOT NULL"
+        boolean default_scope "NOT NULL"
+    }
+    protocol_mapper {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) name "NOT NULL"
+        character_varying(255) protocol "NOT NULL"
+        character_varying(255) protocol_mapper_name "NOT NULL"
+        character_varying(36) client_id FK "NULL"
+        character_varying(36) client_scope_id FK "NULL"
+    }
+    protocol_mapper_config {
+        character_varying(36) protocol_mapper_id PK, FK "NOT NULL"
+        text value "NULL"
+        character_varying(255) name PK "NOT NULL"
+    }
+    redirect_uris {
+        character_varying(36) client_id PK, FK "NOT NULL"
+        character_varying(255) value PK "NOT NULL"
+    }
+    scope_mapping {
+        character_varying(36) client_id PK, FK "NOT NULL"
+        character_varying(36) role_id PK "NOT NULL"
+    }
+    web_origins {
+        character_varying(36) client_id PK, FK "NOT NULL"
+        character_varying(255) value PK "NOT NULL"
+    }
+    %% Identity brokering and federation
+    broker_link {
+        character_varying(255) identity_provider PK "NOT NULL"
+        character_varying(255) storage_provider_id "NULL"
+        character_varying(36) realm_id "NOT NULL"
+        character_varying(255) broker_user_id "NULL"
+        character_varying(255) broker_username "NULL"
+        text token "NULL"
+        character_varying(255) user_id PK "NOT NULL"
+    }
+    fed_user_attribute {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) name "NOT NULL"
+        character_varying(255) user_id "NOT NULL"
+        character_varying(36) realm_id "NOT NULL"
+        character_varying(36) storage_provider_id "NULL"
+        character_varying(2024) value "NULL"
+        bytea long_value_hash "NULL"
+        bytea long_value_hash_lower_case "NULL"
+        text long_value "NULL"
+    }
+    fed_user_consent {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) client_id "NULL"
+        character_varying(255) user_id "NOT NULL"
+        character_varying(36) realm_id "NOT NULL"
+        character_varying(36) storage_provider_id "NULL"
+        bigint created_date "NULL"
+        bigint last_updated_date "NULL"
+        character_varying(36) client_storage_provider "NULL"
+        character_varying(255) external_client_id "NULL"
+    }
+    fed_user_consent_cl_scope {
+        character_varying(36) user_consent_id PK "NOT NULL"
+        character_varying(36) scope_id PK "NOT NULL"
+    }
+    fed_user_credential {
+        character_varying(36) id PK "NOT NULL"
+        bytea salt "NULL"
+        character_varying(255) type "NULL"
+        bigint created_date "NULL"
+        character_varying(255) user_id "NOT NULL"
+        character_varying(36) realm_id "NOT NULL"
+        character_varying(36) storage_provider_id "NULL"
+        character_varying(255) user_label "NULL"
+        text secret_data "NULL"
+        text credential_data "NULL"
+        integer priority "NULL"
+    }
+    fed_user_group_membership {
+        character_varying(36) group_id PK "NOT NULL"
+        character_varying(255) user_id PK "NOT NULL"
+        character_varying(36) realm_id "NOT NULL"
+        character_varying(36) storage_provider_id "NULL"
+    }
+    fed_user_required_action {
+        character_varying(255) required_action PK "NOT NULL"
+        character_varying(255) user_id PK "NOT NULL"
+        character_varying(36) realm_id "NOT NULL"
+        character_varying(36) storage_provider_id "NULL"
+    }
+    fed_user_role_mapping {
+        character_varying(36) role_id PK "NOT NULL"
+        character_varying(255) user_id PK "NOT NULL"
+        character_varying(36) realm_id "NOT NULL"
+        character_varying(36) storage_provider_id "NULL"
+    }
+    federated_identity {
+        character_varying(255) identity_provider PK "NOT NULL"
+        character_varying(36) realm_id "NULL"
+        character_varying(255) federated_user_id "NULL"
+        character_varying(255) federated_username "NULL"
+        text token "NULL"
+        character_varying(36) user_id PK, FK "NOT NULL"
+    }
+    federated_user {
+        character_varying(255) id PK "NOT NULL"
+        character_varying(255) storage_provider_id "NULL"
+        character_varying(36) realm_id "NOT NULL"
+    }
+    identity_provider {
+        character_varying(36) internal_id PK "NOT NULL"
+        boolean enabled "NOT NULL"
+        character_varying(255) provider_alias "NULL"
+        character_varying(255) provider_id "NULL"
+        boolean store_token "NOT NULL"
+        boolean authenticate_by_default "NOT NULL"
+        character_varying(36) realm_id FK "NULL"
+        boolean add_token_role "NOT NULL"
+        boolean trust_email "NOT NULL"
+        character_varying(36) first_broker_login_flow_id "NULL"
+        character_varying(36) post_broker_login_flow_id "NULL"
+        character_varying(255) provider_display_name "NULL"
+        boolean link_only "NOT NULL"
+        character_varying(255) organization_id "NULL"
+        boolean hide_on_login "NULL"
+    }
+    identity_provider_config {
+        character_varying(36) identity_provider_id PK, FK "NOT NULL"
+        text value "NULL"
+        character_varying(255) name PK "NOT NULL"
+    }
+    identity_provider_mapper {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) name "NOT NULL"
+        character_varying(255) idp_alias "NOT NULL"
+        character_varying(255) idp_mapper_name "NOT NULL"
+        character_varying(36) realm_id FK "NOT NULL"
+    }
+    idp_mapper_config {
+        character_varying(36) idp_mapper_id PK, FK "NOT NULL"
+        text value "NULL"
+        character_varying(255) name PK "NOT NULL"
+    }
+    user_federation_config {
+        character_varying(36) user_federation_provider_id PK, FK "NOT NULL"
+        character_varying(255) value "NULL"
+        character_varying(255) name PK "NOT NULL"
+    }
+    user_federation_mapper {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) name "NOT NULL"
+        character_varying(36) federation_provider_id FK "NOT NULL"
+        character_varying(255) federation_mapper_type "NOT NULL"
+        character_varying(36) realm_id FK "NOT NULL"
+    }
+    user_federation_mapper_config {
+        character_varying(36) user_federation_mapper_id PK, FK "NOT NULL"
+        character_varying(255) value "NULL"
+        character_varying(255) name PK "NOT NULL"
+    }
+    user_federation_provider {
+        character_varying(36) id PK "NOT NULL"
+        integer changed_sync_period "NULL"
+        character_varying(255) display_name "NULL"
+        integer full_sync_period "NULL"
+        integer last_sync "NULL"
+        integer priority "NULL"
+        character_varying(255) provider_name "NULL"
+        character_varying(36) realm_id FK "NULL"
+    }
+    %% Migration bookkeeping (Keycloak and Liquibase owned)
+    databasechangelog {
+        character_varying(255) id "NOT NULL"
+        character_varying(255) author "NOT NULL"
+        character_varying(255) filename "NOT NULL"
+        timestamp_without_time_zone dateexecuted "NOT NULL"
+        integer orderexecuted "NOT NULL"
+        character_varying(10) exectype "NOT NULL"
+        character_varying(35) md5sum "NULL"
+        character_varying(255) description "NULL"
+        character_varying(255) comments "NULL"
+        character_varying(255) tag "NULL"
+        character_varying(20) liquibase "NULL"
+        character_varying(255) contexts "NULL"
+        character_varying(255) labels "NULL"
+        character_varying(10) deployment_id "NULL"
+    }
+    databasechangeloglock {
+        integer id PK "NOT NULL"
+        boolean locked "NOT NULL"
+        timestamp_without_time_zone lockgranted "NULL"
+        character_varying(255) lockedby "NULL"
+    }
+    migration_model {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(36) version "NULL"
+        bigint update_time "NOT NULL"
+    }
+    %% Realms, components and organizations
+    component {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) name "NULL"
+        character_varying(36) parent_id "NULL"
+        character_varying(36) provider_id "NULL"
+        character_varying(255) provider_type "NULL"
+        character_varying(36) realm_id FK "NULL"
+        character_varying(255) sub_type "NULL"
+    }
+    component_config {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(36) component_id FK "NOT NULL"
+        character_varying(255) name "NOT NULL"
+        text value "NULL"
+    }
+    org {
+        character_varying(255) id PK "NOT NULL"
+        boolean enabled "NOT NULL"
+        character_varying(255) realm_id "NOT NULL"
+        character_varying(255) group_id UK "NOT NULL"
+        character_varying(255) name "NOT NULL"
+        character_varying(4000) description "NULL"
+        character_varying(255) alias "NOT NULL"
+        character_varying(2048) redirect_url "NULL"
+    }
+    org_domain {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) name PK "NOT NULL"
+        boolean verified "NOT NULL"
+        character_varying(255) org_id "NOT NULL"
+    }
+    realm {
+        character_varying(36) id PK "NOT NULL"
+        integer access_code_lifespan "NULL"
+        integer user_action_lifespan "NULL"
+        integer access_token_lifespan "NULL"
+        character_varying(255) account_theme "NULL"
+        character_varying(255) admin_theme "NULL"
+        character_varying(255) email_theme "NULL"
+        boolean enabled "NOT NULL"
+        boolean events_enabled "NOT NULL"
+        bigint events_expiration "NULL"
+        character_varying(255) login_theme "NULL"
+        character_varying(255) name UK "NULL"
+        integer not_before "NULL"
+        character_varying(2550) password_policy "NULL"
+        boolean registration_allowed "NOT NULL"
+        boolean remember_me "NOT NULL"
+        boolean reset_password_allowed "NOT NULL"
+        boolean social "NOT NULL"
+        character_varying(255) ssl_required "NULL"
+        integer sso_idle_timeout "NULL"
+        integer sso_max_lifespan "NULL"
+        boolean update_profile_on_soc_login "NOT NULL"
+        boolean verify_email "NOT NULL"
+        character_varying(36) master_admin_client "NULL"
+        integer login_lifespan "NULL"
+        boolean internationalization_enabled "NOT NULL"
+        character_varying(255) default_locale "NULL"
+        boolean reg_email_as_username "NOT NULL"
+        boolean admin_events_enabled "NOT NULL"
+        boolean admin_events_details_enabled "NOT NULL"
+        boolean edit_username_allowed "NOT NULL"
+        integer otp_policy_counter "NULL"
+        integer otp_policy_window "NULL"
+        integer otp_policy_period "NULL"
+        integer otp_policy_digits "NULL"
+        character_varying(36) otp_policy_alg "NULL"
+        character_varying(36) otp_policy_type "NULL"
+        character_varying(36) browser_flow "NULL"
+        character_varying(36) registration_flow "NULL"
+        character_varying(36) direct_grant_flow "NULL"
+        character_varying(36) reset_credentials_flow "NULL"
+        character_varying(36) client_auth_flow "NULL"
+        integer offline_session_idle_timeout "NULL"
+        boolean revoke_refresh_token "NOT NULL"
+        integer access_token_life_implicit "NULL"
+        boolean login_with_email_allowed "NOT NULL"
+        boolean duplicate_emails_allowed "NOT NULL"
+        character_varying(36) docker_auth_flow "NULL"
+        integer refresh_token_max_reuse "NULL"
+        boolean allow_user_managed_access "NOT NULL"
+        integer sso_max_lifespan_remember_me "NOT NULL"
+        integer sso_idle_timeout_remember_me "NOT NULL"
+        character_varying(255) default_role "NULL"
+    }
+    realm_attribute {
+        character_varying(255) name PK "NOT NULL"
+        character_varying(36) realm_id PK, FK "NOT NULL"
+        text value "NULL"
+    }
+    realm_default_groups {
+        character_varying(36) realm_id PK, FK "NOT NULL"
+        character_varying(36) group_id PK, UK "NOT NULL"
+    }
+    realm_enabled_event_types {
+        character_varying(36) realm_id PK, FK "NOT NULL"
+        character_varying(255) value PK "NOT NULL"
+    }
+    realm_events_listeners {
+        character_varying(36) realm_id PK, FK "NOT NULL"
+        character_varying(255) value PK "NOT NULL"
+    }
+    realm_localizations {
+        character_varying(255) realm_id PK "NOT NULL"
+        character_varying(255) locale PK "NOT NULL"
+        text texts "NOT NULL"
+    }
+    realm_required_credential {
+        character_varying(255) type PK "NOT NULL"
+        character_varying(255) form_label "NULL"
+        boolean input "NOT NULL"
+        boolean secret "NOT NULL"
+        character_varying(36) realm_id PK, FK "NOT NULL"
+    }
+    realm_smtp_config {
+        character_varying(36) realm_id PK, FK "NOT NULL"
+        character_varying(255) value "NULL"
+        character_varying(255) name PK "NOT NULL"
+    }
+    realm_supported_locales {
+        character_varying(36) realm_id PK, FK "NOT NULL"
+        character_varying(255) value PK "NOT NULL"
+    }
+    %% Sessions and events
+    admin_event_entity {
+        character_varying(36) id PK "NOT NULL"
+        bigint admin_event_time "NULL"
+        character_varying(255) realm_id "NULL"
+        character_varying(255) operation_type "NULL"
+        character_varying(255) auth_realm_id "NULL"
+        character_varying(255) auth_client_id "NULL"
+        character_varying(255) auth_user_id "NULL"
+        character_varying(255) ip_address "NULL"
+        character_varying(2550) resource_path "NULL"
+        text representation "NULL"
+        character_varying(255) error "NULL"
+        character_varying(64) resource_type "NULL"
+        text details_json "NULL"
+    }
+    event_entity {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) client_id "NULL"
+        character_varying(2550) details_json "NULL"
+        character_varying(255) error "NULL"
+        character_varying(255) ip_address "NULL"
+        character_varying(255) realm_id "NULL"
+        character_varying(255) session_id "NULL"
+        bigint event_time "NULL"
+        character_varying(255) type "NULL"
+        character_varying(255) user_id "NULL"
+        text details_json_long_value "NULL"
+    }
+    offline_client_session {
+        character_varying(36) user_session_id PK "NOT NULL"
+        character_varying(255) client_id PK "NOT NULL"
+        character_varying(4) offline_flag PK "NOT NULL"
+        integer timestamp "NULL"
+        text data "NULL"
+        character_varying(36) client_storage_provider PK "NOT NULL"
+        character_varying(255) external_client_id PK "NOT NULL"
+        integer version "NULL"
+    }
+    offline_user_session {
+        character_varying(36) user_session_id PK "NOT NULL"
+        character_varying(255) user_id "NOT NULL"
+        character_varying(36) realm_id "NOT NULL"
+        integer created_on "NOT NULL"
+        character_varying(4) offline_flag PK "NOT NULL"
+        text data "NULL"
+        integer last_session_refresh "NOT NULL"
+        character_varying(1024) broker_session_id "NULL"
+        integer version "NULL"
+    }
+    revoked_token {
+        character_varying(255) id PK "NOT NULL"
+        bigint expire "NOT NULL"
+    }
+    username_login_failure {
+        character_varying(36) realm_id PK "NOT NULL"
+        character_varying(255) username PK "NOT NULL"
+        integer failed_login_not_before "NULL"
+        bigint last_failure "NULL"
+        character_varying(255) last_ip_failure "NULL"
+        integer num_failures "NULL"
+    }
+    %% Users, groups, roles and credentials
+    composite_role {
+        character_varying(36) composite PK, FK "NOT NULL"
+        character_varying(36) child_role PK, FK "NOT NULL"
+    }
+    credential {
+        character_varying(36) id PK "NOT NULL"
+        bytea salt "NULL"
+        character_varying(255) type "NULL"
+        character_varying(36) user_id FK "NULL"
+        bigint created_date "NULL"
+        character_varying(255) user_label "NULL"
+        text secret_data "NULL"
+        text credential_data "NULL"
+        integer priority "NULL"
+    }
+    group_attribute {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) name "NOT NULL"
+        character_varying(255) value "NULL"
+        character_varying(36) group_id FK "NOT NULL"
+    }
+    group_role_mapping {
+        character_varying(36) role_id PK "NOT NULL"
+        character_varying(36) group_id PK, FK "NOT NULL"
+    }
+    keycloak_group {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) name "NULL"
+        character_varying(36) parent_group "NOT NULL"
+        character_varying(36) realm_id "NULL"
+        integer type "NOT NULL"
+    }
+    keycloak_role {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) client_realm_constraint "NULL"
+        boolean client_role "NOT NULL"
+        character_varying(255) description "NULL"
+        character_varying(255) name "NULL"
+        character_varying(255) realm_id "NULL"
+        character_varying(36) client "NULL"
+        character_varying(36) realm FK "NULL"
+    }
+    role_attribute {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(36) role_id FK "NOT NULL"
+        character_varying(255) name "NOT NULL"
+        character_varying(255) value "NULL"
+    }
+    user_attribute {
+        character_varying(255) name "NOT NULL"
+        character_varying(255) value "NULL"
+        character_varying(36) user_id FK "NOT NULL"
+        character_varying(36) id PK "NOT NULL"
+        bytea long_value_hash "NULL"
+        bytea long_value_hash_lower_case "NULL"
+        text long_value "NULL"
+    }
+    user_consent {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) client_id "NULL"
+        character_varying(36) user_id FK "NOT NULL"
+        bigint created_date "NULL"
+        bigint last_updated_date "NULL"
+        character_varying(36) client_storage_provider "NULL"
+        character_varying(255) external_client_id "NULL"
+    }
+    user_consent_client_scope {
+        character_varying(36) user_consent_id PK, FK "NOT NULL"
+        character_varying(36) scope_id PK "NOT NULL"
+    }
+    user_entity {
+        character_varying(36) id PK "NOT NULL"
+        character_varying(255) email "NULL"
+        character_varying(255) email_constraint "NULL"
+        boolean email_verified "NOT NULL"
+        boolean enabled "NOT NULL"
+        character_varying(255) federation_link "NULL"
+        character_varying(255) first_name "NULL"
+        character_varying(255) last_name "NULL"
+        character_varying(255) realm_id "NULL"
+        character_varying(255) username "NULL"
+        bigint created_timestamp "NULL"
+        character_varying(255) service_account_client_link "NULL"
+        integer not_before "NOT NULL"
+    }
+    user_group_membership {
+        character_varying(36) group_id PK "NOT NULL"
+        character_varying(36) user_id PK, FK "NOT NULL"
+        character_varying(255) membership_type "NOT NULL"
+    }
+    user_required_action {
+        character_varying(36) user_id PK, FK "NOT NULL"
+        character_varying(255) required_action PK "NOT NULL"
+    }
+    user_role_mapping {
+        character_varying(255) role_id PK "NOT NULL"
+        character_varying(36) user_id PK, FK "NOT NULL"
+    }
+    %% Declared physical foreign keys; labels are exact constraint names.
+    resource_server_policy ||--o{ associated_policy : "fk_frsr5s213xcx4wnkog82ssrfy"
+    resource_server_policy ||--o{ associated_policy : "fk_frsrpas14xcx4wnkog82ssrfy"
+    authentication_flow |o..o{ authentication_execution : "fk_auth_exec_flow"
+    realm |o..o{ authentication_execution : "fk_auth_exec_realm"
+    realm |o..o{ authentication_flow : "fk_auth_flow_realm"
+    realm |o..o{ authenticator_config : "fk_auth_realm"
+    client ||--o{ client_attributes : "fk3c47c64beacca966"
+    realm ||..o{ client_initial_access : "fk_client_init_acc_realm"
+    client ||--o{ client_node_registrations : "fk4129723ba992f594"
+    client_scope ||--o{ client_scope_attributes : "fk_cl_scope_attr_scope"
+    client_scope ||--o{ client_scope_role_mapping : "fk_cl_scope_rm_scope"
+    realm |o..o{ component : "fk_component_realm"
+    component ||..o{ component_config : "fk_component_config"
+    keycloak_role ||--o{ composite_role : "fk_a63wvekftu8jo1pnj81e7mce2"
+    keycloak_role ||--o{ composite_role : "fk_gr7thllb9lu8q4vqa4524jjy8"
+    user_entity |o..o{ credential : "fk_pfyr0glasqyl0dei3kl69r6v0"
+    realm ||--o{ default_client_scope : "fk_r_def_cli_scope_realm"
+    user_entity ||--o{ federated_identity : "fk404288b92ef007a6"
+    keycloak_group ||..o{ group_attribute : "fk_group_attribute_group"
+    keycloak_group ||--o{ group_role_mapping : "fk_group_role_group"
+    realm |o..o{ identity_provider : "fk2b4ebc52ae5c3b34"
+    identity_provider ||--o{ identity_provider_config : "fkdc4897cf864c4e43"
+    realm ||..o{ identity_provider_mapper : "fk_idpm_realm"
+    identity_provider_mapper ||--o{ idp_mapper_config : "fk_idpmconfig"
+    realm |o..o{ keycloak_role : "fk_6vyqfe4cn4wlq8r6kt5vdsj5c"
+    resource_server_policy ||--o{ policy_config : "fkdc34197cf864c4e43"
+    client_scope |o..o{ protocol_mapper : "fk_cli_scope_mapper"
+    client |o..o{ protocol_mapper : "fk_pcm_realm"
+    protocol_mapper ||--o{ protocol_mapper_config : "fk_pmconfig"
+    realm ||--o{ realm_attribute : "fk_8shxd6l3e9atqukacxgpffptw"
+    realm ||--o{ realm_default_groups : "fk_def_groups_realm"
+    realm ||--o{ realm_enabled_event_types : "fk_h846o4h0w8epx5nwedrf5y69j"
+    realm ||--o{ realm_events_listeners : "fk_h846o4h0w8epx5nxev9f5y69j"
+    realm ||--o{ realm_required_credential : "fk_5hg65lybevavkqfki3kponh9v"
+    realm ||--o{ realm_smtp_config : "fk_70ej8xdxgxd0b9hh6180irr0o"
+    realm ||--o{ realm_supported_locales : "fk_supported_locales_realm"
+    client ||--o{ redirect_uris : "fk_1burs8pb4ouj97h5wuppahv9f"
+    realm |o..o{ required_action_provider : "fk_req_act_realm"
+    resource_server_resource ||..o{ resource_attribute : "fk_5hrm2vlf9ql5fu022kqepovbr"
+    resource_server_resource ||--o{ resource_policy : "fk_frsrpos53xcx4wnkog82ssrfy"
+    resource_server_policy ||--o{ resource_policy : "fk_frsrpp213xcx4wnkog82ssrfy"
+    resource_server_resource ||--o{ resource_scope : "fk_frsrpos13xcx4wnkog82ssrfy"
+    resource_server_scope ||--o{ resource_scope : "fk_frsrps213xcx4wnkog82ssrfy"
+    resource_server ||..o{ resource_server_perm_ticket : "fk_frsrho213xcx4wnkog82sspmt"
+    resource_server_resource ||..o{ resource_server_perm_ticket : "fk_frsrho213xcx4wnkog83sspmt"
+    resource_server_scope |o..o{ resource_server_perm_ticket : "fk_frsrho213xcx4wnkog84sspmt"
+    resource_server_policy |o..o{ resource_server_perm_ticket : "fk_frsrpo2128cx4wnkog82ssrfy"
+    resource_server ||..o{ resource_server_policy : "fk_frsrpo213xcx4wnkog82ssrfy"
+    resource_server ||..o{ resource_server_resource : "fk_frsrho213xcx4wnkog82ssrfy"
+    resource_server ||..o{ resource_server_scope : "fk_frsrso213xcx4wnkog82ssrfy"
+    resource_server_resource ||--o{ resource_uris : "fk_resource_server_uris"
+    keycloak_role ||..o{ role_attribute : "fk_role_attribute_id"
+    client ||--o{ scope_mapping : "fk_ouse064plmlr732lxjcn1q5f1"
+    resource_server_policy ||--o{ scope_policy : "fk_frsrasp13xcx4wnkog82ssrfy"
+    resource_server_scope ||--o{ scope_policy : "fk_frsrpass3xcx4wnkog82ssrfy"
+    user_entity ||..o{ user_attribute : "fk_5hrm2vlf9ql5fu043kqepovbr"
+    user_entity ||..o{ user_consent : "fk_grntcsnt_user"
+    user_consent ||--o{ user_consent_client_scope : "fk_grntcsnt_clsc_usc"
+    user_federation_provider ||--o{ user_federation_config : "fk_t13hpu1j94r2ebpekr39x5eu5"
+    user_federation_provider ||..o{ user_federation_mapper : "fk_fedmapperpm_fedprv"
+    realm ||..o{ user_federation_mapper : "fk_fedmapperpm_realm"
+    user_federation_mapper ||--o{ user_federation_mapper_config : "fk_fedmapper_cfg"
+    realm |o..o{ user_federation_provider : "fk_1fj32f6ptolw2qy60cd8n01e8"
+    user_entity ||--o{ user_group_membership : "fk_user_group_user"
+    user_entity ||--o{ user_required_action : "fk_6qj3w1jw9cvafhe19bwsiuvmd"
+    user_entity ||--o{ user_role_mapping : "fk_c4fqv34p1mbylloxang7b1q3l"
+    client ||--o{ web_origins : "fk_lojpho213xcx4wnkog82ssrfy"

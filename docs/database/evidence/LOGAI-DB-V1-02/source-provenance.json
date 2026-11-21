@@ -1,0 +1,444 @@
+{
+  "deployment_repository": "Gamestory-Space/gamestory_schneider_logai_platform_stack",
+  "deployment_revision": "9f5f9123364b4914d1fb05dc8ce4846f0e33713a",
+  "keycloak_version": "26.0.8",
+  "configured_image": "quay.io/keycloak/keycloak:26.0.8@sha256:09a381c715ab0b111835b70f2905955274843a219c6f27efb348e4d9f4086858",
+  "image_config_id": "e447933b6a5015646c24a1b927a40202ce07adbadac839e7a1f99c463d68a224",
+  "architecture": "amd64",
+  "upstream_repository": "https://github.com/keycloak/keycloak",
+  "upstream_tag": "26.0.8",
+  "upstream_revision": "9ca0ccddbf9a69d84c8d3391a86251a96ff47ca7",
+  "liquibase_version": "4.29.1",
+  "model_jpa_jar": "/opt/keycloak/lib/lib/main/org.keycloak.keycloak-model-jpa-26.0.8.jar",
+  "jar_sha256": "9d6026e328dfc3317ede4eb90dddae6f1abd0595c45ce26fe7e65473d27d02e9",
+  "schema_evidence": "Exact-image fresh-install reference on isolated PostgreSQL 16.15; NOT a deployed-database catalogue",
+  "reachable_changelogs": [
+    "META-INF/jpa-changelog-master.xml",
+    "META-INF/jpa-changelog-1.0.0.Final.xml",
+    "META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+    "META-INF/jpa-changelog-1.1.0.Beta1.xml",
+    "META-INF/jpa-changelog-1.1.0.Final.xml",
+    "META-INF/jpa-changelog-1.2.0.Beta1.xml",
+    "META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+    "META-INF/jpa-changelog-1.2.0.CR1.xml",
+    "META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+    "META-INF/jpa-changelog-1.2.0.Final.xml",
+    "META-INF/jpa-changelog-1.3.0.xml",
+    "META-INF/jpa-changelog-1.4.0.xml",
+    "META-INF/jpa-changelog-1.4.0-db2.xml",
+    "META-INF/jpa-changelog-1.5.0.xml",
+    "META-INF/jpa-changelog-1.6.1.xml",
+    "META-INF/jpa-changelog-1.7.0.xml",
+    "META-INF/jpa-changelog-1.8.0.xml",
+    "META-INF/jpa-changelog-1.8.0-db2.xml",
+    "META-INF/jpa-changelog-1.9.0.xml",
+    "META-INF/jpa-changelog-1.9.1.xml",
+    "META-INF/jpa-changelog-1.9.1-db2.xml",
+    "META-INF/jpa-changelog-1.9.2.xml",
+    "META-INF/jpa-changelog-authz-master.xml",
+    "META-INF/jpa-changelog-authz-2.0.0.xml",
+    "META-INF/jpa-changelog-authz-2.5.1.xml",
+    "META-INF/jpa-changelog-2.1.0.xml",
+    "META-INF/jpa-changelog-2.2.0.xml",
+    "META-INF/jpa-changelog-2.3.0.xml",
+    "META-INF/jpa-changelog-2.4.0.xml",
+    "META-INF/jpa-changelog-2.5.0.xml",
+    "META-INF/jpa-changelog-2.5.1.xml",
+    "META-INF/jpa-changelog-3.0.0.xml",
+    "META-INF/jpa-changelog-3.2.0.xml",
+    "META-INF/jpa-changelog-3.3.0.xml",
+    "META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+    "META-INF/jpa-changelog-3.4.0.xml",
+    "META-INF/jpa-changelog-3.4.1.xml",
+    "META-INF/jpa-changelog-3.4.2.xml",
+    "META-INF/jpa-changelog-4.0.0.xml",
+    "META-INF/jpa-changelog-authz-4.0.0.CR1.xml",
+    "META-INF/jpa-changelog-authz-4.0.0.Beta3.xml",
+    "META-INF/jpa-changelog-authz-4.2.0.Final.xml",
+    "META-INF/jpa-changelog-4.2.0.xml",
+    "META-INF/jpa-changelog-4.3.0.xml",
+    "META-INF/jpa-changelog-4.6.0.xml",
+    "META-INF/jpa-changelog-4.7.0.xml",
+    "META-INF/jpa-changelog-4.8.0.xml",
+    "META-INF/jpa-changelog-authz-7.0.0.xml",
+    "META-INF/jpa-changelog-8.0.0.xml",
+    "META-INF/jpa-changelog-9.0.0.xml",
+    "META-INF/jpa-changelog-9.0.1.xml",
+    "META-INF/jpa-changelog-11.0.0.xml",
+    "META-INF/jpa-changelog-12.0.0.xml",
+    "META-INF/jpa-changelog-13.0.0.xml",
+    "META-INF/jpa-changelog-14.0.0.xml",
+    "META-INF/jpa-changelog-15.0.0.xml",
+    "META-INF/jpa-changelog-17.0.0.xml",
+    "META-INF/jpa-changelog-18.0.0.xml",
+    "META-INF/jpa-changelog-18.0.15.xml",
+    "META-INF/jpa-changelog-19.0.0.xml",
+    "META-INF/jpa-changelog-20.0.0.xml",
+    "META-INF/jpa-changelog-21.0.2.xml",
+    "META-INF/jpa-changelog-21.1.0.xml",
+    "META-INF/jpa-changelog-22.0.0.xml",
+    "META-INF/jpa-changelog-23.0.0.xml",
+    "META-INF/jpa-changelog-24.0.0.xml",
+    "META-INF/jpa-changelog-24.0.2.xml",
+    "META-INF/jpa-changelog-25.0.0.xml",
+    "META-INF/jpa-changelog-26.0.0.xml",
+    "META-INF/jpa-changelog-26.0.6.xml"
+  ],
+  "image_migration_resources": [
+    {
+      "resource": "META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "sha256": "c8f8f16d41e6d32962f37eeb4d9c745c81f56592fc4963e8769e5def5af4cd4c",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.0.0.Final.xml",
+      "sha256": "cbaebbee5395a8836ddb55fb462442f58df8b0e13560a6740b74a82a376b0f1f",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.1.0.Beta1.xml",
+      "sha256": "dc1bd486ff53530c3340e67fd8fa3214820e63a3574678d4ade34cc7e51d7eae",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.1.0.Final.xml",
+      "sha256": "fb1ede95b67f877402fed18ac9b311038df5de27d5c0b12dcd9dc463d7fac941",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "sha256": "0ef8718f1a543b4a2da18e44689be01a9856a2850a9d21fddf5e82897f0a9cc3",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "sha256": "05df15a541dbdeae4ba16cf854f26b16627be8b032ec43fb0379f762193ce046",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "sha256": "8b34814fe8fdda58aa4d9ace09bdc0a4867994ac034b217e2ac6c4574b284e3f",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "sha256": "5e13db9bc534ee101b656b625108a06c6de71d50f0299027dc8cb617e57771cc",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.2.0.Final.xml",
+      "sha256": "f2cb825938d478505d42a1ce40c9c62d633141afcebf552705de49d61fcfc8be",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.3.0.xml",
+      "sha256": "0fd19b895ebe7d928f767595a8a11517f7767047b40814fa6ac3869d638586c2",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.4.0-db2.xml",
+      "sha256": "9b637516e75cca2e9805c6e46f9d14606e5d7fc5db0ad52102beabef783cbea0",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.4.0.xml",
+      "sha256": "0d8290c6a51c9b520f46522ff6623fc4977de2233ffd8d947b1c96282c63940d",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.5.0.xml",
+      "sha256": "51b8ec667827d516ae704920543aea7deaca93f8fb655a9d3dabaeed681342c1",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.6.0.xml",
+      "sha256": "857539ff29889434f08f68b6999d25d4092ddaba698b1022867c90ae50872eb4",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.6.1.xml",
+      "sha256": "5e39bc6dcbeb15014675bee737e7c1c68bee0cd219ed3c863045d2d41f01a4ce",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.7.0.xml",
+      "sha256": "32cc0558502aaa04402c98d850c7b75bb09b7b4114c96313a05c76e9c62795ba",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.8.0-db2.xml",
+      "sha256": "f9fb75417a541c0067835df9f180c2894b5c8cd1aaa0744cb447a705763abfff",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.8.0.xml",
+      "sha256": "54ada4866b81ef8c342e23169c40de3286340c042478365a0ad137c9033c95bf",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.9.0.xml",
+      "sha256": "3186408324d71f95c8cb0d2c9b0147eb14f1dd2c1fe7be532f07ad9b8ffead71",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.9.1-db2.xml",
+      "sha256": "234ff8a55d1d869c0c58ae04d8c705d8b9e87169d60b0b0c48de1fc32b845ede",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.9.1.xml",
+      "sha256": "f6869e99a531665851bb300ba183c5b22cf3b8cf959881f6616cd1914003653b",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-1.9.2.xml",
+      "sha256": "a1cb8966695320cfb5e505f6fd3adca365a1dcb6c311a3aed62a302ecce94b87",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-11.0.0.xml",
+      "sha256": "368fdcc798cae6c71d7284acb4af9d19d0510c756ec1ee4fc8a6473a83fb67ef",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-12.0.0.xml",
+      "sha256": "9e18c5da84d774a1c938be285aee08b09df74698f047a51029c466d2f13b39b8",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-13.0.0.xml",
+      "sha256": "f6a9374196341286ede56cfc17715665836471ae8702e8c0dab28fa7e8fb35e8",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-14.0.0.xml",
+      "sha256": "7cdf96ef1f760edf109b0555c846197826a69591cdb672d01a515356f34537b0",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-15.0.0.xml",
+      "sha256": "f01b9539337a2ba30ba08de559f3a44bc18faec7592230abf5e1d7a461f0ffad",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-17.0.0.xml",
+      "sha256": "6a76109cba1d428453a5eaced0ca3feb2827c0a5671b1067ad2105ad75c8e1b9",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-18.0.0.xml",
+      "sha256": "0e6b6cd916b97925140fed5873fbba8117fcd6a1aab86081bc2b3537758724cf",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-18.0.15.xml",
+      "sha256": "215e8ab668488fa8e632dacb0e5db3a955fb886b20bcca61d48786697d08f00f",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-19.0.0.xml",
+      "sha256": "e763048b32cd610fffd6c6079aea3167f2e46a3b1619471ab6e45981b6984e07",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-2.1.0.xml",
+      "sha256": "c3408e9bc5a5fd8bc490f8e51f56b2e68132babe5d15c461fef724ea712e7ba3",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-2.2.0.xml",
+      "sha256": "7912b6bcc0e3370daa6f6a3940cabe3726cb5a82635bb3fb7d38b76949e4a295",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-2.3.0.xml",
+      "sha256": "77e2bd048a75ef17c30d3b958773dbbb7350e10c7aa06956914860fc87ef4030",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-2.4.0.xml",
+      "sha256": "ea067814cf11868614f869fc853fff7bac179df4da600d9b1581f727ed8c3641",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-2.5.0.xml",
+      "sha256": "ee78c742586025be16cb50cdc5cc5263e8701557a10701cce14df0f4653c007a",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-2.5.1.xml",
+      "sha256": "815ebbce417d1126b2ec8d890eef86f6193af9c4af49438a1b27c899d561d609",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-20.0.0.xml",
+      "sha256": "385b0c00b455584b3166627fd47b1138ae0b1362fab2a9deaec80af7e9a728d1",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-21.0.2.xml",
+      "sha256": "aae9ae76157b0cfaff12188aee91685cf6a432752b2bbf493c7ee947d34e3688",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-21.1.0.xml",
+      "sha256": "e679c24552d865f20af101dcb8e2eff4ddbc9b9fd9b525f89787447f66bb5479",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-22.0.0.xml",
+      "sha256": "734d9103f73cf2fa87e42fe15d8f3a2e5a3bde28f2be1886141f922ee4b84405",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-23.0.0.xml",
+      "sha256": "5e23c871f12d6435e1cbc3f821df1bf3d6a266ab12bc2dc34e7cca02fa3e87f5",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-24.0.0.xml",
+      "sha256": "c29348769467af6f834361654a85e8a7e652d89e6a732fab73e5d72b21a460a7",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-24.0.2.xml",
+      "sha256": "0ba8718a5d6477f4e198baca707237ed4442161c7246bb9dba7aad63f6ed6e60",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-25.0.0.xml",
+      "sha256": "1b1748181923c3aebf3ae16b1bb363d800ee6e9e6101346f0bea7ccaddf5bd14",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-26.0.0.xml",
+      "sha256": "6271c011e32d033f6c09b400766ef67f28e2f13020d7a82b21de14ef7edbba07",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-26.0.6.xml",
+      "sha256": "3b8e306950c91827f85d6bda5cd13ffaa4973b165089ce81df794c3ce26b29a8",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-3.0.0.xml",
+      "sha256": "d2ede3ccbd620367ebd8ff597259206311f547c288fd510e2da70ad229caab78",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-3.2.0.xml",
+      "sha256": "f67fa8eafce0dbf8e5ff6a017bfa2d3a3d93b4a704a48ffc8430d136534326d3",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-3.3.0.xml",
+      "sha256": "6c4da7834562f1d735ba73603d56ab7fa56e1eff717ba158c8b4d4587bccc98e",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-3.4.0.xml",
+      "sha256": "0f4b4a4bbd658b5d33c2ced2bc66539e8b203de114eff60c0728d39a97164ce3",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-3.4.1.xml",
+      "sha256": "3016590f60e13e5e67bcce4c11df7b32d920fa5e1c3f821b894fdeaf13e54454",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-3.4.2.xml",
+      "sha256": "18298c9091f17b3fcd4ca4c4948c2e4bb9efd5796856fb16820d8a9e9a2cc988",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-4.0.0.xml",
+      "sha256": "5ec03b3609b23d2f1760639a74795d9c72fbd5ea98caf4052209c85a923363d1",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-4.2.0.xml",
+      "sha256": "8469c4de6ab07d86c6ef315e4df09958e189d55885db736b325a648934c1e518",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-4.3.0.xml",
+      "sha256": "94df5e6daef886c383a7ea9debafd8dc55e48d0b97529c611fffee64b58141df",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-4.6.0.xml",
+      "sha256": "67077dbe38c55184fa088fabbe43a44df80138033c72aeeeac34ffcc49840541",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-4.7.0.xml",
+      "sha256": "48f843252a03ffab2fe5c62e81a20f45f6f7ee3305ef2b9a8c06bba47901fe2d",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-4.8.0.xml",
+      "sha256": "9f29c8dcd22c9ee9b31539079f77e1d2c27bd66b9b5f4f8e06c91e9c07d9e130",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-8.0.0.xml",
+      "sha256": "08dedb65b3d08dbaf124aaecc7f3279b80e249079c55dc6f809c7f0241807650",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-9.0.0.xml",
+      "sha256": "0982aceaefbb7d4dd90b44f01712e8a874a7b6b66b1969abff70a4aa5939ef0c",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-9.0.1.xml",
+      "sha256": "0f66b450c84d0b221d5ffbb7dc76b2b199bf54c22ebb6ca590639fa310e7a678",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-authz-2.0.0.xml",
+      "sha256": "dc504d4c23d4af109803a3270ba3b46ca559845325dec3ed900e522eeb63dc7e",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-authz-2.5.1.xml",
+      "sha256": "0c83a68249a115d35b29847292ae69765ebecb9f2a4c72ec11f5e0605ba8b5e3",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "sha256": "5b5895a8edf7bcf9a0a62a2ea534de87d4fbe8b380eeb2b3fb53ad3be5ebc51d",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-authz-4.0.0.Beta3.xml",
+      "sha256": "056ac8b787d9d3de2a200f860572719bff1ef6f7ff3ac8e72dc424bd5b2cadef",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-authz-4.0.0.CR1.xml",
+      "sha256": "f8987fb1d01c98c081b89d3bf40412770c873220180e53ead095b1b5254e63e4",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-authz-4.2.0.Final.xml",
+      "sha256": "adcf899b91461e6772263b7d229168daa674db5e238b8a1180130a9c32c5f335",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-authz-7.0.0.xml",
+      "sha256": "f4bc372d47decc9d502bd1de11a4d5a691c7c15120aa48a729506da2bbaf1436",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-authz-master.xml",
+      "sha256": "4b02c365457d977c7357faf084aabe134679a1b866d68412ae69b87779a82ba4",
+      "upstream_matches_image": true
+    },
+    {
+      "resource": "META-INF/jpa-changelog-master.xml",
+      "sha256": "a87f886756c60cd2e2196ef22b90b32679805567764ea96e475ff4b7f405193a",
+      "upstream_matches_image": true
+    }
+  ]
+}

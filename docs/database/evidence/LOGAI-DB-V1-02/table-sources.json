@@ -1,0 +1,4411 @@
+{
+  "admin_event_entity": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.2.0.xml",
+      "change_set": "2.2.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-18.0.0.xml",
+      "change_set": "18.0.0-10625-IDX_ADMIN_EVENT_TIME",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.6.xml",
+      "change_set": "26.0.6-34013",
+      "operation": "columnExists"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.6.xml",
+      "change_set": "26.0.6-34013",
+      "operation": "addColumn"
+    }
+  ],
+  "associated_policy": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    }
+  ],
+  "authentication_execution": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0.xml",
+      "change_set": "1.4.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.5.0.xml",
+      "change_set": "1.5.0",
+      "operation": "dropDefaultValue"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.5.0.xml",
+      "change_set": "1.5.0",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    }
+  ],
+  "authentication_flow": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0.xml",
+      "change_set": "1.4.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-oracle",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    }
+  ],
+  "authenticator_config": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0.xml",
+      "change_set": "1.4.0",
+      "operation": "renameTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "renameTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    }
+  ],
+  "authenticator_config_entry": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0.xml",
+      "change_set": "1.4.0",
+      "operation": "renameTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "renameTable"
+    }
+  ],
+  "broker_link": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    }
+  ],
+  "client": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.1.0.Beta1.xml",
+      "change_set": "1.1.0.Beta1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.1.0.Beta1.xml",
+      "change_set": "1.1.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Final.xml",
+      "change_set": "1.2.0.Final",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0.xml",
+      "change_set": "1.4.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.5.0.xml",
+      "change_set": "1.5.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from15",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "dropDefaultValue"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0.xml",
+      "change_set": "1.8.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0.xml",
+      "change_set": "1.8.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0-db2.xml",
+      "change_set": "1.8.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0-db2.xml",
+      "change_set": "1.8.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-oracle",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.2.xml",
+      "change_set": "3.4.2-KEYCLOAK-5172",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "dropForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "dropIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "dropDefaultValue"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-always-display-client",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.1.xml",
+      "change_set": "9.0.1-add-index-to-client.client_id",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "map-remove-ri-13.0.0",
+      "operation": "dropForeignKeyConstraint"
+    }
+  ],
+  "client_attributes": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.1.0.Beta1.xml",
+      "change_set": "1.1.0.Beta1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.1.0.Beta1.xml",
+      "change_set": "1.1.0.Beta1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.1.0.Beta1.xml",
+      "change_set": "1.1.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.1.xml",
+      "change_set": "3.4.1",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-14.0.0.xml",
+      "change_set": "14.0.0-KEYCLOAK-18286",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-14.0.0.xml",
+      "change_set": "14.0.0-KEYCLOAK-18286-revert",
+      "operation": "indexExists"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-14.0.0.xml",
+      "change_set": "14.0.0-KEYCLOAK-18286-revert",
+      "operation": "dropIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-14.0.0.xml",
+      "change_set": "14.0.0-KEYCLOAK-18286-supported-dbs",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-14.0.0.xml",
+      "change_set": "14.0.0-KEYCLOAK-18286-unsupported-dbs",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-20.0.0.xml",
+      "change_set": "client-attributes-string-accomodation-fixed",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-20.0.0.xml",
+      "change_set": "client-attributes-string-accomodation-fixed",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-20.0.0.xml",
+      "change_set": "client-attributes-string-accomodation-fixed",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-20.0.0.xml",
+      "change_set": "client-attributes-string-accomodation-fixed",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-24.0.0.xml",
+      "change_set": "24.0.0-26618-drop-index-if-present",
+      "operation": "indexExists"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-24.0.0.xml",
+      "change_set": "24.0.0-26618-drop-index-if-present",
+      "operation": "dropIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-24.0.0.xml",
+      "change_set": "24.0.0-26618-reindex",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-24.0.2.xml",
+      "change_set": "24.0.2-27967-drop-index-if-present",
+      "operation": "indexExists"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-24.0.2.xml",
+      "change_set": "24.0.2-27967-drop-index-if-present",
+      "operation": "dropIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-24.0.2.xml",
+      "change_set": "24.0.2-27967-reindex",
+      "operation": "createIndex"
+    }
+  ],
+  "client_auth_flow_bindings": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-6335",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-6335",
+      "operation": "addPrimaryKey"
+    }
+  ],
+  "client_initial_access": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fix",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fix-with-keycloak-5416",
+      "operation": "dropIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fix-with-keycloak-5416",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fix-with-keycloak-5416",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    }
+  ],
+  "client_node_registrations": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "renameTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "renameTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    }
+  ],
+  "client_scope": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "renameTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "map-remove-ri-13.0.0",
+      "operation": "dropForeignKeyConstraint"
+    }
+  ],
+  "client_scope_attributes": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "renameTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "createIndex"
+    }
+  ],
+  "client_scope_client": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "map-remove-ri-13.0.0",
+      "operation": "dropForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "13.0.0-KEYCLOAK-17992-drop-constraints",
+      "operation": "dropPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "13.0.0-KEYCLOAK-17992-drop-constraints",
+      "operation": "dropIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "13.0.0-increase-column-size-federated",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "13.0.0-KEYCLOAK-17992-recreate-constraints",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "13.0.0-KEYCLOAK-17992-recreate-constraints",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "13.0.0-KEYCLOAK-17992-recreate-constraints",
+      "operation": "createIndex"
+    }
+  ],
+  "client_scope_role_mapping": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "renameTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "dropIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-12.0.0.xml",
+      "change_set": "map-remove-ri",
+      "operation": "dropForeignKeyConstraint"
+    }
+  ],
+  "component": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.3.0.xml",
+      "change_set": "2.3.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.6.0.xml",
+      "change_set": "4.6.0-KEYCLOAK-8555",
+      "operation": "createIndex"
+    }
+  ],
+  "component_config": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-oracle",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-oracle",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-oracle",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-23.0.0.xml",
+      "change_set": "23.0.0-12062",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-23.0.0.xml",
+      "change_set": "23.0.0-12062",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-23.0.0.xml",
+      "change_set": "23.0.0-12062",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-23.0.0.xml",
+      "change_set": "23.0.0-12062",
+      "operation": "renameColumn"
+    }
+  ],
+  "composite_role": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0",
+      "operation": "addPrimaryKey"
+    }
+  ],
+  "credential": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.5.0.xml",
+      "change_set": "1.5.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0.xml",
+      "change_set": "1.8.0",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0.xml",
+      "change_set": "1.8.0-2",
+      "operation": "dropDefaultValue"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0.xml",
+      "change_set": "1.8.0-2",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0-db2.xml",
+      "change_set": "1.8.0",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0-db2.xml",
+      "change_set": "1.8.0-2",
+      "operation": "dropDefaultValue"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0-db2.xml",
+      "change_set": "1.8.0-2",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.9.0.xml",
+      "change_set": "1.9.0",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.9.2.xml",
+      "change_set": "1.9.2",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.2.0.xml",
+      "change_set": "2.2.0",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.2.0.xml",
+      "change_set": "2.2.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-8.0.0.xml",
+      "change_set": "8.0.0-adding-credential-columns",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-8.0.0.xml",
+      "change_set": "8.0.0-updating-credential-data-not-oracle-fixed",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-8.0.0.xml",
+      "change_set": "8.0.0-updating-credential-data-oracle-fixed",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-8.0.0.xml",
+      "change_set": "8.0.0-credential-cleanup-fixed",
+      "operation": "dropDefaultValue"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-8.0.0.xml",
+      "change_set": "8.0.0-credential-cleanup-fixed",
+      "operation": "dropColumn"
+    }
+  ],
+  "databasechangelog": [
+    {
+      "library": "Liquibase",
+      "evidence": "reference-schema.sql and catalogue.json",
+      "operation": "migration bookkeeping table"
+    }
+  ],
+  "databasechangeloglock": [
+    {
+      "library": "Liquibase",
+      "evidence": "reference-schema.sql and catalogue.json",
+      "operation": "migration bookkeeping table"
+    }
+  ],
+  "default_client_scope": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "map-remove-ri-13.0.0",
+      "operation": "dropForeignKeyConstraint"
+    }
+  ],
+  "event_entity": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.1.0.Final.xml",
+      "change_set": "1.1.0.Final",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.1.xml",
+      "change_set": "9.0.1-add-index-to-events",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-23.0.0.xml",
+      "change_set": "23.0.0-17258",
+      "operation": "addColumn"
+    }
+  ],
+  "fed_user_attribute": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0-KEYCLOAK-5230",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-24.0.0.xml",
+      "change_set": "24.0.0-9758",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-24.0.0.xml",
+      "change_set": "24.0.0-9758",
+      "operation": "createIndex"
+    }
+  ],
+  "fed_user_consent": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.1.xml",
+      "change_set": "2.5.1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0-KEYCLOAK-5230",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-6228",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-6228",
+      "operation": "dropNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-6228",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-increase-column-size-federated-fk",
+      "operation": "modifyDataType"
+    }
+  ],
+  "fed_user_consent_cl_scope": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addPrimaryKey"
+    }
+  ],
+  "fed_user_credential": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.2.0.xml",
+      "change_set": "2.2.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0-KEYCLOAK-5230",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-8.0.0.xml",
+      "change_set": "8.0.0-adding-credential-columns",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-8.0.0.xml",
+      "change_set": "8.0.0-updating-credential-data-not-oracle-fixed",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-8.0.0.xml",
+      "change_set": "8.0.0-updating-credential-data-oracle-fixed",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-8.0.0.xml",
+      "change_set": "8.0.0-credential-cleanup-fixed",
+      "operation": "dropDefaultValue"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-8.0.0.xml",
+      "change_set": "8.0.0-credential-cleanup-fixed",
+      "operation": "dropColumn"
+    }
+  ],
+  "fed_user_group_membership": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0-KEYCLOAK-5230",
+      "operation": "createIndex"
+    }
+  ],
+  "fed_user_required_action": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0-KEYCLOAK-5230",
+      "operation": "createIndex"
+    }
+  ],
+  "fed_user_role_mapping": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0-KEYCLOAK-5230",
+      "operation": "createIndex"
+    }
+  ],
+  "federated_identity": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.9.2.xml",
+      "change_set": "1.9.2",
+      "operation": "createIndex"
+    }
+  ],
+  "federated_user": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.3.0.xml",
+      "change_set": "2.3.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.3.0.xml",
+      "change_set": "2.3.0",
+      "operation": "addPrimaryKey"
+    }
+  ],
+  "group_attribute": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-oracle",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-20.0.0.xml",
+      "change_set": "20.0.0-12964-supported-dbs",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-20.0.0.xml",
+      "change_set": "20.0.0-12964-unsupported-dbs",
+      "operation": "createIndex"
+    }
+  ],
+  "group_role_mapping": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-12.0.0.xml",
+      "change_set": "map-remove-ri",
+      "operation": "dropForeignKeyConstraint"
+    }
+  ],
+  "identity_provider": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "dropDefaultValue"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "dropDefaultValue"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0.xml",
+      "change_set": "1.8.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0-db2.xml",
+      "change_set": "1.8.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.3.0.xml",
+      "change_set": "2.3.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.0.0.xml",
+      "change_set": "3.0.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-idps-for-login",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-idps-for-login",
+      "operation": "createIndex"
+    }
+  ],
+  "identity_provider_config": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    }
+  ],
+  "identity_provider_mapper": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    }
+  ],
+  "idp_mapper_config": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "dropForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "dropPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addForeignKeyConstraint"
+    }
+  ],
+  "keycloak_group": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-oracle",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unique-group-names",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.1.xml",
+      "change_set": "9.0.1-KEYCLOAK-12579-drop-constraints",
+      "operation": "dropUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.1.xml",
+      "change_set": "9.0.1-KEYCLOAK-12579-add-not-null-constraint",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.1.xml",
+      "change_set": "9.0.1-KEYCLOAK-12579-recreate-constraints",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "map-remove-ri-13.0.0",
+      "operation": "dropForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-org-group",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-org-group",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-org-group",
+      "operation": "addNotNullConstraint"
+    }
+  ],
+  "keycloak_role": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "dropForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "dropUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "dropForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from15",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0.xml",
+      "change_set": "1.8.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0-db2.xml",
+      "change_set": "1.8.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-oracle",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "dropUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "dropDefaultValue"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.6.0.xml",
+      "change_set": "4.6.0-KEYCLOAK-8377",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-increase-column-size-federated-fk",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-11.0.0.xml",
+      "change_set": "map-remove-ri",
+      "operation": "dropForeignKeyConstraint"
+    }
+  ],
+  "migration_model": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-8.0.0.xml",
+      "change_set": "8.0.0-resource-tag-support",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-8.0.0.xml",
+      "change_set": "8.0.0-resource-tag-support",
+      "operation": "createIndex"
+    }
+  ],
+  "offline_client_session": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from15",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from15",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from16-pre",
+      "operation": "delete"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from16",
+      "operation": "dropPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from16",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from16",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from16",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from16",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.9.0.xml",
+      "change_set": "1.9.0",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "dropPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-6228",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-6228",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-6228",
+      "operation": "dropPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-6228",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-drop-constraints-for-column-increase",
+      "operation": "dropPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-increase-column-size-federated-fk",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-recreate-constraints-after-column-increase",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-recreate-constraints-after-column-increase",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-14.0.0.xml",
+      "change_set": "14.0.0-KEYCLOAK-11019",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-28265-tables",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-28265-index-cleanup-css-preload",
+      "operation": "indexExists"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-28265-index-cleanup-css-preload",
+      "operation": "dropIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-32583-drop-redundant-index-on-client-session",
+      "operation": "indexExists"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-32583-drop-redundant-index-on-client-session",
+      "operation": "dropIndex"
+    }
+  ],
+  "offline_user_session": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from15",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from15",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from16-pre",
+      "operation": "delete"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from16",
+      "operation": "dropPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from16",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from16",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from16",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from16",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.7.0.xml",
+      "change_set": "4.7.0-KEYCLOAK-7275",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.7.0.xml",
+      "change_set": "4.7.0-KEYCLOAK-7275",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.7.0.xml",
+      "change_set": "4.7.0-KEYCLOAK-7275",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.7.0.xml",
+      "change_set": "4.7.0-KEYCLOAK-7275",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "13.0.0-KEYCLOAK-16844",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-14.0.0.xml",
+      "change_set": "14.0.0-KEYCLOAK-11019",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-28265-tables",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-28265-index-creation",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-28265-index-cleanup-uss-createdon",
+      "operation": "indexExists"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-28265-index-cleanup-uss-createdon",
+      "operation": "dropIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-28265-index-cleanup-uss-preload",
+      "operation": "indexExists"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-28265-index-cleanup-uss-preload",
+      "operation": "dropIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-28265-index-cleanup-uss-by-usersess",
+      "operation": "indexExists"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-28265-index-cleanup-uss-by-usersess",
+      "operation": "dropIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-28265-index-2-mysql",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-28265-index-2-not-mysql",
+      "operation": "createIndex"
+    }
+  ],
+  "org": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-org",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-org",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-org-alias",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-org-alias",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-org-alias",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-org-alias",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-33201-org-redirect-url",
+      "operation": "addColumn"
+    }
+  ],
+  "org_domain": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-org",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-org-indexes",
+      "operation": "createIndex"
+    }
+  ],
+  "policy_config": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addForeignKeyConstraint"
+    }
+  ],
+  "protocol_mapper": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0.xml",
+      "change_set": "1.8.0",
+      "operation": "dropNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0.xml",
+      "change_set": "1.8.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0.xml",
+      "change_set": "1.8.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0-db2.xml",
+      "change_set": "1.8.0",
+      "operation": "dropNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0-db2.xml",
+      "change_set": "1.8.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0-db2.xml",
+      "change_set": "1.8.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "dropForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "dropIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "dropDefaultValue"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "createIndex"
+    }
+  ],
+  "protocol_mapper_config": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "dropForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "dropPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addForeignKeyConstraint"
+    }
+  ],
+  "realm": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.1.0.Beta1.xml",
+      "change_set": "1.1.0.Beta1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "dropForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "dropForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "dropDefaultValue"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0.xml",
+      "change_set": "1.4.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.5.0.xml",
+      "change_set": "1.5.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.6.1.xml",
+      "change_set": "1.6.1_from15",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0.xml",
+      "change_set": "1.8.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.8.0-db2.xml",
+      "change_set": "1.8.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.9.0.xml",
+      "change_set": "1.9.0",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.9.1.xml",
+      "change_set": "1.9.1",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.9.1-db2.xml",
+      "change_set": "1.9.1",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.1.0.xml",
+      "change_set": "2.1.0-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.3.0.xml",
+      "change_set": "2.3.0",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-duplicate-email-support",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authn-3.4.0.CR1-refresh-token-max-reuse",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.2.xml",
+      "change_set": "3.4.2",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.CR1.xml",
+      "change_set": "authz-4.0.0.CR1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.7.0.xml",
+      "change_set": "4.7.0-KEYCLOAK-1267",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.8.0.xml",
+      "change_set": "4.8.0-KEYCLOAK-8835",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-11.0.0.xml",
+      "change_set": "map-remove-ri",
+      "operation": "dropForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "default-roles",
+      "operation": "addColumn"
+    }
+  ],
+  "realm_attribute": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-oracle",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "json-string-accomodation-fixed",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "json-string-accomodation-fixed",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "json-string-accomodation-fixed",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-13.0.0.xml",
+      "change_set": "json-string-accomodation-fixed",
+      "operation": "renameColumn"
+    }
+  ],
+  "realm_default_groups": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-12.0.0.xml",
+      "change_set": "map-remove-ri",
+      "operation": "dropForeignKeyConstraint"
+    }
+  ],
+  "realm_enabled_event_types": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0",
+      "operation": "addPrimaryKey"
+    }
+  ],
+  "realm_events_listeners": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0",
+      "operation": "addPrimaryKey"
+    }
+  ],
+  "realm_localizations": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-12.0.0.xml",
+      "change_set": "12.1.0-add-realm-localization-table",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-12.0.0.xml",
+      "change_set": "12.1.0-add-realm-localization-table",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-15.0.0.xml",
+      "change_set": "15.0.0-KEYCLOAK-18467",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-15.0.0.xml",
+      "change_set": "15.0.0-KEYCLOAK-18467",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-15.0.0.xml",
+      "change_set": "15.0.0-KEYCLOAK-18467",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-15.0.0.xml",
+      "change_set": "15.0.0-KEYCLOAK-18467",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-15.0.0.xml",
+      "change_set": "15.0.0-KEYCLOAK-18467",
+      "operation": "addNotNullConstraint"
+    }
+  ],
+  "realm_required_credential": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    }
+  ],
+  "realm_smtp_config": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    }
+  ],
+  "realm_supported_locales": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0",
+      "operation": "addPrimaryKey"
+    }
+  ],
+  "redirect_uris": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0",
+      "operation": "addPrimaryKey"
+    }
+  ],
+  "required_action_config": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0.xml",
+      "change_set": "1.4.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0.xml",
+      "change_set": "1.4.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "addPrimaryKey"
+    }
+  ],
+  "required_action_provider": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0.xml",
+      "change_set": "1.4.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0.xml",
+      "change_set": "1.4.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0.xml",
+      "change_set": "1.4.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.2.0.xml",
+      "change_set": "4.2.0-KEYCLOAK-6313",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.3.0.xml",
+      "change_set": "4.3.0-KEYCLOAK-7984",
+      "operation": "update"
+    }
+  ],
+  "resource_attribute": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.CR1.xml",
+      "change_set": "authz-4.0.0.CR1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.CR1.xml",
+      "change_set": "authz-4.0.0.CR1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.CR1.xml",
+      "change_set": "authz-4.0.0.CR1",
+      "operation": "addForeignKeyConstraint"
+    }
+  ],
+  "resource_policy": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    }
+  ],
+  "resource_scope": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    }
+  ],
+  "resource_server": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "dropPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "dropUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.CR1.xml",
+      "change_set": "authz-4.0.0.CR1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-7.0.0.xml",
+      "change_set": "authz-7.0.0-KEYCLOAK-10443",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-21.1.0.xml",
+      "change_set": "21.1.0-19404",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-21.1.0.xml",
+      "change_set": "21.1.0-19404-2",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-21.1.0.xml",
+      "change_set": "21.1.0-19404-2",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-21.1.0.xml",
+      "change_set": "21.1.0-19404-2",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-21.1.0.xml",
+      "change_set": "21.1.0-19404-2",
+      "operation": "renameColumn"
+    }
+  ],
+  "resource_server_perm_ticket": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.CR1.xml",
+      "change_set": "authz-4.0.0.CR1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.CR1.xml",
+      "change_set": "authz-4.0.0.CR1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.CR1.xml",
+      "change_set": "authz-4.0.0.CR1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.CR1.xml",
+      "change_set": "authz-4.0.0.CR1",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.Beta3.xml",
+      "change_set": "authz-4.0.0.Beta3",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.Beta3.xml",
+      "change_set": "authz-4.0.0.Beta3",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-drop-constraints-for-column-increase",
+      "operation": "dropUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-increase-column-size-federated-fk",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-recreate-constraints-after-column-increase",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-recreate-constraints-after-column-increase",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "25.0.0-28861-index-creation",
+      "operation": "createIndex"
+    }
+  ],
+  "resource_server_policy": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.5.1.xml",
+      "change_set": "authz-2.5.1",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-oracle",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed",
+      "operation": "dropIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "dropUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "dropForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.Beta3.xml",
+      "change_set": "authz-4.0.0.Beta3",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.Beta3.xml",
+      "change_set": "authz-4.0.0.Beta3",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-increase-column-size-federated-fk",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-21.1.0.xml",
+      "change_set": "21.1.0-19404",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-21.1.0.xml",
+      "change_set": "21.1.0-19404-2",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-21.1.0.xml",
+      "change_set": "21.1.0-19404-2",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-21.1.0.xml",
+      "change_set": "21.1.0-19404-2",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-21.1.0.xml",
+      "change_set": "21.1.0-19404-2",
+      "operation": "renameColumn"
+    }
+  ],
+  "resource_server_resource": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed",
+      "operation": "dropIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "dropUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "dropForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.CR1.xml",
+      "change_set": "authz-4.0.0.CR1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.CR1.xml",
+      "change_set": "authz-4.0.0.CR1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.2.0.Final.xml",
+      "change_set": "authz-4.2.0.Final",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.2.0.Final.xml",
+      "change_set": "authz-4.2.0.Final",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.6.0.xml",
+      "change_set": "4.6.0-KEYCLOAK-7950",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-drop-constraints-for-column-increase",
+      "operation": "dropUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-increase-column-size-federated-fk",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-recreate-constraints-after-column-increase",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-recreate-constraints-after-column-increase",
+      "operation": "addUniqueConstraint"
+    }
+  ],
+  "resource_server_scope": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part1",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed",
+      "operation": "dropIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "dropUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "dropForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "renameColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-3.4.0.CR1.xml",
+      "change_set": "authz-3.4.0.CR1-resource-server-pk-change-part3-fixed-nodropindex",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.CR1.xml",
+      "change_set": "authz-4.0.0.CR1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.0.0.CR1.xml",
+      "change_set": "authz-4.0.0.CR1",
+      "operation": "addColumn"
+    }
+  ],
+  "resource_uris": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.2.0.Final.xml",
+      "change_set": "authz-4.2.0.Final",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.2.0.Final.xml",
+      "change_set": "authz-4.2.0.Final",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-4.2.0.Final.xml",
+      "change_set": "authz-4.2.0.Final-KEYCLOAK-9944",
+      "operation": "addPrimaryKey"
+    }
+  ],
+  "revoked_token": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "31296-persist-revoked-access-tokens",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "31296-persist-revoked-access-tokens",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "31725-index-persist-revoked-access-tokens",
+      "operation": "createIndex"
+    }
+  ],
+  "role_attribute": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.6.0.xml",
+      "change_set": "4.6.0-KEYCLOAK-8377",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.6.0.xml",
+      "change_set": "4.6.0-KEYCLOAK-8377",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.6.0.xml",
+      "change_set": "4.6.0-KEYCLOAK-8377",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.6.0.xml",
+      "change_set": "4.6.0-KEYCLOAK-8377",
+      "operation": "createIndex"
+    }
+  ],
+  "scope_mapping": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-12.0.0.xml",
+      "change_set": "map-remove-ri",
+      "operation": "dropForeignKeyConstraint"
+    }
+  ],
+  "scope_policy": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-authz-2.0.0.xml",
+      "change_set": "authz-2.0.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    }
+  ],
+  "user_attribute": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0.xml",
+      "change_set": "1.4.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0.xml",
+      "change_set": "1.4.0",
+      "operation": "dropPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0.xml",
+      "change_set": "1.4.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "dropPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.9.2.xml",
+      "change_set": "1.9.2",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-oracle",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-14.0.0.xml",
+      "change_set": "KEYCLOAK-17267-add-index-to-user-attributes",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-24.0.0.xml",
+      "change_set": "24.0.0-9758",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-24.0.0.xml",
+      "change_set": "24.0.0-9758",
+      "operation": "createIndex"
+    }
+  ],
+  "user_consent": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.9.2.xml",
+      "change_set": "1.9.2",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.3.0.xml",
+      "change_set": "2.3.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-6228",
+      "operation": "dropUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-6228",
+      "operation": "dropNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-6228",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-6228",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-increase-column-size-federated-fk",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "unique-consentuser",
+      "operation": "dropUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "unique-consentuser",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "unique-consentuser-mysql",
+      "operation": "dropUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-25.0.0.xml",
+      "change_set": "unique-consentuser-mysql",
+      "operation": "addUniqueConstraint"
+    }
+  ],
+  "user_consent_client_scope": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-4.0.0.xml",
+      "change_set": "4.0.0-KEYCLOAK-5579-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-18.0.15.xml",
+      "change_set": "18.0.15-30992-index-consent",
+      "operation": "indexExists"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-18.0.15.xml",
+      "change_set": "18.0.15-30992-index-consent",
+      "operation": "createIndex"
+    }
+  ],
+  "user_entity": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.Beta1-db2.xml",
+      "change_set": "1.2.0.Beta1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.2.0.CR1-db2.xml",
+      "change_set": "1.2.0.RC1",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0.xml",
+      "change_set": "1.4.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.4.0-db2.xml",
+      "change_set": "1.4.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.9.2.xml",
+      "change_set": "1.9.2",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.3.0.xml",
+      "change_set": "2.3.0",
+      "operation": "dropDefaultValue"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.3.0.xml",
+      "change_set": "2.3.0",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-oracle",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "dropUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "addUniqueConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.3.0.xml",
+      "change_set": "3.3.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-9.0.0.xml",
+      "change_set": "9.0.0-increase-column-size-federated-fk",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-17.0.0.xml",
+      "change_set": "17.0.0-9562",
+      "operation": "createIndex"
+    }
+  ],
+  "user_federation_config": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    }
+  ],
+  "user_federation_mapper": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    }
+  ],
+  "user_federation_mapper_config": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addForeignKeyConstraint"
+    }
+  ],
+  "user_federation_provider": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    }
+  ],
+  "user_group_membership": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.7.0.xml",
+      "change_set": "1.7.0",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.9.2.xml",
+      "change_set": "1.9.2",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-org-group-membership",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-org-group-membership",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-26.0.0.xml",
+      "change_set": "26.0.0-org-group-membership",
+      "operation": "addNotNullConstraint"
+    }
+  ],
+  "user_required_action": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "update"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "dropPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "dropColumn"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.3.0.xml",
+      "change_set": "1.3.0",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.9.2.xml",
+      "change_set": "1.9.2",
+      "operation": "createIndex"
+    }
+  ],
+  "user_role_mapping": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.9.2.xml",
+      "change_set": "1.9.2",
+      "operation": "createIndex"
+    }
+  ],
+  "username_login_failure": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-oracle",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "dropPrimaryKey"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "modifyDataType"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-2.5.0.xml",
+      "change_set": "2.5.0-unicode-other-dbs",
+      "operation": "addPrimaryKey"
+    }
+  ],
+  "web_origins": [
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "createTable"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-1.0.0.Final-db2.xml",
+      "change_set": "1.0.0.Final-KEYCLOAK-5461",
+      "operation": "addForeignKeyConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.2.0.xml",
+      "change_set": "3.2.0-fixed",
+      "operation": "createIndex"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0",
+      "operation": "addNotNullConstraint"
+    },
+    {
+      "file": "model/jpa/src/main/resources/META-INF/jpa-changelog-3.4.0.xml",
+      "change_set": "3.4.0",
+      "operation": "addPrimaryKey"
+    }
+  ]
+}
