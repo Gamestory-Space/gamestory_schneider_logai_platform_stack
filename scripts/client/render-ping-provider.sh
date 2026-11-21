@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Deployment configuration only. Never contacts Keycloak or prints a secret.
 set -euo pipefail
-secret_file=""; output=""; method=""; scopes=""; existing=""; enabled=false
+secret_file=""; output=""; method="client_secret_basic"; scopes="openid"; existing=""; enabled=false
 issuer="https://ping-sso-uat.schneider-electric.com"
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -14,12 +14,12 @@ while [[ $# -gt 0 ]]; do
       esac
       shift 2;;
     --enable) enabled=true; shift;;
-    --help) echo "Usage: $0 --client-secret-file FILE --output FILE --client-auth-method BASIC_OR_POST --scopes SCOPES [--existing-provider-file PRIVATE_BACKUP] [--enable]"; exit 0;;
+    --help) echo "Usage: $0 --client-secret-file FILE --output FILE [--client-auth-method client_secret_basic|client_secret_post] [--scopes SCOPES] [--existing-provider-file PRIVATE_BACKUP] [--enable] (defaults: Basic, openid only)"; exit 0;;
     *) echo "Unknown option: $1" >&2; exit 2;;
   esac
 done
 [[ -f "$secret_file" && -n "$output" && -n "$scopes" ]] || { echo "Provide --client-secret-file, --output, --scopes and --client-auth-method." >&2; exit 2; }
-case "$method" in client_secret_basic|client_secret_post) ;; *) echo "Confirm this client's Basic or POST authentication method." >&2; exit 2;; esac
+case "$method" in client_secret_basic|client_secret_post) ;; *) echo "Use client_secret_basic or client_secret_post." >&2; exit 2;; esac
 [[ "$issuer" == https://ping-sso-uat.schneider-electric.com ]] || { echo "This renderer targets Schneider Ping UAT only." >&2; exit 2; }
 command -v jq >/dev/null || { echo "jq is required." >&2; exit 2; }
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

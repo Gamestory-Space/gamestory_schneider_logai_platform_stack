@@ -1,21 +1,22 @@
 # Ping + Policy Studio: UAT rollout preparation
 
 **Prepared, not deployed.** This package contains an additive schema plan and public
-Ping configuration tools. It does not merge implementation PRs, publish service
-releases, promote images, change image pins or connect to the client's database.
-The bundled default values still pin the previous API/UI. Do not deploy them as the
-Policy Studio rollout: first obtain the approved new API/UI release images and digests.
+Ping configuration tools. API v0.1.9-rc.1 and UI v0.1.8-rc.1 are published, signed
+release candidates from the unmerged PR heads. The UAT values pin their digests;
+other environment defaults retain their stable releases. Promote the exact candidate
+images to the client registry before deployment. No client database or deployment
+has been changed, and no implementation PR has been merged.
 
 ## Release inputs and boundaries
 
 1. Review/merge API PR #6 and UI PR #6 through normal owner control. The four-section
-   implementation passed CI at API `dde5d6b86050a359d30690c94ba7d45b706b6b41` and UI
-   `cfd4ff294d21793e0afc0c7a6f46a43715b20eea`. No implementation is merged by this plan.
-2. Publish approved release images and promote the exact digests to the client registry.
-   Set both API/UI references in Schneider's private values; retain Identity API and
-   Keycloak pins unless independently approved. Update the rollout image record in
-   `manifest.json` when release provenance is available. Never substitute an old API
-   image merely because a newer UI image exists.
+   implementation and release checks passed at API `d3f58e2847ce58e365832050ed85ebfcd665c043` and UI
+   `a2ebcb067e55f92becaf8af7f6c5d23272c6880b`. No implementation is merged by this plan.
+2. The published candidates and source/evidence links are in `manifest.json`. Promote
+   those exact digests to the client registry and apply `release-values.yaml` last
+   after Schneider's private values. Retain Identity API and Keycloak pins. Final
+   stable versions can replace these candidates after owner review and merge;
+   repeat source/schema/image validation for any replacement.
 3. Verify the signed client archive and schema checksums. Extract `/app/schema` from
    the approved API image without starting it and compare the ten listed files:
 
@@ -28,9 +29,9 @@ Policy Studio rollout: first obtain the approved new API/UI release images and d
 4. Have the client provide the actual LogAI database, schema/search_path, current
    deployment versions, DDL owner, runtime role, secret references and restored backup
    evidence. Repository placeholders and local tests are not live UAT inventory.
-5. The secret for Ping stays at the client site. Its client authentication method
-   (Basic or POST) and client-approved scopes remain client-specific inputs. Discovery
-   confirms capabilities, not that client's assigned method or grants.
+5. The secret for Ping stays at the client site. The agreed defaults are Basic client authentication and mandatory `openid` scope
+   only. Optional profile/email scopes and mappings stay unset; POST remains an
+   override if client-site testing requires it. Discovery is not client acceptance.
 
 Policy Studio provides configuration and a versioned intelligence preference; it does
 not implement Self-hosted/Enterprise AI adapters or a deterministic execution engine.
@@ -147,7 +148,7 @@ local subset. Render/diff the complete remote chart with its private values befo
 ## D. Ping enablement — separate from database migration
 
 Follow `docs/ping-uat-integration.md` in the extracted client bundle. Render the provider
-with the client-site secret file and confirmed Basic/POST method/scopes, using
+with the client-site secret file and minimal Basic/`openid` defaults, using
 `./scripts/render-ping-provider.sh`. The generated private JSON stays outside Git and
 the release archive. Inspect/back up the existing `schneider-main` provider, preserve
 its mappers, pass the protected backup with `--existing-provider-file`, and perform a targeted update. Keep local administrator login available;
@@ -190,6 +191,38 @@ verified forward fix when new-format policy data has already been written.
 
 Record approved API/UI digests and promotion evidence; target DB/schema and preflight;
 restored backup reference; migration/count/grant results; preserved backend profile;
-private-value diff; Ping client method/scopes and test user; local admin recovery;
+private-value diff; Ping default/override used and assigned test user; local admin recovery;
 functional/SSO/permission acceptance; and the rehearsed rollback owner/window.
 Unconfirmed items keep the rollout in preparation, not declared ready for live sync.
+
+## Release input check
+
+After promoting the approved API/UI images, apply their recorded digests to both
+UAT value paths (and the client's complete private chart). Retain the Identity and
+Keycloak pins. Render that complete chart to a protected file and run (paths are relative to the
+extracted client bundle):
+
+```bash
+helm template logai /secure/complete-client-chart \
+  -f /secure/current-private-values.yaml \
+  -f rollouts/ping-policy-studio/release-values.yaml \
+  > /secure/final-logai-render.yaml
+```
+
+```bash
+./scripts/check-policy-release.sh rollouts/ping-policy-studio/manifest.json /secure/final-logai-render.yaml
+```
+
+This read-only check rejects missing/unpinned images, old API/UI references,
+missing source commits, partial chart output without both image digests and
+known site placeholders. Promotion may change repository names, but must preserve
+the recorded digest. It does not certify registry access, database state or login.
+Use an approved immutable platform release for `argocd/logai-uat.yaml`; its former
+`rel2_v0.1.7` target has been replaced with an explicit required input.
+
+API/UI release candidates come from the PR commits in the manifest. The checked-in
+UAT values and shared release overlay use the published digests, with startup DDL
+and demo seeding off. They remain
+prereleases; all implementation PRs remain unmerged. Platform publication retains
+its existing approved-source restriction: complete owner merge/review before the
+final platform release. No release-source guard is bypassed.

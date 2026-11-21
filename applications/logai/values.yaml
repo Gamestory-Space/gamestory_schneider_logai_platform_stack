@@ -39,7 +39,7 @@ securityContext:
 identityApi:
   image:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
-    tag: identity-api-v01.7
+    tag: identity-api-v0.1.7
     pullPolicy: IfNotPresent
   replicas: 2
   resources:
@@ -79,7 +79,7 @@ logaiApi:
 logaiUi:
   image:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
-    tag: logai-ui-v01.7
+    tag: logai-ui-v0.1.7
     pullPolicy: IfNotPresent
   replicas: 2
   # Writable directory used to render config.json at startup.

@@ -43,5 +43,7 @@ ESO verification and actual Schneider deployment acceptance remain separate.
 The rollout-preparation branch adds public Ping configuration, shell-only client
 helpers and the reviewed Policy Studio DDL/runbook under `rollouts/ping-policy-studio`.
 No application Python/TypeScript source or generated credential files are included.
-Its manifest identifies the API candidate and SQL checksums; released API/UI image
-references remain prerequisites rather than invented pins. See the rollout runbook.
+Its manifest identifies the API/UI candidates, published image digests, release
+evidence and SQL checksums. UAT pins API v0.1.9-rc.1 and UI v0.1.8-rc.1; the shared
+release overlay must be applied after private values. Client registry promotion and
+live acceptance remain on-site steps. See the rollout runbook.

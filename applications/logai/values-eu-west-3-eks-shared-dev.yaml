@@ -41,8 +41,8 @@ identityApi:
 logaiApi:
   image:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
-    tag: logai-api-v0.1.8
-    digest: sha256:14a1b3e6a36def12e1553e9bae2bee2b91317b989d54338a0aeb7e7f99b90357
+    tag: logai-api-v0.1.9-rc.1
+    digest: sha256:306fbbca9fd5777a6f84219026ad302b2ff694ed008987744188b4f74172324e
   # Existing-database upgrades run DDL once through the reviewed migration plan.
   applyDatabaseSchemaOnStartup: false
   # Never seed demo data during an existing-database upgrade.
@@ -64,8 +64,8 @@ logaiApi:
 logaiUi:
   image:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
-    tag: logai-ui-v0.1.7
-    digest: sha256:4254cae40587d1d1c5f35fa150f48f127169f8c9dc829dda43473a9c214ba53e
+    tag: logai-ui-v0.1.8-rc.1
+    digest: sha256:7ef465cdc0a3250d78960caba5f5fbb8650b5ce39f85a6bcfe08d2fee6152a47
   resources:
     requests:
       cpu: 50m

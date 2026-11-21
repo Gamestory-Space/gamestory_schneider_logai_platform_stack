@@ -15,6 +15,67 @@ VERIFY=ROOT/'scripts/client/verify-policy-schema.sh'
 
 
 class PublicRolloutAssets(unittest.TestCase):
+    def test_candidate_overlay_and_uat_pins_match_published_manifest(self):
+        rollout=ROOT/'rollouts/ping-policy-studio'
+        manifest=json.loads((rollout/'manifest.json').read_text())
+        overlay=rollout/'release-values.yaml'
+        values=yaml.safe_load(overlay.read_text())
+        self.assertEqual(set(values),{'logaiApi','logaiUi'})
+        for name,key in [('api','logaiApi'),('ui','logaiUi')]:
+            digest=manifest[name+'_release_image'].split('@')[1]
+            for file in [overlay,ROOT/'environments/uat/values.yaml',ROOT/'applications/logai/values-eu-west-3-eks-shared-dev.yaml']:
+                self.assertEqual(yaml.safe_load(file.read_text())[key]['image']['digest'],digest)
+        self.assertFalse(values['logaiApi']['applyDatabaseSchemaOnStartup'])
+        self.assertFalse(values['logaiApi']['seedSampleDataOnStartup'])
+        command=['helm','template','logai',str(ROOT/'helm/gamestory-schneider-platform'),'-f',str(ROOT/'environments/uat/values.yaml'),'-f',str(overlay),'--set','identity.domain=uat.example.test','--set','externalDatabase.host=postgres.example.test']
+        # Synthetic site values exercise the complete reference chart only;
+        # they are never shipped as a claim about the actual client environment.
+        with tempfile.TemporaryDirectory() as directory:
+            render=Path(directory)/'complete.yaml'
+            render.write_text(subprocess.run(command,capture_output=True,text=True,check=True).stdout)
+            check=[str(ROOT/'scripts/client/check-policy-release.sh'),str(rollout/'manifest.json'),str(render)]
+            result=subprocess.run(check,capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stderr)
+            partial=['helm','template','logai',str(ROOT/'applications/logai'),'-f',str(ROOT/'applications/logai/values-eu-west-3-eks-shared-dev.yaml'),'-f',str(overlay)]
+            render.write_text(subprocess.run(partial,capture_output=True,text=True,check=True).stdout)
+            self.assertNotEqual(subprocess.run(check,capture_output=True).returncode,0)
+
+    def test_release_input_check_requires_new_pinned_images_and_complete_render(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);manifest=root/'manifest.json';rendered=root/'rendered.yaml'
+            data=json.loads((ROOT/'rollouts/ping-policy-studio/manifest.json').read_text())
+            data['api_release_image']=None;data['ui_release_image']=None
+            manifest.write_text(json.dumps(data));rendered.write_text('kind: Deployment\n')
+            check=[str(ROOT/'scripts/client/check-policy-release.sh'),str(manifest),str(rendered)]
+            self.assertNotEqual(subprocess.run(check,capture_output=True).returncode,0)
+            data['api_release_image']='docker.io/test/app:logai-api-v0.1.9-rc.1@sha256:'+'1'*64
+            data['ui_release_image']='docker.io/test/app:logai-ui-v0.1.8-rc.1@sha256:'+'2'*64
+            manifest.write_text(json.dumps(data))
+            rendered.write_text('image: client.invalid/app:logai-api-v0.1.9-rc.1@sha256:'+'1'*64+'\n')
+            self.assertNotEqual(subprocess.run(check,capture_output=True).returncode,0)
+            full=rendered.read_text()+'image: "client.invalid/app:logai-ui-v0.1.8-rc.1@sha256:'+'2'*64+'"\n'
+            rendered.write_text(full)
+            self.assertEqual(subprocess.run(check,capture_output=True).returncode,0)
+            rendered.write_text(full+'host: example.invalid\n')
+            self.assertNotEqual(subprocess.run(check,capture_output=True).returncode,0)
+            rendered.write_text(full)
+            data['api_release_image']='docker.io/test/app:logai-api-v0.1.8@sha256:'+'1'*64
+            manifest.write_text(json.dumps(data))
+            self.assertNotEqual(subprocess.run(check,capture_output=True).returncode,0)
+
+    def test_minimal_defaults_need_no_optional_client_settings(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);secret=root/'secret';secret.write_text('dummy-only')
+            output=root/'minimal.private.json'
+            result=subprocess.run([str(RENDER),'--client-secret-file',str(secret),'--output',str(output)],capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stderr)
+            provider=json.loads(output.read_text())
+            self.assertFalse(provider['enabled'])
+            self.assertEqual(provider['config']['clientAuthMethod'],'client_secret_basic')
+            self.assertEqual(provider['config']['defaultScope'],'openid')
+            self.assertNotIn('claims',provider['config'])
+            self.assertNotIn('pkceMethod',provider['config'])
+
     def render(self, secret, output, enabled=False, method='client_secret_basic', scopes='openid profile email'):
         command=[str(RENDER),'--client-secret-file',str(secret),'--output',str(output),'--client-auth-method',method,'--scopes',scopes]
         if enabled: command.append('--enable')
