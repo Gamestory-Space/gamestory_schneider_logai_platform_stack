@@ -29,3 +29,12 @@ Platform v0.1.9 includes the supplied central-chart files and pins LogAI API
 v0.1.8; Identity API and UI remain v0.1.7. Merge the central-chart delta described
 in [transfer_To_schneider.readme](transfer_To_schneider.readme) into the complete
 remote chart. Platform inputs and controlled schema preparation are still required.
+
+
+## Preparing Ping + Policy Studio
+
+See [the staged rollout runbook](rollouts/ping-policy-studio/README.md) before the
+next Policy Studio deployment. It includes checksummed SQL, a read-only preflight,
+a transactional migration for existing tables, runtime grants and a client-site Ping
+configuration helper. Existing API/UI pins are not the new Policy Studio release;
+obtain the reviewed release images/digests and rehearse the target database first.

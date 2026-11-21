@@ -1,0 +1,32 @@
+\ir target.psql
+\if :{?backup_reference}
+\else
+  \echo 'Required: -v backup_reference=<verified backup/snapshot reference>'
+  DO $$ BEGIN RAISE EXCEPTION 'Rollout precondition failed; nothing applied'; END $$;
+\endif
+SELECT length(btrim(:'backup_reference'))>0 AS backup_recorded \gset
+\if :backup_recorded
+\else
+  \echo 'Backup reference must not be blank. Nothing applied.'
+  DO $$ BEGIN RAISE EXCEPTION 'Rollout precondition failed; nothing applied'; END $$;
+\endif
+BEGIN;
+SET LOCAL lock_timeout='5s';
+SET LOCAL statement_timeout='5min';
+SET LOCAL idle_in_transaction_session_timeout='5min';
+SELECT pg_catalog.set_config('search_path',pg_catalog.quote_ident(:'target_schema')||', pg_catalog',true);
+SELECT pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended('logai:policy-rollout:'||current_schema(),0));
+\ir minimum-shape.psql
+-- Deliberately excludes demo seed 002 and every down migration.
+\ir schema/001_release_and_chutes_read_models.sql
+\ir schema/003_order_orchestration_runs.sql
+\ir schema/004_policy_persistence.sql
+\ir schema/005_policy_lifecycle.sql
+\ir schema/006_fixed_policy_snapshots.sql
+\ir schema/007_dictionary_versions.sql
+\ir schema/008_dictionary_setting_terms.sql
+\ir schema/009_shared_dictionary.sql
+\ir schema/010_policy_use_case_details.sql
+\ir schema/011_four_section_policy.sql
+COMMIT;
+\echo 'Schema transaction committed. No customer policies seeded or snapshots activated.'

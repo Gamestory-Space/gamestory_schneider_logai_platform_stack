@@ -1,0 +1,11 @@
+\ir target.psql
+BEGIN READ ONLY;
+SET LOCAL statement_timeout='60s';
+SELECT pg_catalog.set_config('search_path',pg_catalog.quote_ident(:'target_schema')||', pg_catalog',true);
+-- Run before/after DDL while writers are quiesced, before startup/explicit seeding.
+-- Exact counts can be expensive; timeout is intentional. Keep output client-private.
+SELECT format('SELECT %L AS table_name,count(*) AS rows FROM %I.%I',c.relname,n.nspname,c.relname)
+ FROM pg_catalog.pg_class c JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
+ WHERE n.nspname=current_schema() AND c.relkind IN ('r','p')
+ AND c.relname LIKE 'logai\_%' ESCAPE '\' ORDER BY c.relname \gexec
+COMMIT;

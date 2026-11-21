@@ -72,6 +72,17 @@ spec:
             - name: DB_CREDENTIAL_REFRESH_MAX_WAIT_SECONDS
               value: {{ $credentials.refreshMaxWaitSeconds | default 10 | quote }}
             {{- end }}
+            {{- if .Values.logaiApi.policyConfigMap }}
+            {{- $policyConfigMap := .Values.logaiApi.policyConfigMap }}
+            {{- range $key := list "POLICY_STORAGE_BACKEND" "POLICY_S3_BUCKET" "POLICY_S3_REGION" "POLICY_S3_PREFIX" "POLICY_S3_KMS_KEY_ID" "POLICY_S3_EXPECTED_ACCOUNT_ID" "POLICY_S3_CREDENTIALS_SOURCE" "POLICY_S3_RETENTION_DAYS" "POLICY_LIFECYCLE_ACTIVATION_ENABLED" "POLICY_RUNTIME_TEMPLATE_VERIFIED" }}
+            - name: {{ $key }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $policyConfigMap }}
+                  key: {{ $key }}
+                  optional: true
+            {{- end }}
+            {{- end }}
             - name: DB_HOST
               value: {{ required "database.host is cluster-specific and must be set in values-<cluster>.yaml" .Values.database.host | quote }}
             - name: DB_PORT

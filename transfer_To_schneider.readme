@@ -1,20 +1,40 @@
-# Schneider transfer summary
+# Schneider manual transfer list — Ping + Policy Studio
 
-Merge these three files into the remote project under applications/logai/:
+Updated: 21 November 2026. Chris will apply client-side changes manually.
+Remote application statuses remain pending until Chris confirms completion.
 
-- values.yaml — add recovery settings, disabled by default.
-- values-eu-west-3-eks-shared-dev.yaml — enable recovery for UAT.
-- templates/20-logai-api.yaml — add recovery environment variables and the
-  read-only database password Secret mount.
+Known edits under the client's existing applications/logai/ chart:
 
-The shared and UAT values now pin logai-api-v0.1.8 and its published digest.
+- [ ] values.yaml — add logaiApi.policyConfigMap: "". Correct the old v01.7
+      spelling for Identity/UI tags if still present; retain other shared defaults.
+- [ ] values-eu-west-3-eks-shared-dev.yaml — set both API/UI candidate tags and
+      digests below. Keep startup DDL and demo seeding false.
+- [ ] templates/20-logai-api.yaml — add the optional policy ConfigMap environment
+      mapping from the supplied template; retain credential-recovery wiring.
 
-Chart.yaml and templates/_helpers.tpl need no changes.
-No apps.yaml is required in this chart.
+Conditional checks:
 
-API image published: docker.io/chrismdgs/gamestory_logai_schneider:logai-api-v0.1.8.
-Promote it into Schneider's configured JFrog repository before deployment.
-Schneider must confirm the Secret password is synchronized.
+- [ ] templates/30-logai-ui.yaml — verify the image expression honors image.digest;
+      edit only if it does not. Full current template still needed for verification.
+- [ ] Existing client Argo Application/ApplicationSet — verify approved revision,
+      chart and UAT value-file selection. Retain the existing client resource.
+- [ ] Client-managed policy ConfigMap — use only for an existing storage profile
+      or approved snapshot-use flags. Optional inputs stay unset.
 
-Helm validation and 63 API tests passed, including preservation of active
-transactions during password rotation.
+Published candidates (promote exact digests to the configured JFrog repository):
+
+- API: logai-api-v0.1.9-rc.1
+  sha256:306fbbca9fd5777a6f84219026ad302b2ff694ed008987744188b4f74172324e
+- UI: logai-ui-v0.1.8-rc.1
+  sha256:7ef465cdc0a3250d78960caba5f5fbb8650b5ce39f85a6bcfe08d2fee6152a47
+
+Detailed per-file patches, optional settings, operator assets, database order and
+manual progress record: rollouts/ping-policy-studio/manual-remote-changes.md.
+
+Chart.yaml and templates/_helpers.tpl have no planned changes. Identity v0.1.7
+and Keycloak 26.0.8 are retained. Preserve existing namespace, hosts, gateway,
+Secrets, database wiring and credential recovery. The supplied chart is partial;
+merge individual edits into the complete client chart. No apps.yaml is needed.
+
+Image promotion, reviewed database upgrade/grants and targeted Ping enablement
+are separately tracked one-off client operations. This list applies no remote edits.

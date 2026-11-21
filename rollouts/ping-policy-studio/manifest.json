@@ -1,0 +1,63 @@
+{
+  "status": "release-candidates-pinned-not-deployed",
+  "api_source_commit": "d3f58e2847ce58e365832050ed85ebfcd665c043",
+  "policy_content_schema": 4,
+  "generator": "four-section-policy-v5",
+  "api_release_image": "docker.io/chrismdgs/gamestory_logai_schneider:logai-api-v0.1.9-rc.1@sha256:306fbbca9fd5777a6f84219026ad302b2ff694ed008987744188b4f74172324e",
+  "ui_release_image": "docker.io/chrismdgs/gamestory_logai_schneider:logai-ui-v0.1.8-rc.1@sha256:7ef465cdc0a3250d78960caba5f5fbb8650b5ce39f85a6bcfe08d2fee6152a47",
+  "migration_order": [
+    "schema/001_release_and_chutes_read_models.sql",
+    "schema/003_order_orchestration_runs.sql",
+    "schema/004_policy_persistence.sql",
+    "schema/005_policy_lifecycle.sql",
+    "schema/006_fixed_policy_snapshots.sql",
+    "schema/007_dictionary_versions.sql",
+    "schema/008_dictionary_setting_terms.sql",
+    "schema/009_shared_dictionary.sql",
+    "schema/010_policy_use_case_details.sql",
+    "schema/011_four_section_policy.sql"
+  ],
+  "excluded": [
+    "002_seed_schneider_sample_read_models.sql",
+    "004_policy_persistence.down.sql",
+    "005_policy_lifecycle.down.sql"
+  ],
+  "policy_tables": [
+    "logai_current_snapshot",
+    "logai_definition_revisions",
+    "logai_dictionary_members",
+    "logai_dictionary_versions",
+    "logai_global_snapshots",
+    "logai_policies",
+    "logai_policy_approvals",
+    "logai_policy_audit",
+    "logai_policy_categories",
+    "logai_policy_definition_versions",
+    "logai_policy_definitions",
+    "logai_policy_objectives",
+    "logai_policy_rules",
+    "logai_policy_settings",
+    "logai_policy_snapshot_uses",
+    "logai_policy_storage",
+    "logai_policy_strategies",
+    "logai_policy_use_case_details",
+    "logai_policy_versions",
+    "logai_policy_write_intents",
+    "logai_selection_reviews",
+    "logai_shared_dictionary_terms",
+    "logai_shared_dictionary_versions",
+    "logai_snapshot_approvals",
+    "logai_snapshot_members"
+  ],
+  "preservation_targets": [
+    "logai_release_shipments",
+    "logai_chutes",
+    "logai_order_orchestration_runs"
+  ],
+  "ui_source_commit": "a2ebcb067e55f92becaf8af7f6c5d23272c6880b",
+  "release_evidence": {
+    "api": "https://github.com/Gamestory-Space/gamestory-logai-api/actions/runs/44944700794",
+    "ui": "https://github.com/Gamestory-Space/logai_ui/actions/runs/44944703477"
+  },
+  "client_registry_promotion": "required; preserve digests before deployment"
+}
