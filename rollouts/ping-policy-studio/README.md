@@ -1,5 +1,9 @@
 # Ping + Policy Studio: UAT rollout preparation
 
+Chris will apply client-side changes manually. Maintain the exact remote paths,
+per-file edits and pending/applied statuses in [manual-remote-changes.md](manual-remote-changes.md).
+The root `transfer_To_schneider.readme` is the short entry point to that list.
+
 **Prepared, not deployed.** This package contains an additive schema plan and public
 Ping configuration tools. API v0.1.9-rc.1 and UI v0.1.8-rc.1 are published, signed
 release candidates from the unmerged PR heads. The UAT values pin their digests;
