@@ -43,8 +43,8 @@ Snapshot-use flags remain disabled unless the separately governed readiness chec
 
 ## A. Read-only database preflight
 
-Use the **LogAI application database**, not Keycloak's database. Preserve its existing
-schema and connection options. Run as the approved migration/DDL owner, not by giving
+Use the reviewed shared PostgreSQL database and schema. Keycloak manages its
+objects there through Liquibase. Preserve the existing connection options. Run as the approved migration/DDL owner, not by giving
 DDL rights to the service's runtime role. Credentials stay in the client's protected
 PostgreSQL service/password files; do not put a DSN/password into command arguments,
 Git, Helm values or shared logs. Use a PostgreSQL client with access from the approved
@@ -58,7 +58,7 @@ psql -X -v expected_database=ACTUAL_DB -v target_schema=ACTUAL_SCHEMA \
 ```
 
 The report lists relations, owners, columns and constraints without warehouse rows or
-credentials. It also rejects a Keycloak-only target schema. Guards reject wrong database/schema, common incompatible table layouts,
+credentials. Guards reject wrong database/schema, common incompatible table layouts,
 LogAI tables found only in another schema, conflicting reserved policy identities,
 and policy data without a backend registry.
 A successful preflight is **not** a complete proof of custom-schema compatibility.
@@ -160,7 +160,7 @@ upstream authentication alone must not grant application administrator privilege
 
 ## E. Acceptance and rollback
 
-- Verify the rendered and running API/UI image digests, startup/seed flags, database
+- Verify the rendered and running API/UI image digests, Flyway history, database
   connectivity, read-model endpoints and existing operational data. A basic /health
   response alone is not a database test.
 - Test assigned-user Ping login and the existing local administrator route separately.
@@ -181,7 +181,7 @@ upstream authentication alone must not grant application administrator privilege
 If Ping fails, disable only that provider or restore its reviewed prior configuration;
 retain the secret's secure source because exported secrets may be masked. If application
 acceptance fails, stop new policy writes and use the rehearsed application rollback
-with startup DDL/seeding still off. Keep the additive schema/history. Do not run down
+using an image compatible with the migrated schema. Keep the additive schema/history. Do not run down
 scripts or blindly restore the whole database after new operational writes; database
 restoration needs its own reviewed recovery window and reconciliation. Prefer a
 verified forward fix when new-format policy data has already been written.
