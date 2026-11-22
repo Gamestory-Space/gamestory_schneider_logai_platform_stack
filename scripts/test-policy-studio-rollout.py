@@ -6,6 +6,8 @@ import os
 import re
 from pathlib import Path
 import shlex
+import shutil
+import tempfile
 import subprocess
 import unittest
 from uuid import uuid4
@@ -65,10 +67,10 @@ class MigrationRehearsal(unittest.TestCase):
                 return baseline
         return self.flyway('migrate')
 
-    def flyway(self, *args):
+    def flyway(self, *args, migrations=None):
         command = [
             'docker', 'run', '--rm', '--network', 'host',
-            '-v', f'{Path(PLAN).resolve()}/schema:/flyway/sql:ro',
+            '-v', f'{migrations or Path(PLAN).resolve() / "schema"}:/flyway/sql:ro',
             '-e', f"FLYWAY_URL=jdbc:postgresql://{os.environ['PGHOST']}:{os.environ['PGPORT']}/{DB}",
             '-e', f"FLYWAY_USER={os.environ['PGUSER']}",
             '-e', 'FLYWAY_PASSWORD',
@@ -123,6 +125,9 @@ class MigrationRehearsal(unittest.TestCase):
              UPDATE logai_policy_versions SET backend='s3',yaml_text=NULL,object_key='legacy-policy/object.yaml',object_version_id='retained-version-1';
              CREATE TRIGGER policy_snapshot_immutable BEFORE UPDATE OR DELETE ON logai_policy_versions FOR EACH ROW EXECUTE FUNCTION logai_policy_immutable();
             """)
+        return self.existing_fingerprints()
+
+    def existing_fingerprints(self):
         tables = query(f"SELECT table_name FROM information_schema.tables WHERE table_schema='{self.schema}' ORDER BY table_name").splitlines()
         result = {}
         for table in tables:
@@ -145,6 +150,44 @@ class MigrationRehearsal(unittest.TestCase):
         self.assertEqual(query(f'SELECT count(*) FROM {self.schema}.logai_global_snapshots'), '0')
         self.assertEqual(query(f'SELECT count(*) FROM {self.schema}.logai_shared_dictionary_versions'), '0')
         self.assertEqual(self.plan().returncode, 0)
+        self.assert_preserved(baseline)
+
+    def test_checksum_drift_and_failed_migration_recovery(self):
+        result = self.plan()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        with tempfile.TemporaryDirectory() as directory:
+            migrations = Path(directory) / 'schema'
+            shutil.copytree(Path(PLAN) / 'schema', migrations)
+            original = migrations / 'V001__release_and_chutes_read_models.sql'
+            original.write_text(original.read_text() + '\nSELECT 1;\n')
+            drift = self.flyway('validate', migrations=migrations)
+            self.assertNotEqual(drift.returncode, 0)
+            self.assertIn('checksum mismatch', (drift.stdout + drift.stderr).lower())
+            shutil.copyfile(Path(PLAN) / 'schema' / original.name, original)
+
+            candidate = migrations / 'V012__recovery_fixture.sql'
+            candidate.write_text('CREATE TABLE recovery_fixture(id int); SELECT 1/0;')
+            failed = self.flyway('migrate', migrations=migrations)
+            self.assertNotEqual(failed.returncode, 0)
+            self.assertIn('division by zero', failed.stdout + failed.stderr)
+            self.assertEqual(query(f"SELECT to_regclass('{self.schema}.recovery_fixture') IS NULL"), 't')
+            candidate.write_text('CREATE TABLE recovery_fixture(id int);')
+            recovered = self.flyway('migrate', migrations=migrations)
+            self.assertEqual(recovered.returncode, 0, recovered.stdout + recovered.stderr)
+
+    def test_liquibase_objects_preserved_during_legacy_adoption(self):
+        self.existing_data()
+        query(f"""CREATE TABLE {self.schema}.databasechangelog(id text primary key);
+            INSERT INTO {self.schema}.databasechangelog VALUES ('keycloak-fixture');
+            CREATE TABLE {self.schema}.databasechangeloglock(id int primary key, locked boolean);
+            INSERT INTO {self.schema}.databasechangeloglock VALUES (1, false);
+            CREATE TABLE {self.schema}.realm(id text primary key);
+            INSERT INTO {self.schema}.realm VALUES ('test-realm');
+            CREATE TABLE {self.schema}.user_entity(id text primary key);
+            INSERT INTO {self.schema}.user_entity VALUES ('test-user')""")
+        baseline = self.existing_fingerprints()
+        result = self.plan()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assert_preserved(baseline)
 
     def test_existing_policy_history_and_backend_registry_preserved(self):
