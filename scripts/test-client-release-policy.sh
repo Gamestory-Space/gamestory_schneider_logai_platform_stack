@@ -34,9 +34,9 @@ with zipfile.ZipFile(sys.argv[1]) as archive:
     root = 'schneider-logai-platform-v0.0.0-policy-test/'
     for name in ['identity/ping-uat.json', 'scripts/render-ping-provider.sh',
                  'scripts/verify-policy-schema.sh', 'docs/ping-uat-integration.md',
-                 'rollouts/ping-policy-studio/preflight.psql', 'rollouts/ping-policy-studio/migrate.psql',
+                 'rollouts/ping-policy-studio/preflight.psql', 'scripts/migrate-policy-schema.sh',
                  'rollouts/ping-policy-studio/grant-runtime.psql', 'rollouts/ping-policy-studio/schema.sha256',
-                 'rollouts/ping-policy-studio/schema/011_four_section_policy.sql']:
+                 'rollouts/ping-policy-studio/schema/V011__four_section_policy.sql']:
         assert root + name in archive.namelist(), 'Missing rollout payload: ' + name
     assert not any('.private.json' in name or '/identity/generated/' in name for name in archive.namelist())
 CHECK_TRANSFER
