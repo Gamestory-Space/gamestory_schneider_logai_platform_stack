@@ -114,11 +114,14 @@ def main():
             issuer=kcurl+'/realms/gamestory-sso';jwks=f'http://{kc}:8080/realms/gamestory-sso/protocol/openid-connect/certs'
             start(prefix+'-identity',args.identity_image,{'KEYCLOAK_PUBLIC_URL':kcurl,'KEYCLOAK_ISSUER_URL':issuer,'KEYCLOAK_JWKS_FETCH_URL':jwks,'KEYCLOAK_AUDIENCE':'logai-api','API_CORS_ORIGINS':uiurl},f'127.0.0.1:{identityport}:8000',extra=['--user','10001:10001',*restrictions])
             migrations = platform / 'rollouts/ping-policy-studio/schema'
-            run('run','--rm','--network',prefix,'-v',str(migrations)+':/flyway/sql:ro',
+            flyway = ('run','--rm','--network',prefix,'-v',str(migrations)+':/flyway/sql:ro',
                 '-e',f'FLYWAY_URL=jdbc:postgresql://{db}:5432/logai',
                 '-e','FLYWAY_USER=logai','-e','FLYWAY_PASSWORD='+dbpassword,
                 '-e','FLYWAY_TABLE=logai_flyway_schema_history',
-                'docker.io/redgate/flyway:11.20.0','migrate')
+                'docker.io/redgate/flyway:11.20.0')
+            # This disposable database was empty before Keycloak initialized Liquibase.
+            run(*flyway,'-baselineVersion=0','baseline')
+            run(*flyway,'migrate')
             start(prefix+'-api',args.api_image,{'AUTH_MODE':'sso','ENVIRONMENT':'test','OIDC_ISSUER_URL':issuer,'OIDC_AUDIENCE':'logai-api','OIDC_JWKS_URL':jwks,'API_CORS_ORIGINS':uiurl,'DATABASE_URL':f'postgresql://logai:{dbpassword}@{db}:5432/logai'},f'127.0.0.1:{apiport}:8000',extra=['--user','10001:10001',*restrictions])
             config_mount='mode=1777' if args.engine=='podman' else 'uid=1000,gid=1000,mode=0700'
             start(prefix+'-ui',args.ui_image,{'AUTH_MODE':'sso','AUTH_URL':kcurl,'AUTH_REALM':'gamestory-sso','AUTH_CLIENT_ID':'logai-ui','AUTH_IDP_HINT':'','AUTH_CALLBACK_URL':uiurl+'/auth/callback','IDENTITY_API_BASE_URL':identityurl,'LOGAI_API_BASE_URL':apiurl},f'127.0.0.1:{uiport}:3000',extra=['--user','1000:1000',*restrictions,'--tmpfs','/app/runtime-config:rw,nosuid,nodev,'+config_mount])
