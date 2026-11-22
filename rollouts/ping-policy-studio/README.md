@@ -220,8 +220,7 @@ Use an approved immutable platform release for `argocd/logai-uat.yaml`; its form
 `rel2_v0.1.7` target has been replaced with an explicit required input.
 
 API/UI release candidates come from the PR commits in the manifest. The checked-in
-UAT values and shared release overlay use the published digests, with startup DDL
-and demo seeding off. They remain
+UAT values and shared release overlay use the published digests, for use after the controlled schema migration. They remain
 prereleases; all implementation PRs remain unmerged. Platform publication retains
 its existing approved-source restriction: complete owner merge/review before the
 final platform release. No release-source guard is bypassed.
