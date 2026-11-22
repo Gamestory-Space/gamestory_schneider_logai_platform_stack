@@ -3,10 +3,6 @@
 DO $$
 DECLARE item record; actual text; kind "char"; occupied boolean; registered boolean; incompatible boolean;
 BEGIN
- IF to_regclass(format('%I.user_entity',current_schema())) IS NOT NULL
- AND to_regclass(format('%I.realm',current_schema())) IS NOT NULL
- AND to_regclass(format('%I.logai_release_shipments',current_schema())) IS NULL THEN
- RAISE EXCEPTION 'Target appears to be a Keycloak schema; select the LogAI application database/schema'; END IF;
  IF NOT EXISTS(SELECT 1 FROM pg_catalog.pg_class c JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace
   WHERE n.nspname=current_schema() AND c.relname IN ('logai_release_shipments','logai_chutes','logai_policies'))
  AND EXISTS(SELECT 1 FROM pg_catalog.pg_class c JOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace

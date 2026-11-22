@@ -25,8 +25,6 @@ class PublicRolloutAssets(unittest.TestCase):
             digest=manifest[name+'_release_image'].split('@')[1]
             for file in [overlay,ROOT/'environments/uat/values.yaml',ROOT/'applications/logai/values-eu-west-3-eks-shared-dev.yaml']:
                 self.assertEqual(yaml.safe_load(file.read_text())[key]['image']['digest'],digest)
-        self.assertFalse(values['logaiApi']['applyDatabaseSchemaOnStartup'])
-        self.assertFalse(values['logaiApi']['seedSampleDataOnStartup'])
         command=['helm','template','logai',str(ROOT/'helm/gamestory-schneider-platform'),'-f',str(ROOT/'environments/uat/values.yaml'),'-f',str(overlay),'--set','identity.domain=uat.example.test','--set','externalDatabase.host=postgres.example.test']
         # Synthetic site values exercise the complete reference chart only;
         # they are never shipped as a claim about the actual client environment.
@@ -139,12 +137,11 @@ class PublicRolloutAssets(unittest.TestCase):
         self.assertEqual(subprocess.run([str(VERIFY)],capture_output=True).returncode,0)
         with tempfile.TemporaryDirectory() as directory:
             target=Path(directory)/'schema';shutil.copytree(ROOT/'rollouts/ping-policy-studio/schema',target)
-            (target/'005_policy_lifecycle.down.sql').write_text('-- ignored, never executed\n')
             self.assertEqual(subprocess.run([str(VERIFY),str(target)],capture_output=True).returncode,0)
-            unknown=target/'012_unreviewed.sql';unknown.write_text('SELECT 1;')
+            unknown=target/'V012__unreviewed.sql';unknown.write_text('SELECT 1;')
             self.assertNotEqual(subprocess.run([str(VERIFY),str(target)],capture_output=True).returncode,0)
             unknown.unlink()
-            first=target/'004_policy_persistence.sql';first.write_text(first.read_text()+'\n-- changed\n')
+            first=target/'V004__policy_persistence.sql';first.write_text(first.read_text()+'\n-- changed\n')
             self.assertNotEqual(subprocess.run([str(VERIFY),str(target)],capture_output=True).returncode,0)
 
     def test_chart_policy_profile_is_opt_in_and_startup_ddl_stays_off(self):
@@ -159,8 +156,6 @@ class PublicRolloutAssets(unittest.TestCase):
             deployments=[d for d in yaml.safe_load_all(rendered) if d and d.get('kind')=='Deployment']
             api=next(c for d in deployments for c in d['spec']['template']['spec']['containers'] if c['name']=='logai-api')
             env={entry['name']:entry for entry in api['env']}
-            self.assertEqual(str(env['APPLY_DATABASE_SCHEMA_ON_STARTUP']['value']).lower(),'false')
-            self.assertEqual(str(env['SEED_SAMPLE_DATA_ON_STARTUP']['value']).lower(),'false')
             self.assertEqual(env['POLICY_STORAGE_BACKEND']['valueFrom']['configMapKeyRef']['name'],'approved-existing-profile')
             # Existing chart tests parse environment values; defaults must remain false.
             self.assertNotIn('POLICY_LIFECYCLE_ACTIVATION_ENABLED, value: "true"',rendered)

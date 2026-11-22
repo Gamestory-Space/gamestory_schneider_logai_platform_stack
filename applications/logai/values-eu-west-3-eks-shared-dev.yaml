@@ -41,12 +41,10 @@ identityApi:
 logaiApi:
   image:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
-    tag: logai-api-v0.1.9-rc.1
-    digest: sha256:306fbbca9fd5777a6f84219026ad302b2ff694ed008987744188b4f74172324e
+    tag: logai-api-v0.1.9-rc.2
+    digest: sha256:aea11602302ef76c3a3c5f332b71329e0798d1cfecd6b14b19998a5873fe3ef8
   # Existing-database upgrades run DDL once through the reviewed migration plan.
-  applyDatabaseSchemaOnStartup: false
   # Never seed demo data during an existing-database upgrade.
-  seedSampleDataOnStartup: false
   # Promote the pinned Docker Hub API release into the JFrog repository above
   # before deployment. ESO must synchronize database.secretName/password.
   databaseCredentials:

@@ -98,10 +98,6 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.database.secretName }}
                   key: password
-            - name: APPLY_DATABASE_SCHEMA_ON_STARTUP
-              value: {{ .Values.logaiApi.applyDatabaseSchemaOnStartup | quote }}
-            - name: SEED_SAMPLE_DATA_ON_STARTUP
-              value: {{ .Values.logaiApi.seedSampleDataOnStartup | quote }}
           {{- include "logai.containerSecurityContext" . | nindent 10 }}
           resources:
             {{- toYaml .Values.logaiApi.resources | nindent 12 }}

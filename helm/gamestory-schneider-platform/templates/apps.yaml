@@ -60,8 +60,6 @@ spec:
                   optional: true
             {{- end }}
             {{- end }}
-            - {name: APPLY_DATABASE_SCHEMA_ON_STARTUP, value: {{ $root.Values.logaiApi.applyDatabaseSchemaOnStartup | quote }}}
-            - {name: SEED_SAMPLE_DATA_ON_STARTUP, value: {{ $root.Values.logaiApi.seedSampleDataOnStartup | quote }}}
             - {name: DB_CREDENTIAL_REFRESH_ENABLED, value: {{ $root.Values.logaiApi.databaseCredentials.enabled | quote }}}
             {{- if $root.Values.logaiApi.databaseCredentials.enabled }}
             - {name: DATABASE_PASSWORD_FILE, value: /var/run/secrets/logai-db/password}

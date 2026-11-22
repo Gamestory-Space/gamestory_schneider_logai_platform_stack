@@ -5,7 +5,7 @@ per-file edits and pending/applied statuses in [manual-remote-changes.md](manual
 The root `transfer_To_schneider.readme` is the short entry point to that list.
 
 **Prepared, not deployed.** This package contains an additive schema plan and public
-Ping configuration tools. API v0.1.9-rc.1 and UI v0.1.8-rc.1 are published, signed
+Ping configuration tools. API v0.1.9-rc.2 and UI v0.1.8-rc.1 are published, signed
 release candidates from the unmerged PR heads. The UAT values pin their digests;
 other environment defaults retain their stable releases. Promote the exact candidate
 images to the client registry before deployment. No client database or deployment
@@ -14,14 +14,14 @@ has been changed, and no implementation PR has been merged.
 ## Release inputs and boundaries
 
 1. Review/merge API PR #6 and UI PR #6 through normal owner control. The four-section
-   implementation and release checks passed at API `d3f58e2847ce58e365832050ed85ebfcd665c043` and UI
+   implementation and release checks passed at API `d439f11d1a58a8193128469e2e8f284dcc6ea759` and UI
    `a2ebcb067e55f92becaf8af7f6c5d23272c6880b`. No implementation is merged by this plan.
 2. The published candidates and source/evidence links are in `manifest.json`. Promote
    those exact digests to the client registry and apply `release-values.yaml` last
    after Schneider's private values. Retain Identity API and Keycloak pins. Final
    stable versions can replace these candidates after owner review and merge;
    repeat source/schema/image validation for any replacement.
-3. Verify the signed client archive and schema checksums. Extract `/app/schema` from
+3. Verify the signed client archive and schema checksums. Extract `/app/db/migration` from
    the approved API image without starting it and compare the ten listed files:
 
    ```bash
@@ -43,8 +43,8 @@ Snapshot-use flags remain disabled unless the separately governed readiness chec
 
 ## A. Read-only database preflight
 
-Use the **LogAI application database**, not Keycloak's database. Preserve its existing
-schema and connection options. Run as the approved migration/DDL owner, not by giving
+Use the reviewed shared PostgreSQL database and schema. Keycloak manages its
+objects there through Liquibase. Preserve the existing connection options. Run as the approved migration/DDL owner, not by giving
 DDL rights to the service's runtime role. Credentials stay in the client's protected
 PostgreSQL service/password files; do not put a DSN/password into command arguments,
 Git, Helm values or shared logs. Use a PostgreSQL client with access from the approved
@@ -58,7 +58,7 @@ psql -X -v expected_database=ACTUAL_DB -v target_schema=ACTUAL_SCHEMA \
 ```
 
 The report lists relations, owners, columns and constraints without warehouse rows or
-credentials. It also rejects a Keycloak-only target schema. Guards reject wrong database/schema, common incompatible table layouts,
+credentials. Guards reject wrong database/schema, common incompatible table layouts,
 LogAI tables found only in another schema, conflicting reserved policy identities,
 and policy data without a backend registry.
 A successful preflight is **not** a complete proof of custom-schema compatibility.
@@ -84,22 +84,20 @@ S3 content. Retain applicable IRSA/IAM/KMS/network access as well as its non-sec
 - Run `counts.psql` before DDL, with writers stopped, and keep the output private.
   Exact counts time out rather than scanning indefinitely. Use the client's approved
   backup/dataset comparison tooling where counts alone are insufficient.
-- Apply the reviewed plan **once**, using the DDL owner. It runs the listed numbered
-  migrations in a single transaction with an advisory lock, bounded lock/statement
-  timeouts and ON_ERROR_STOP. A failure rolls back the DDL in that transaction. Fix
-  the cause/rehearse and retry; do not bypass the failed constraint.
-
-```bash
-psql -X -v expected_database=ACTUAL_DB -v target_schema=ACTUAL_SCHEMA \
-  -v backup_reference=VERIFIED_BACKUP_ID -f migrate.psql \
-  > /secure/evidence/logai-migrate.txt 2>&1
-```
-
-The backup argument records the operator prerequisite; this script cannot certify a
-backup or restoration. Demo seed 002 and all down scripts are excluded. Existing
-operational tables use their reviewed original DDL and data is retained; policy
-migrations add tables/columns and replace compatible constraints/functions/triggers.
-These take locks even when a table already exists, hence the maintenance window.
+- Use the migration role and the same reviewed database and schema for Flyway.
+  Set `FLYWAY_URL` to the JDBC URL and load `FLYWAY_USER` and `FLYWAY_PASSWORD`
+  from the protected operator environment. Set `EXPECTED_DATABASE`,
+  `FLYWAY_SCHEMA` and `BACKUP_REFERENCE` to the reviewed target and restored backup.
+- Run `./scripts/migrate-policy-schema.sh` from the extracted bundle before
+  deploying either application. Flyway records versions in
+  `logai_flyway_schema_history` in the shared schema.
+- If the shared schema already contains objects and has no Flyway history,
+  rehearse explicit baselining on the restored clone. Compare the LogAI catalogue
+  with a reference migrated to each candidate version. Baseline at version 0
+  only if there are no LogAI objects. Otherwise record the exact highest
+  fully applied version and baseline at that version only with reviewed
+  evidence. Stop on partial or unknown layouts. Use the same Flyway schema
+  and history table settings for baseline and migrate.
 
 Repeat `counts.psql` immediately after DDL, before restarting the API. Compare every
 pre-existing table count and the restored-clone checksums/legacy history. New tables
@@ -130,10 +128,7 @@ policy privileges or unqualified relations resolving to a different schema. The 
 check as the DDL owner would not validate runtime permissions. Retain existing core-table
 rights; this plan adds only policy rights.
 
-Use the new API/UI images together. Keep both
-`logaiApi.applyDatabaseSchemaOnStartup: false` and
-`logaiApi.seedSampleDataOnStartup: false` in the private final values. Run DDL through
-this plan, not concurrent service replicas. Restore the reviewed replica count after
+Use the new API/UI images together after Flyway and the runtime checks succeed. Restore the reviewed replica count after
 normal deployment verification. The separate explicit admin Sample action may append
 a guide revision; that must not populate the three customer slots.
 
@@ -165,7 +160,7 @@ upstream authentication alone must not grant application administrator privilege
 
 ## E. Acceptance and rollback
 
-- Verify the rendered and running API/UI image digests, startup/seed flags, database
+- Verify the rendered and running API/UI image digests, Flyway history, database
   connectivity, read-model endpoints and existing operational data. A basic /health
   response alone is not a database test.
 - Test assigned-user Ping login and the existing local administrator route separately.
@@ -186,7 +181,7 @@ upstream authentication alone must not grant application administrator privilege
 If Ping fails, disable only that provider or restore its reviewed prior configuration;
 retain the secret's secure source because exported secrets may be masked. If application
 acceptance fails, stop new policy writes and use the rehearsed application rollback
-with startup DDL/seeding still off. Keep the additive schema/history. Do not run down
+using an image compatible with the migrated schema. Keep the additive schema/history. Do not run down
 scripts or blindly restore the whole database after new operational writes; database
 restoration needs its own reviewed recovery window and reconciliation. Prefer a
 verified forward fix when new-format policy data has already been written.
@@ -225,8 +220,7 @@ Use an approved immutable platform release for `argocd/logai-uat.yaml`; its form
 `rel2_v0.1.7` target has been replaced with an explicit required input.
 
 API/UI release candidates come from the PR commits in the manifest. The checked-in
-UAT values and shared release overlay use the published digests, with startup DDL
-and demo seeding off. They remain
+UAT values and shared release overlay use the published digests, for use after the controlled schema migration. They remain
 prereleases; all implementation PRs remain unmerged. Platform publication retains
 its existing approved-source restriction: complete owner merge/review before the
 final platform release. No release-source guard is bypassed.

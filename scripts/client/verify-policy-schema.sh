@@ -18,7 +18,6 @@ if [[ $# -eq 1 ]]; then
   for source_file in "$1"/*.sql; do
     [[ -e "$source_file" ]] || continue
     name="${source_file##*/}"
-    case "$name" in 002_seed_schneider_sample_read_models.sql|004_policy_persistence.down.sql|005_policy_lifecycle.down.sql) continue;; esac
     if ! awk '{print $2}' "$rollout/schema.sha256" | grep -Fxq -- "schema/$name"; then
       echo "Approved API image contains unreviewed SQL: $name." >&2; exit 1
     fi

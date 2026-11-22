@@ -35,6 +35,6 @@ remote chart. Platform inputs and controlled schema preparation are still requir
 
 See [the staged rollout runbook](rollouts/ping-policy-studio/README.md) before the
 next Policy Studio deployment. It includes checksummed SQL, a read-only preflight,
-a transactional migration for existing tables, runtime grants and a client-site Ping
+a controlled Flyway migration and explicit legacy adoption procedure, runtime grants and a client-site Ping
 configuration helper. Existing API/UI pins are not the new Policy Studio release;
 obtain the reviewed release images/digests and rehearse the target database first.

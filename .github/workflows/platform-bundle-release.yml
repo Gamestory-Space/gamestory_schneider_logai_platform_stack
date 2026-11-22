@@ -109,8 +109,9 @@ jobs:
           source environments/client-local/compose.env.example
           set +a
           identity_image="${IDENTITY_API_IMAGE_REPOSITORY}:${IDENTITY_API_IMAGE_TAG}"
-          api_image="${LOGAI_API_IMAGE_REPOSITORY}:${LOGAI_API_IMAGE_TAG}"
-          ui_image="${LOGAI_UI_IMAGE_REPOSITORY}:${LOGAI_UI_IMAGE_TAG}"
+          manifest=rollouts/ping-policy-studio/manifest.json
+          api_image="$(jq -er '.api_release_image | select(test("@sha256:[0-9a-f]{64}$"))' "$manifest")"
+          ui_image="$(jq -er '.ui_release_image | select(test("@sha256:[0-9a-f]{64}$"))' "$manifest")"
           docker pull "$identity_image"
           docker pull "$api_image"
           docker pull "$ui_image"

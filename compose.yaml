@@ -118,8 +118,6 @@ services:
       ENVIRONMENT: ${ENVIRONMENT}
       API_CORS_ORIGINS: ${LOGAI_PUBLIC_URL:-http://localhost:3000}
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
-      APPLY_DATABASE_SCHEMA_ON_STARTUP: ${APPLY_DATABASE_SCHEMA_ON_STARTUP}
-      SEED_SAMPLE_DATA_ON_STARTUP: ${SEED_SAMPLE_DATA_ON_STARTUP}
     healthcheck:
       test: [CMD-SHELL, "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
       interval: 10s
