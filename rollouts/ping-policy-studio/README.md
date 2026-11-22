@@ -21,7 +21,7 @@ has been changed, and no implementation PR has been merged.
    after Schneider's private values. Retain Identity API and Keycloak pins. Final
    stable versions can replace these candidates after owner review and merge;
    repeat source/schema/image validation for any replacement.
-3. Verify the signed client archive and schema checksums. Extract `/app/schema` from
+3. Verify the signed client archive and schema checksums. Extract `/app/db/migration` from
    the approved API image without starting it and compare the ten listed files:
 
    ```bash
@@ -84,22 +84,20 @@ S3 content. Retain applicable IRSA/IAM/KMS/network access as well as its non-sec
 - Run `counts.psql` before DDL, with writers stopped, and keep the output private.
   Exact counts time out rather than scanning indefinitely. Use the client's approved
   backup/dataset comparison tooling where counts alone are insufficient.
-- Apply the reviewed plan **once**, using the DDL owner. It runs the listed numbered
-  migrations in a single transaction with an advisory lock, bounded lock/statement
-  timeouts and ON_ERROR_STOP. A failure rolls back the DDL in that transaction. Fix
-  the cause/rehearse and retry; do not bypass the failed constraint.
-
-```bash
-psql -X -v expected_database=ACTUAL_DB -v target_schema=ACTUAL_SCHEMA \
-  -v backup_reference=VERIFIED_BACKUP_ID -f migrate.psql \
-  > /secure/evidence/logai-migrate.txt 2>&1
-```
-
-The backup argument records the operator prerequisite; this script cannot certify a
-backup or restoration. Demo seed 002 and all down scripts are excluded. Existing
-operational tables use their reviewed original DDL and data is retained; policy
-migrations add tables/columns and replace compatible constraints/functions/triggers.
-These take locks even when a table already exists, hence the maintenance window.
+- Use the migration role and the same reviewed database and schema for Flyway.
+  Set `FLYWAY_URL` to the JDBC URL and load `FLYWAY_USER` and `FLYWAY_PASSWORD`
+  from the protected operator environment. Set `EXPECTED_DATABASE`,
+  `FLYWAY_SCHEMA` and `BACKUP_REFERENCE` to the reviewed target and restored backup.
+- Run `./scripts/migrate-policy-schema.sh` from the extracted bundle before
+  deploying either application. Flyway records versions in
+  `logai_flyway_schema_history` in the shared schema.
+- If the shared schema already contains objects and has no Flyway history,
+  rehearse explicit baselining on the restored clone. Compare the LogAI catalogue
+  with a reference migrated to each candidate version. Baseline at version 0
+  only if there are no LogAI objects. Otherwise record the exact highest
+  fully applied version and baseline at that version only with reviewed
+  evidence. Stop on partial or unknown layouts. Use the same Flyway schema
+  and history table settings for baseline and migrate.
 
 Repeat `counts.psql` immediately after DDL, before restarting the API. Compare every
 pre-existing table count and the restored-clone checksums/legacy history. New tables
@@ -130,10 +128,7 @@ policy privileges or unqualified relations resolving to a different schema. The 
 check as the DDL owner would not validate runtime permissions. Retain existing core-table
 rights; this plan adds only policy rights.
 
-Use the new API/UI images together. Keep both
-`logaiApi.applyDatabaseSchemaOnStartup: false` and
-`logaiApi.seedSampleDataOnStartup: false` in the private final values. Run DDL through
-this plan, not concurrent service replicas. Restore the reviewed replica count after
+Use the new API/UI images together after Flyway and the runtime checks succeed. Restore the reviewed replica count after
 normal deployment verification. The separate explicit admin Sample action may append
 a guide revision; that must not populate the three customer slots.
 

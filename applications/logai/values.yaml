@@ -59,8 +59,6 @@ logaiApi:
     digest: sha256:14a1b3e6a36def12e1553e9bae2bee2b91317b989d54338a0aeb7e7f99b90357
     pullPolicy: IfNotPresent
   replicas: 2
-  applyDatabaseSchemaOnStartup: false
-  seedSampleDataOnStartup: false
   # Requires a recovery-capable API image and Deployment template support for
   # the password-file environment variables and read-only Secret directory mount.
   # Enable per cluster after those changes are available.

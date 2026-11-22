@@ -148,8 +148,6 @@ services:
       AGENTIC_CORE_BASE_URL: http://agentic-core:8000
       TEAMS_INTERFACE_BASE_URL: http://teams-interface:8000
       DATABASE_URL: postgresql://${POSTGRES_USER:-keycloak}:${POSTGRES_PASSWORD:-change-me}@postgres:5432/${POSTGRES_DB:-keycloak}
-      APPLY_DATABASE_SCHEMA_ON_STARTUP: "true"
-      SEED_SAMPLE_DATA_ON_STARTUP: "true"
     ports:
       - "${LOGAI_API_PORT:-8010}:8000"
 

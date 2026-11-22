@@ -6,16 +6,16 @@
   "api_release_image": "docker.io/chrismdgs/gamestory_logai_schneider:logai-api-v0.1.9-rc.1@sha256:306fbbca9fd5777a6f84219026ad302b2ff694ed008987744188b4f74172324e",
   "ui_release_image": "docker.io/chrismdgs/gamestory_logai_schneider:logai-ui-v0.1.8-rc.1@sha256:7ef465cdc0a3250d78960caba5f5fbb8650b5ce39f85a6bcfe08d2fee6152a47",
   "migration_order": [
-    "schema/001_release_and_chutes_read_models.sql",
-    "schema/003_order_orchestration_runs.sql",
-    "schema/004_policy_persistence.sql",
-    "schema/005_policy_lifecycle.sql",
-    "schema/006_fixed_policy_snapshots.sql",
-    "schema/007_dictionary_versions.sql",
-    "schema/008_dictionary_setting_terms.sql",
-    "schema/009_shared_dictionary.sql",
-    "schema/010_policy_use_case_details.sql",
-    "schema/011_four_section_policy.sql"
+    "schema/V001__release_and_chutes_read_models.sql",
+    "schema/V003__order_orchestration_runs.sql",
+    "schema/V004__policy_persistence.sql",
+    "schema/V005__policy_lifecycle.sql",
+    "schema/V006__fixed_policy_snapshots.sql",
+    "schema/V007__dictionary_versions.sql",
+    "schema/V008__dictionary_setting_terms.sql",
+    "schema/V009__shared_dictionary.sql",
+    "schema/V010__policy_use_case_details.sql",
+    "schema/V011__four_section_policy.sql"
   ],
   "excluded": [
     "002_seed_schneider_sample_read_models.sql",

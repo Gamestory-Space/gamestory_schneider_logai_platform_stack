@@ -44,9 +44,7 @@ logaiApi:
     tag: logai-api-v0.1.9-rc.1
     digest: sha256:306fbbca9fd5777a6f84219026ad302b2ff694ed008987744188b4f74172324e
   # Existing-database upgrades run DDL once through the reviewed migration plan.
-  applyDatabaseSchemaOnStartup: false
   # Never seed demo data during an existing-database upgrade.
-  seedSampleDataOnStartup: false
   # Promote the pinned Docker Hub API release into the JFrog repository above
   # before deployment. ESO must synchronize database.secretName/password.
   databaseCredentials:

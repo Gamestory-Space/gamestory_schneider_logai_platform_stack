@@ -27,8 +27,6 @@ logaiApi:
   service:
     port: 8000
   resources: {}
-  applyDatabaseSchemaOnStartup: false
-  seedSampleDataOnStartup: false
   databaseCredentials:
     # Enable only with an API image containing credential recovery support.
     enabled: false
