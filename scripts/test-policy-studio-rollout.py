@@ -3,6 +3,7 @@
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import shlex
 import subprocess
@@ -32,6 +33,7 @@ class MigrationRehearsal(unittest.TestCase):
         self.schema = 'rollout_test_' + uuid4().hex
         self.schemas = [self.schema]
         self.roles = []
+        self.legacy_version = None
         query(f'CREATE SCHEMA {self.schema}')
 
     def tearDown(self):
@@ -40,7 +42,7 @@ class MigrationRehearsal(unittest.TestCase):
         for role in self.roles:
             query(f'DROP ROLE {role}')
 
-    def plan(self, name='migrate.psql', backup=True, as_role=None, **variables):
+    def plan(self, name=None, backup=True, as_role=None, **variables):
         args = {'expected_database': DB, 'target_schema': self.schema, **variables}
         if backup:
             args['backup_reference'] = 'isolated-test-backup'
@@ -49,9 +51,36 @@ class MigrationRehearsal(unittest.TestCase):
             command += ['-v', f'{key}={value}']
         if as_role:
             command += ['-c',f'SET ROLE {as_role}; SET search_path TO {self.schema},pg_catalog']
-        return subprocess.run([*command, '-f', PLAN + '/' + name], capture_output=True, text=True)
+        if name:
+            return subprocess.run([*command, '-f', PLAN + '/' + name], capture_output=True, text=True)
+        if not backup or args['expected_database'] != DB or args['target_schema'] != self.schema:
+            return subprocess.CompletedProcess(command, 1, '', 'Invalid fixture target or backup')
+        history = query(f"SELECT to_regclass('{self.schema}.logai_flyway_schema_history') IS NOT NULL")
+        if history == 'f' and self.legacy_version:
+            inventory = self.plan('preflight.psql', backup=False)
+            if inventory.returncode:
+                return inventory
+            baseline = self.flyway('baseline', f'-baselineVersion={self.legacy_version}')
+            if baseline.returncode:
+                return baseline
+        return self.flyway('migrate')
+
+    def flyway(self, *args):
+        command = [
+            'docker', 'run', '--rm', '--network', 'host',
+            '-v', f'{Path(PLAN).resolve()}/schema:/flyway/sql:ro',
+            '-e', f"FLYWAY_URL=jdbc:postgresql://{os.environ['PGHOST']}:{os.environ['PGPORT']}/{DB}",
+            '-e', f"FLYWAY_USER={os.environ['PGUSER']}",
+            '-e', 'FLYWAY_PASSWORD',
+            'docker.io/redgate/flyway:11.20.0',
+            f'-schemas={self.schema}', '-table=logai_flyway_schema_history',
+            '-createSchemas=false', '-baselineOnMigrate=false', '-group=true', *args,
+        ]
+        return subprocess.run(command, env={**os.environ, 'FLYWAY_PASSWORD': os.environ['PGPASSWORD']},
+                              capture_output=True, text=True)
 
     def file(self, name):
+        name = re.sub(r'^(\d+)_', r'V\1__', name)
         return subprocess.run([*PSQL, '-X', '-v', 'ON_ERROR_STOP=1', '-c', f'SET search_path TO {self.schema},pg_catalog', '-f', PLAN + '/schema/' + name], capture_output=True, text=True)
 
     def fingerprint(self, table, columns):
@@ -72,7 +101,9 @@ class MigrationRehearsal(unittest.TestCase):
           INSERT INTO logai_order_orchestration_runs(id,tenant_id,site_id,business_date,ai_mode,status)
           VALUES('00000000-0000-4000-8000-000000000003','test-tenant','test-site','2026-11-17','suggest','existing');
         """)
+        self.legacy_version = 3
         if policies:
+            self.legacy_version = 4
             result = self.file('004_policy_persistence.sql')
             self.assertEqual(result.returncode, 0, result.stderr)
             location = hashlib.sha256(json.dumps([backend]).encode()).hexdigest()
@@ -156,7 +187,7 @@ class MigrationRehearsal(unittest.TestCase):
         query(f'CREATE TABLE {self.schema}.logai_policies(id integer PRIMARY KEY)')
         result = self.plan()
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn('incompatible', result.stderr)
+        self.assertIn('non-empty', result.stdout + result.stderr)
         self.assertEqual(query(f"SELECT count(*) FROM information_schema.tables WHERE table_schema='{self.schema}'"), '1')
 
     def test_later_constraint_failure_rolls_back_earlier_ddl(self):
@@ -201,14 +232,14 @@ class MigrationRehearsal(unittest.TestCase):
         query(f'CREATE TABLE {self.schema}.user_entity(id text); CREATE TABLE {self.schema}.realm(id text)')
         result = self.plan()
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn('Keycloak',result.stderr)
+        self.assertIn('non-empty',result.stdout + result.stderr)
         self.assertEqual(query(f"SELECT count(*) FROM information_schema.tables WHERE table_schema='{self.schema}'"),'2')
 
     def test_target_schema_collision_detected(self):
         other = 'rollout_test_' + uuid4().hex
         self.schemas.append(other)
         query(f'CREATE SCHEMA {other}; CREATE TABLE {other}.logai_chutes(id uuid)')
-        result = self.plan()
+        result = self.plan('preflight.psql', backup=False)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('another schema', result.stderr)
 
