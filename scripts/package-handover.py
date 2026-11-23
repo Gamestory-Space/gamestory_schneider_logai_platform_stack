@@ -68,8 +68,11 @@ def verify(archive, version, registry=False):
             assert not name.startswith('/') and '..' not in Path(name).parts
             assert sha(z.read(name)) == digest, f'Checksum mismatch: {name}'
         for component, item in manifest['components'].items():
-            assert item['reference'] == f'{REGISTRY}:{component}-{version}'
-            assert evidence(z.read(item['evidence']), version) == item['digest']
+            component_version = item.get('version', version)
+            assert re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+(?:[.-][A-Za-z0-9.-]+)?', component_version)
+            assert component != 'platform' or component_version == version
+            assert item['reference'] == f'{REGISTRY}:{component}-{component_version}'
+            assert evidence(z.read(item['evidence']), component_version) == item['digest']
             if registry:
                 descriptor = json.loads(subprocess.check_output(
                     ['oras', 'manifest', 'fetch', '--descriptor', item['reference']], text=True))
@@ -90,17 +93,22 @@ def verify(archive, version, registry=False):
     print('Verified handover checksums, version, four evidence packs and artifact digests')
 
 
-def package(inputs, output, version):
+def package(inputs, output, version, component_versions=None):
     files = {}
     modes = {}
     components = {}
+    component_versions = component_versions or {}
+    assert set(component_versions) <= set(COMPONENTS) - {'platform'}
     for component, (repo, service) in COMPONENTS.items():
-        filename = f'{service}-{version}-evidence.zip'
+        component_version = component_versions.get(component, version)
+        assert re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+(?:[.-][A-Za-z0-9.-]+)?', component_version)
+        filename = f'{service}-{component_version}-evidence.zip'
         data = (inputs / repo / filename).read_bytes()
         name = f'associated_artefacts/evidence/{filename}'
         files[name] = data
-        components[component] = {'reference': f'{REGISTRY}:{component}-{version}',
-                                 'digest': evidence(data, version), 'evidence': name}
+        components[component] = {'reference': f'{REGISTRY}:{component}-{component_version}',
+                                 'version': component_version,
+                                 'digest': evidence(data, component_version), 'evidence': name}
         for member, (contents, mode) in entries(data).items():
             destination = f'associated_artefacts/evidence/{component}/{member}'
             files[destination] = contents
@@ -151,11 +159,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('version')
     parser.add_argument('--inputs', type=Path)
+    parser.add_argument('--component-versions', type=json.loads,
+                        help='JSON map of application component names to published versions')
     parser.add_argument('--archive', type=Path, required=True)
     parser.add_argument('--registry', action='store_true')
     args = parser.parse_args()
     assert re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+(?:[.-][A-Za-z0-9.-]+)?', args.version)
     if args.inputs:
-        package(args.inputs, args.archive, args.version)
+        package(args.inputs, args.archive, args.version, args.component_versions)
     else:
         verify(args.archive, args.version, args.registry)

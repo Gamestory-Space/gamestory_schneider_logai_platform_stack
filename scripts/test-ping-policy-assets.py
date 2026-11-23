@@ -23,8 +23,24 @@ class PublicRolloutAssets(unittest.TestCase):
         self.assertEqual(set(values),{'logaiApi','logaiUi'})
         for name,key in [('api','logaiApi'),('ui','logaiUi')]:
             digest=manifest[name+'_release_image'].split('@')[1]
-            for file in [overlay,ROOT/'environments/uat/values.yaml',ROOT/'applications/logai/values-eu-west-3-eks-shared-dev.yaml']:
+            for file in [overlay,ROOT/'environments/uat/values.yaml',ROOT/'applications/logai/values.yaml']:
                 self.assertEqual(yaml.safe_load(file.read_text())[key]['image']['digest'],digest)
+        chart = ROOT / 'applications/logai'
+        uat = chart / 'values-eu-west-3-eks-shared-dev.yaml'
+        cluster_values = yaml.safe_load(uat.read_text())
+        for name in ('identityApi', 'logaiApi', 'logaiUi'):
+            self.assertNotIn('image', cluster_values[name])
+        self.assertFalse(cluster_values['logaiApi']['migration']['enabled'])
+        command = ['helm', 'template', 'logai', str(chart), '-f', str(uat)]
+        rendered = subprocess.check_output(command, text=True)
+        self.assertNotIn('kind: Job', rendered)
+        enabled = subprocess.check_output([*command, '--set',
+            'logaiApi.migration.enabled=true,logaiApi.migration.secretName=test-migration,logaiApi.migration.schema=logai'], text=True)
+        resources = {doc['kind']: doc for doc in yaml.safe_load_all(enabled) if doc}
+        job_image = resources['Job']['spec']['template']['spec']['containers'][0]['image']
+        api_image = resources['Deployment']['spec']['template']['spec']['containers'][0]['image']
+        self.assertEqual(job_image, api_image)
+        self.assertEqual(job_image.rsplit('@', 1)[1], manifest['api_release_image'].rsplit('@', 1)[1])
         command=['helm','template','logai',str(ROOT/'helm/gamestory-schneider-platform'),'-f',str(ROOT/'environments/uat/values.yaml'),'-f',str(overlay),'--set','identity.domain=uat.example.test','--set','externalDatabase.host=postgres.example.test']
         # Synthetic site values exercise the complete reference chart only;
         # they are never shipped as a claim about the actual client environment.
