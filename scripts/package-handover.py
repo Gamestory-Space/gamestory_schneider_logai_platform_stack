@@ -19,6 +19,25 @@ COMPONENTS = {
 }
 
 
+# Component releases carried by the signed deployment archives.
+RELEASE_COMPONENT_VERSIONS = {
+    'v0.1.10': {
+        'identity-api': 'v0.1.7',
+        'logai-api': 'v0.1.9-rc.2',
+        'logai-ui': 'v0.1.8-rc.1',
+    },
+    'v0.1.11': {
+        'identity-api': 'v0.1.7',
+        'logai-api': 'v0.1.9-rc.4',
+        'logai-ui': 'v0.1.8-rc.1',
+    },
+}
+
+
+def component_version(component, version):
+    return RELEASE_COMPONENT_VERSIONS.get(version, {}).get(component, version)
+
+
 def sha(data):
     return hashlib.sha256(data).hexdigest()
 
@@ -68,11 +87,9 @@ def verify(archive, version, registry=False):
             assert not name.startswith('/') and '..' not in Path(name).parts
             assert sha(z.read(name)) == digest, f'Checksum mismatch: {name}'
         for component, item in manifest['components'].items():
-            component_version = item.get('version', version)
-            assert re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+(?:[.-][A-Za-z0-9.-]+)?', component_version)
-            assert component != 'platform' or component_version == version
-            assert item['reference'] == f'{REGISTRY}:{component}-{component_version}'
-            assert evidence(z.read(item['evidence']), component_version) == item['digest']
+            release = component_version(component, version)
+            assert item['reference'] == f'{REGISTRY}:{component}-{release}'
+            assert evidence(z.read(item['evidence']), release) == item['digest']
             if registry:
                 descriptor = json.loads(subprocess.check_output(
                     ['oras', 'manifest', 'fetch', '--descriptor', item['reference']], text=True))
@@ -83,7 +100,18 @@ def verify(archive, version, registry=False):
         deployment = f'{"associated_artefacts" if modern else "deployment"}/schneider-logai-platform-{version}.zip'
         assert z.read(deployment + '.sha256').decode().split()[0] == sha(z.read(deployment))
         with zipfile.ZipFile(io.BytesIO(z.read(deployment))) as deployment_zip:
-            assert deployment_zip.read(f'schneider-logai-platform-{version}/VERSION').decode().strip() == version
+            root = f'schneider-logai-platform-{version}/'
+            assert deployment_zip.read(root + 'VERSION').decode().strip() == version
+            if version in RELEASE_COMPONENT_VERSIONS:
+                rollout = json.loads(deployment_zip.read(root + 'rollouts/ping-policy-studio/manifest.json'))
+                for component, field in [('logai-api', 'api_release_image'), ('logai-ui', 'ui_release_image')]:
+                    item = manifest['components'][component]
+                    assert rollout[field] == f"{item['reference']}@{item['digest']}", f'Deployment pin mismatch: {component}'
+                identity = manifest['components']['identity-api']
+                env = deployment_zip.read(root + 'environments/client-local/compose.env.example').decode().splitlines()
+                repository, tag = identity['reference'].rsplit(':', 1)
+                assert f'IDENTITY_API_IMAGE_REPOSITORY={repository}' in env
+                assert f'IDENTITY_API_IMAGE_TAG={tag}' in env
         if modern:
             prefix = f'schneider-logai-platform-{version}/'
             for name, (data, _) in entries(z.read(deployment)).items():
@@ -93,22 +121,18 @@ def verify(archive, version, registry=False):
     print('Verified handover checksums, version, four evidence packs and artifact digests')
 
 
-def package(inputs, output, version, component_versions=None):
+def package(inputs, output, version):
     files = {}
     modes = {}
     components = {}
-    component_versions = component_versions or {}
-    assert set(component_versions) <= set(COMPONENTS) - {'platform'}
     for component, (repo, service) in COMPONENTS.items():
-        component_version = component_versions.get(component, version)
-        assert re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+(?:[.-][A-Za-z0-9.-]+)?', component_version)
-        filename = f'{service}-{component_version}-evidence.zip'
+        release = component_version(component, version)
+        filename = f'{service}-{release}-evidence.zip'
         data = (inputs / repo / filename).read_bytes()
         name = f'associated_artefacts/evidence/{filename}'
         files[name] = data
-        components[component] = {'reference': f'{REGISTRY}:{component}-{component_version}',
-                                 'version': component_version,
-                                 'digest': evidence(data, component_version), 'evidence': name}
+        components[component] = {'reference': f'{REGISTRY}:{component}-{release}',
+                                 'digest': evidence(data, release), 'evidence': name}
         for member, (contents, mode) in entries(data).items():
             destination = f'associated_artefacts/evidence/{component}/{member}'
             files[destination] = contents
@@ -159,13 +183,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('version')
     parser.add_argument('--inputs', type=Path)
-    parser.add_argument('--component-versions', type=json.loads,
-                        help='JSON map of application component names to published versions')
     parser.add_argument('--archive', type=Path, required=True)
     parser.add_argument('--registry', action='store_true')
     args = parser.parse_args()
     assert re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+(?:[.-][A-Za-z0-9.-]+)?', args.version)
     if args.inputs:
-        package(args.inputs, args.archive, args.version, args.component_versions)
+        package(args.inputs, args.archive, args.version)
     else:
         verify(args.archive, args.version, args.registry)

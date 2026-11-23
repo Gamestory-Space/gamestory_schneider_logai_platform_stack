@@ -50,14 +50,14 @@ class LayoutTests(unittest.TestCase):
             f'schneider-logai-platform-{VERSION}/scripts/deploy-compose.sh': '#!/bin/bash\n',
         }
 
-    def package(self, component_versions=None):
+    def package(self):
         directory = self.root / handover.COMPONENTS['platform'][0]
         archive = directory / f'schneider-logai-platform-{VERSION}.zip'
         archive.write_bytes(zipped(self.deployment_files))
         archive.with_suffix('.zip.sha256').write_text(handover.sha(archive.read_bytes()) + '  ' + archive.name)
         archive.with_suffix('.zip.sigstore.json').write_text('{"signature":"test"}')
         output = self.root / 'handover.zip'
-        handover.package(self.root, output, VERSION, component_versions)
+        handover.package(self.root, output, VERSION)
         return output
 
     def test_checkout_layout_and_permissions(self):
@@ -70,20 +70,6 @@ class LayoutTests(unittest.TestCase):
             for component in handover.COMPONENTS:
                 self.assertIn(f'associated_artefacts/evidence/{component}/sbom/component.cdx.json', z.namelist())
             self.assertFalse(any(n.startswith('deployment/') for n in z.namelist()))
-
-    def test_mixed_component_versions_keep_original_evidence(self):
-        repo, service = handover.COMPONENTS['logai-api']
-        original = self.root / repo / f'{service}-{VERSION}-evidence.zip'
-        version = 'v9.8.0-rc.4'
-        with zipfile.ZipFile(original) as archive:
-            evidence = {name: archive.read(name) for name in archive.namelist()}
-        evidence['image-metadata.md'] = f'- Version: {version}\n'
-        (original.parent / f'{service}-{version}-evidence.zip').write_bytes(zipped(evidence))
-        with zipfile.ZipFile(self.package({'logai-api': version})) as archive:
-            manifest = json.loads(archive.read('associated_artefacts/manifest.json'))
-            self.assertEqual(manifest['components']['logai-api']['version'], version)
-            self.assertTrue(manifest['components']['logai-api']['reference'].endswith(f'logai-api-{version}'))
-            self.assertEqual(manifest['components']['platform']['version'], VERSION)
 
     def test_rejects_runtime_credentials(self):
         self.deployment_files[f'schneider-logai-platform-{VERSION}/environments/client-local/compose.env'] = 'PASSWORD=private'
