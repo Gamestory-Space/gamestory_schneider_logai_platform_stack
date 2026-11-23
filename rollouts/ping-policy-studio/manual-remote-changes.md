@@ -17,8 +17,8 @@ Paths beginning `applications/logai/` refer to the client's existing central cha
 | ID | Remote path/resource | Manual action | Status |
 | --- | --- | --- | --- |
 | R01 | `applications/logai/values.yaml` | Add the blank policy ConfigMap reference; correct old tag spelling only if present. | Pending |
-| R02 | `applications/logai/values-eu-west-3-eks-shared-dev.yaml` | Update API/UI pins together; keep startup DDL and seeding false. | Pending |
-| R03 | `applications/logai/templates/20-logai-api.yaml` | Add optional policy ConfigMap key mapping under container `env`. | Pending |
+| R02 | `applications/logai/values-eu-west-3-eks-shared-dev.yaml` | Verify the rendered API/UI pins and remove both legacy startup values. | Pending |
+| R03 | `applications/logai/templates/20-logai-api.yaml` | Remove both legacy startup environment entries and add the optional policy ConfigMap mapping. | Pending |
 | V01 | `applications/logai/templates/30-logai-ui.yaml` | Verify digest support; change the image expression only if required. Current file still needed. | Pending verification |
 | V02 | Existing client Argo Application/ApplicationSet; actual source path awaiting file | Verify revision, chart path and UAT value-file selection; edit only if stale. | Pending verification |
 | O01 | Client-managed policy ConfigMap; actual name chosen only if needed | Preserve storage profile or supply approved snapshot-use flags. | Conditional |
@@ -47,8 +47,6 @@ logaiApi:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
     tag: logai-api-v0.1.9-rc.2
     digest: sha256:aea11602302ef76c3a3c5f332b71329e0798d1cfecd6b14b19998a5873fe3ef8
-  applyDatabaseSchemaOnStartup: false
-  seedSampleDataOnStartup: false
 logaiUi:
   image:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
@@ -56,7 +54,9 @@ logaiUi:
     digest: sha256:7ef465cdc0a3250d78960caba5f5fbb8650b5ce39f85a6bcfe08d2fee6152a47
 ```
 
-These are signed, published candidates from the unmerged implementation PRs.
+These are the signed, published v0.1.10 image pins. If UAT already inherits
+both exact pins, omit duplicate image overrides. Remove
+`applyDatabaseSchemaOnStartup` and `seedSampleDataOnStartup` from the chart values.
 `manifest.json` records their source/evidence. Promote both exact digests from
 Docker Hub to JFrog before sync. Retain Identity v0.1.7 and Keycloak 26.0.8, plus
 existing UAT hosts, namespace, gateway/Rancher settings, Secret references,
@@ -68,8 +68,9 @@ ledger, the overlay and manifest together when a later image replaces a candidat
 
 ### R03 — API template
 
-Under the existing API container's `env` list in `20-logai-api.yaml`, add this block.
-The supplied template puts it after credential-refresh entries, before `DB_HOST`:
+In the API container's `env` list, remove `APPLY_DATABASE_SCHEMA_ON_STARTUP` and
+`SEED_SAMPLE_DATA_ON_STARTUP` together with their `value:` lines. Add this
+block before `DB_HOST`. Retain any existing credential-refresh wiring.
 
 ```yaml
             {{- if .Values.logaiApi.policyConfigMap }}
@@ -125,18 +126,17 @@ Merge individual edits; the supplied partial chart must not replace the full cha
 | --- | --- | --- | --- |
 | A01 | Image references in `manifest.json` | Promote both exact candidate digests to JFrog. | Pending |
 | A02 | Entire `rollouts/ping-policy-studio/` directory | Extract/copy to the secured operator workspace, retaining relative `schema/` paths. | Pending |
-| A03 | `scripts/client/verify-policy-schema.sh`, `check-policy-release.sh`, `render-ping-provider.sh` | Extracted bundle places these under `scripts/`; use that layout for manual transfer. | Pending |
+| A03 | `scripts/client/verify-policy-schema.sh`, `check-policy-release.sh`, `migrate-policy-schema.sh`, `render-ping-provider.sh` | Extracted bundle places these under `scripts/`; use that layout for manual transfer. | Pending |
 | A04 | `identity/ping-uat.json`, `docs/ping-uat-integration.md` | Extract/copy into the same relative operator-workspace paths. | Pending |
-| D01 | Rollout `.psql` scripts and schema | Apply the reviewed DB sequence with actual target DB/schema/roles and verified backup. | Pending |
+| D01 | Rollout `.psql` scripts and schema | Run the controlled Flyway migration with actual target DB/schema/roles and verified backup. | Pending |
 | P01 | Rendered private Ping provider JSON | Perform a targeted Keycloak provider create/update for `schneider-main`. | Pending |
 | V03 | `scripts/check-policy-release.sh` in extracted workspace | Check the complete client-chart render against the manifest before sync. | Pending |
 
 **D01:** follow the rollout README for preflight, backup/clone rehearsal, writer
-quiescence, before/after counts, transactional migration, runtime grants and actual
-runtime-role/search-path verification. SQL order is `001 → 003 → 004 → 005 → 006 →
-007 → 008 → 009 → 010 → 011`; LogAI currently uses ordered SQL, not Flyway.
-Keep the existing application database/schema and Keycloak tables. Exclude seed
-`002` and every down script. Keeping this ledger performs no migration.
+quiescence, before/after counts, runtime grants and runtime-role/search-path
+verification. Run the bundled `scripts/migrate-policy-schema.sh` before syncing
+the new API and UI. Follow the runbook's explicit adoption procedure for a
+reviewed legacy database. Keep Keycloak's Liquibase history in the shared schema.
 
 **P01:** defaults are `client_secret_basic` and mandatory `openid` only. Optional
 profile/email scopes, extra claims/mappers, PKCE and upstream logout remain unset
