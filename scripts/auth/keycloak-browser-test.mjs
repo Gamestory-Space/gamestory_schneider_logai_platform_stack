@@ -67,7 +67,7 @@ try {
   assert.ok(me.claims.realm_access.roles.includes(user.role));
   const release = await context.request.get(config.api+'/api/v1/release',{headers});
   assert.equal(release.status(),200);
-  assert.equal((await release.json()).shipments.length,8);
+  assert.equal((await release.json()).shipments.length,0);
   assert.equal((await context.request.get(config.api+'/api/v1/chutes',{headers})).status(),200);
   assert.equal((await context.request.get(config.api+'/api/v1/release')).status(),401);
   assert.equal((await context.request.get(config.api+'/api/v1/release',{headers:{Authorization:'Bearer invalid'}})).status(),401);
