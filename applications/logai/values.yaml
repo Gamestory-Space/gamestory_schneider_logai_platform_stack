@@ -52,6 +52,12 @@ identityApi:
 
 logaiApi:
   # Existing policy storage profile and approved policy flags only; never credentials.
+  # Enable after the API image and UAT target have been verified.
+  migration:
+    enabled: false
+    secretName: ""
+    schema: ""
+    reviewedBaselineVersion: ""
   policyConfigMap: ""
   image:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider

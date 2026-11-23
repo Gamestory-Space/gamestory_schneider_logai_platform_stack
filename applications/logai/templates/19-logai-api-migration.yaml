@@ -1,0 +1,63 @@
+{{- $migration := .Values.logaiApi.migration | default dict -}}
+{{- if $migration.enabled }}
+{{- $image := .Values.logaiApi.image }}
+{{- if not (regexMatch "^sha256:[0-9a-f]{64}$" ($image.digest | default "")) }}
+{{- fail "logaiApi.image.digest must pin the approved API image when migrations are enabled" }}
+{{- end }}
+{{- $secret := required "logaiApi.migration.secretName must name the existing migration Secret" $migration.secretName }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: logai-api-migration
+  namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 900
+  template:
+    metadata:
+      labels:
+        app: logai-api-migration
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      {{- include "logai.imagePullSecrets" . | nindent 6 }}
+      {{- include "logai.podSecurityContext" .Values.securityContext.api | nindent 6 }}
+      containers:
+        - name: migrate
+          image: {{ include "logai.image" $image | quote }}
+          imagePullPolicy: {{ $image.pullPolicy }}
+          command: ["/app/migrate.sh"]
+          env:
+            {{- range $key := list "FLYWAY_URL" "FLYWAY_USER" "FLYWAY_PASSWORD" }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secret | quote }}
+                  key: {{ $key }}
+            {{- end }}
+            - name: FLYWAY_SCHEMA
+              value: {{ required "logaiApi.migration.schema must name the reviewed shared schema" $migration.schema | quote }}
+            - name: EXPECTED_DATABASE
+              value: {{ .Values.database.name | quote }}
+            - name: EXPECTED_RUNTIME_ROLE
+              value: {{ .Values.database.username | quote }}
+            {{- if ne (toString (get $migration "reviewedBaselineVersion")) "" }}
+            - name: LOGAI_REVIEWED_BASELINE_VERSION
+              value: {{ $migration.reviewedBaselineVersion | quote }}
+            {{- end }}
+            - name: RUNTIME_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.database.secretName | quote }}
+                  key: database-url
+          {{- include "logai.containerSecurityContext" . | nindent 10 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+{{- end }}
