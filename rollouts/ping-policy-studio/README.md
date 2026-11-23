@@ -11,14 +11,23 @@ other environment defaults retain their stable releases. Promote the exact candi
 images to the client registry before deployment. No client database or deployment
 has been changed, and no implementation PR has been merged.
 
+## Schneider UAT PreSync
+
+The central chart includes `applications/logai/templates/19-logai-api-migration.yaml`.
+With migration enabled, an Argo full sync runs the bundled Flyway from the same
+signed API image before applying the API Deployment. Keep the Job disabled until
+the client registry, schema, migration Secret and target are verified. The
+standalone database runbook below also supports charts without this Job.
+
 ## Release inputs and boundaries
 
 1. Review/merge API PR #6 and UI PR #6 through normal owner control. The four-section
    implementation and release checks passed at API `d5571cc953d639a1c9fe1cda335a795ae1ac2ce4` and UI
    `a2ebcb067e55f92becaf8af7f6c5d23272c6880b`. No implementation is merged by this plan.
 2. The published candidates and source/evidence links are in `manifest.json`. Promote
-   those exact digests to the client registry and apply `release-values.yaml` last
-   after Schneider's private values. Retain Identity API and Keycloak pins. Final
+   those exact digests to the client registry. Schneider's central UAT chart
+   inherits its image pins from shared values. The reference chart can use
+   `release-values.yaml` as its final overlay. Retain Identity API and Keycloak pins. Final
    stable versions can replace these candidates after owner review and merge;
    repeat source/schema/image validation for any replacement.
 3. Verify the signed client archive and schema checksums. Extract `/app/db/migration` from
