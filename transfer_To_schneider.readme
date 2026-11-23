@@ -8,9 +8,10 @@ Known edits under the client's existing applications/logai/ chart:
 - [ ] values.yaml — add logaiApi.policyConfigMap: "". Correct the old v01.7
       spelling for Identity/UI tags if still present; retain other shared defaults.
 - [ ] values-eu-west-3-eks-shared-dev.yaml — set both API/UI candidate tags and
-      digests below. Keep startup DDL and demo seeding false.
-- [ ] templates/20-logai-api.yaml — add the optional policy ConfigMap environment
-      mapping from the supplied template; retain credential-recovery wiring.
+      digests below where needed. Inherit matching base image values. Remove
+      both legacy startup values.
+- [ ] templates/20-logai-api.yaml — remove both legacy startup environment entries and add the optional
+      policy ConfigMap mapping. Preserve the remote database wiring.
 
 Conditional checks:
 
@@ -36,5 +37,5 @@ and Keycloak 26.0.8 are retained. Preserve existing namespace, hosts, gateway,
 Secrets, database wiring and credential recovery. The supplied chart is partial;
 merge individual edits into the complete client chart. No apps.yaml is needed.
 
-Image promotion, reviewed database upgrade/grants and targeted Ping enablement
+Image promotion, controlled Flyway migration and runtime grants and targeted Ping enablement
 are separately tracked one-off client operations. This list applies no remote edits.
