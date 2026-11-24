@@ -40,6 +40,7 @@ identityApi:
   image:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
     tag: identity-api-v0.1.7
+    digest: sha256:449d3c003f54011a8c6ba3495f27a905822c36f4319fc440e7eb342eed5bdb1e
     pullPolicy: IfNotPresent
   replicas: 2
   resources:
@@ -51,27 +52,22 @@ identityApi:
       memory: 1Gi
 
 logaiApi:
-  # Existing policy storage profile and approved policy flags only; never credentials.
-  # Enable after the API image and UAT target have been verified.
-  migration:
-    enabled: false
-    secretName: ""
-    schema: ""
-    reviewedBaselineVersion: ""
-  policyConfigMap: ""
   image:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
-    tag: logai-api-v0.1.8
-    digest: sha256:14a1b3e6a36def12e1553e9bae2bee2b91317b989d54338a0aeb7e7f99b90357
+    tag: logai-api-v0.1.9-rc.5
+    digest: sha256:307f066186af82615440552203722baabfc964348807e8d720f35e95e7e839ef
     pullPolicy: IfNotPresent
   replicas: 2
-  # Requires a recovery-capable API image and Deployment template support for
-  # the password-file environment variables and read-only Secret directory mount.
-  # Enable per cluster after those changes are available.
-  databaseCredentials:
+  policyConfigMap: ""
+  migration:
     enabled: false
-    refreshBackoffSeconds: 5
-    refreshMaxWaitSeconds: 10
+    # Empty reuses database.secretName / database-url. Set an existing Secret
+    # with FLYWAY_URL, FLYWAY_USER and FLYWAY_PASSWORD for dedicated credentials.
+    secretName: ""
+    # Optional assertion against the API connection's effective schema.
+    schema: ""
+    # Set only for a reviewed legacy adoption.
+    reviewedBaselineVersion: ""
   resources:
     requests:
       cpu: 250m
@@ -83,7 +79,8 @@ logaiApi:
 logaiUi:
   image:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
-    tag: logai-ui-v0.1.7
+    tag: logai-ui-v0.1.8-rc.1
+    digest: sha256:7ef465cdc0a3250d78960caba5f5fbb8650b5ce39f85a6bcfe08d2fee6152a47
     pullPolicy: IfNotPresent
   replicas: 2
   # Writable directory used to render config.json at startup.

@@ -1,9 +1,9 @@
 {
   "status": "release-candidates-pinned-not-deployed",
-  "api_source_commit": "d439f11d1a58a8193128469e2e8f284dcc6ea759",
+  "api_source_commit": "c50b817f1537d4e1fdafd2b2991a01bb98d68411",
   "policy_content_schema": 4,
   "generator": "four-section-policy-v5",
-  "api_release_image": "docker.io/chrismdgs/gamestory_logai_schneider:logai-api-v0.1.9-rc.2@sha256:aea11602302ef76c3a3c5f332b71329e0798d1cfecd6b14b19998a5873fe3ef8",
+  "api_release_image": "docker.io/chrismdgs/gamestory_logai_schneider:logai-api-v0.1.9-rc.5@sha256:307f066186af82615440552203722baabfc964348807e8d720f35e95e7e839ef",
   "ui_release_image": "docker.io/chrismdgs/gamestory_logai_schneider:logai-ui-v0.1.8-rc.1@sha256:7ef465cdc0a3250d78960caba5f5fbb8650b5ce39f85a6bcfe08d2fee6152a47",
   "migration_order": [
     "schema/V001__release_and_chutes_read_models.sql",
@@ -56,7 +56,7 @@
   ],
   "ui_source_commit": "a2ebcb067e55f92becaf8af7f6c5d23272c6880b",
   "release_evidence": {
-    "api": "https://github.com/Gamestory-Space/gamestory-logai-api/actions/runs/45081512639",
+    "api": "https://github.com/Gamestory-Space/gamestory-logai-api/actions/runs/45295795445",
     "ui": "https://github.com/Gamestory-Space/logai_ui/actions/runs/44944703477"
   },
   "client_registry_promotion": "required; preserve digests before deployment"

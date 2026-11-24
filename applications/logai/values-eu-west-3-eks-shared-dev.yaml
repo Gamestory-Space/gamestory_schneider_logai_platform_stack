@@ -20,16 +20,12 @@ database:
   secretName: logai-db-secret
 
 gateway:
-  acmCertificateArn: arn:aws:acm:eu-west-3:716501719225:certificate/a162d922-d6c2-4d80-8be0-d891eb6d14c1
+  acmCertificateArn: arn:aws:acm:eu-west-3:716501719225:certificate/9f5192ba-0999-4c07-b266-c6900ecbd32e
 
 imagePullPolicy: Always
 imagePullSecret: logai-jfrog-secret
 
 identityApi:
-  image:
-    repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
-    tag: identity-api-v0.1.7
-    digest: sha256:449d3c003f54011a8c6ba3495f27a905822c36f4319fc440e7eb342eed5bdb1e
   resources:
     requests:
       cpu: 100m
@@ -39,20 +35,8 @@ identityApi:
       memory: 512Mi
 
 logaiApi:
-  image:
-    repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
-    tag: logai-api-v0.1.9-rc.2
-    digest: sha256:aea11602302ef76c3a3c5f332b71329e0798d1cfecd6b14b19998a5873fe3ef8
-  # Existing-database upgrades run DDL once through the reviewed migration plan.
-  # Never seed demo data during an existing-database upgrade.
   migration:
     enabled: false
-  # Promote the pinned Docker Hub API release into the JFrog repository above
-  # before deployment. ESO must synchronize database.secretName/password.
-  databaseCredentials:
-    enabled: true
-    refreshBackoffSeconds: 5
-    refreshMaxWaitSeconds: 10
   resources:
     requests:
       cpu: 100m
@@ -62,10 +46,6 @@ logaiApi:
       memory: 1Gi
 
 logaiUi:
-  image:
-    repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
-    tag: logai-ui-v0.1.8-rc.1
-    digest: sha256:7ef465cdc0a3250d78960caba5f5fbb8650b5ce39f85a6bcfe08d2fee6152a47
   resources:
     requests:
       cpu: 50m

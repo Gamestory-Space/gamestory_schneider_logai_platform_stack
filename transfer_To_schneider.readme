@@ -1,22 +1,20 @@
 # Schneider manual transfer list — Ping + Policy Studio
 
-Updated: 21 November 2026. Chris will apply client-side changes manually.
+Updated: 24 November 2026. Chris will apply client-side changes manually.
 Remote application statuses remain pending until Chris confirms completion.
 
-Known edits under the client's existing applications/logai/ chart:
+Files for the existing applications/logai/ chart:
 
-- [ ] values.yaml — add logaiApi.policyConfigMap: "". Correct the old v01.7
-      spelling for Identity/UI tags if still present; retain other shared defaults.
-- [ ] values-eu-west-3-eks-shared-dev.yaml — set both API/UI candidate tags and
-      digests below where needed. Inherit matching base image values. Remove
-      both legacy startup values.
-- [ ] templates/20-logai-api.yaml — remove both legacy startup environment entries and add the optional
-      policy ConfigMap mapping. Preserve the remote database wiring.
+- values.yaml — use the shared verified image pins and opt-in migration settings.
+- values-eu-west-3-eks-shared-dev.yaml — inherit shared images and keep PreSync disabled
+  until JFrog promotion and Schneider UAT checks are complete.
+- templates/19-logai-api-migration.yaml — add or update the Flyway PreSync Job.
+- templates/20-logai-api.yaml — retain the current version if it already includes
+  the policy ConfigMap mapping and credential recovery. It shares the API image pin
+  with the Job. The existing 30-logai-ui.yaml honors the shared image digest.
 
 Conditional checks:
 
-- [ ] templates/30-logai-ui.yaml — verify the image expression honors image.digest;
-      edit only if it does not. Full current template still needed for verification.
 - [ ] Existing client Argo Application/ApplicationSet — verify approved revision,
       chart and UAT value-file selection. Retain the existing client resource.
 - [ ] Client-managed policy ConfigMap — use only for an existing storage profile
@@ -24,8 +22,8 @@ Conditional checks:
 
 Published candidates (promote exact digests to the configured JFrog repository):
 
-- API: logai-api-v0.1.9-rc.2
-  sha256:aea11602302ef76c3a3c5f332b71329e0798d1cfecd6b14b19998a5873fe3ef8
+- API: logai-api-v0.1.9-rc.5
+  sha256:307f066186af82615440552203722baabfc964348807e8d720f35e95e7e839ef
 - UI: logai-ui-v0.1.8-rc.1
   sha256:7ef465cdc0a3250d78960caba5f5fbb8650b5ce39f85a6bcfe08d2fee6152a47
 
@@ -37,5 +35,5 @@ and Keycloak 26.0.8 are retained. Preserve existing namespace, hosts, gateway,
 Secrets, database wiring and credential recovery. The supplied chart is partial;
 merge individual edits into the complete client chart. No apps.yaml is needed.
 
-Image promotion, controlled Flyway migration and runtime grants and targeted Ping enablement
-are separately tracked one-off client operations. This list applies no remote edits.
+Image promotion and the UAT database review are separate client operations.
+The opt-in PreSync Job reuses the API database Secret by default and verifies runtime access.

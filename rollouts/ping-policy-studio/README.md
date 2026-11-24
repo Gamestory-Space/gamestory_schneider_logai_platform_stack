@@ -5,20 +5,30 @@ per-file edits and pending/applied statuses in [manual-remote-changes.md](manual
 The root `transfer_To_schneider.readme` is the short entry point to that list.
 
 **Prepared, not deployed.** This package contains an additive schema plan and public
-Ping configuration tools. API v0.1.9-rc.2 and UI v0.1.8-rc.1 are published, signed
+Ping configuration tools. API v0.1.9-rc.5 and UI v0.1.8-rc.1 are published, signed
 release candidates from the unmerged PR heads. The UAT values pin their digests;
 other environment defaults retain their stable releases. Promote the exact candidate
 images to the client registry before deployment. No client database or deployment
 has been changed, and no implementation PR has been merged.
 
+## Schneider UAT PreSync
+
+The central chart includes `applications/logai/templates/19-logai-api-migration.yaml`.
+With migration enabled, an Argo full sync runs the bundled Flyway from the same
+signed API image before applying the API Deployment. Keep the Job disabled until
+the client registry, UAT database target, schema and privileges are verified. The Job
+reuses the API database Secret by default. A dedicated migration Secret remains
+optional. The standalone database runbook below also supports charts without this Job.
+
 ## Release inputs and boundaries
 
 1. Review/merge API PR #6 and UI PR #6 through normal owner control. The four-section
-   implementation and release checks passed at API `d439f11d1a58a8193128469e2e8f284dcc6ea759` and UI
+   implementation and release checks passed at API `c50b817f1537d4e1fdafd2b2991a01bb98d68411` and UI
    `a2ebcb067e55f92becaf8af7f6c5d23272c6880b`. No implementation is merged by this plan.
 2. The published candidates and source/evidence links are in `manifest.json`. Promote
-   those exact digests to the client registry and apply `release-values.yaml` last
-   after Schneider's private values. Retain Identity API and Keycloak pins. Final
+   those exact digests to the client registry. Schneider's central UAT chart
+   inherits its image pins from shared values. The reference chart can use
+   `release-values.yaml` as its final overlay. Retain Identity API and Keycloak pins. Final
    stable versions can replace these candidates after owner review and merge;
    repeat source/schema/image validation for any replacement.
 3. Verify the signed client archive and schema checksums. Extract `/app/db/migration` from

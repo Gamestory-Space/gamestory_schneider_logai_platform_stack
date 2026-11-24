@@ -16,61 +16,49 @@ Paths beginning `applications/logai/` refer to the client's existing central cha
 
 | ID | Remote path/resource | Manual action | Status |
 | --- | --- | --- | --- |
-| R01 | `applications/logai/values.yaml` | Add the blank policy ConfigMap reference; correct old tag spelling only if present. | Pending |
-| R02 | `applications/logai/values-eu-west-3-eks-shared-dev.yaml` | Verify the rendered API/UI pins and remove both legacy startup values. | Pending |
-| R03 | `applications/logai/templates/20-logai-api.yaml` | Remove both legacy startup environment entries and add the optional policy ConfigMap mapping. | Pending |
-| V01 | `applications/logai/templates/30-logai-ui.yaml` | Verify digest support; change the image expression only if required. Current file still needed. | Pending verification |
+| R01 | `applications/logai/values.yaml` | Merge the shared image pins and opt-in migration settings. | Pending |
+| R02 | `applications/logai/values-eu-west-3-eks-shared-dev.yaml` | Inherit the shared image pins, remove the legacy startup values and keep migration disabled. | Pending |
+| R03 | `applications/logai/templates/20-logai-api.yaml` | Retain the supplied policy ConfigMap mapping and credential recovery wiring. Remove legacy startup environment entries if present. | Pending |
+| R04 | `applications/logai/templates/19-logai-api-migration.yaml` | Add or update the Flyway PreSync Job from the archive. | Pending |
+| V01 | `applications/logai/templates/30-logai-ui.yaml` | Retain the existing image helper, which honors the shared digest. | Verified against supplied template |
 | V02 | Existing client Argo Application/ApplicationSet; actual source path awaiting file | Verify revision, chart path and UAT value-file selection; edit only if stale. | Pending verification |
 | O01 | Client-managed policy ConfigMap; actual name chosen only if needed | Preserve storage profile or supply approved snapshot-use flags. | Conditional |
 
-### R01 — shared values
+### R01 and R02 — shared and UAT values
 
-Merge under the existing `logaiApi` mapping in `applications/logai/values.yaml`:
+Merge the signed bundle's `applications/logai/values.yaml` into Schneider's shared
+values. It pins API rc.5, UI rc.1 and Identity v0.1.7. Keep the UAT override free
+of image blocks so it inherits the shared pins. Retain the site's namespace, hosts,
+gateway, resources, Secret references and database settings. The optional policy
+ConfigMap stays blank unless the site has an approved policy storage profile.
 
-```yaml
-logaiApi:
-  policyConfigMap: ""
-```
+The UAT override leaves `logaiApi.migration.enabled: false`. For the shared-credential
+candidate, confirm the Argo application selects Schneider UAT and verify the signed
+API image in JFrog before syncing. The API source commit, signed image reference
+and evidence are in `manifest.json`.
+The chart defaults and `release-values.yaml` carry the same API pin.
 
-Leave it blank unless a client-managed policy ConfigMap is needed. If the remote
-file still contains `identity-api-v01.7` or `logai-ui-v01.7`, correct those to
-`identity-api-v0.1.7` and `logai-ui-v0.1.7`. UAT's new pins belong in R02.
-Retain existing credential recovery, resource, replica and security settings.
+Before enabling, run the read-only UAT catalog check in
+[`diagnostics/schneider-uat-db.yaml`](diagnostics/schneider-uat-db.yaml).
+In Rancher, open the UAT cluster, use **Import YAML** to paste the manifest, then
+open **Workloads → Pods** in `68225-logai-uat` and view the `diagnostic` container
+logs. The diagnostic connects with the existing `logai-db-secret`, sets the
+transaction read-only, and emits catalog and connection metadata. Delete the
+diagnostic pod after collecting its logs.
 
-### R02 — UAT override
-
-Manually merge into `applications/logai/values-eu-west-3-eks-shared-dev.yaml`:
-
-```yaml
-logaiApi:
-  image:
-    repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
-    tag: logai-api-v0.1.9-rc.2
-    digest: sha256:aea11602302ef76c3a3c5f332b71329e0798d1cfecd6b14b19998a5873fe3ef8
-logaiUi:
-  image:
-    repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
-    tag: logai-ui-v0.1.8-rc.1
-    digest: sha256:7ef465cdc0a3250d78960caba5f5fbb8650b5ce39f85a6bcfe08d2fee6152a47
-```
-
-These are the signed, published v0.1.10 image pins. If UAT already inherits
-both exact pins, omit duplicate image overrides. Remove
-`applyDatabaseSchemaOnStartup` and `seedSampleDataOnStartup` from the chart values.
-`manifest.json` records their source/evidence. Promote both exact digests from
-Docker Hub to JFrog before sync. Retain Identity v0.1.7 and Keycloak 26.0.8, plus
-existing UAT hosts, namespace, gateway/Rancher settings, Secret references,
-database connection/search path and credential recovery settings.
-
-`release-values.yaml` has the same block as a copy/reference or optional final
-overlay. Manual merging does not require adding that file to Argo. Keep this
-ledger, the overlay and manifest together when a later image replaces a candidate.
+Once permissions and schema are verified, set `logaiApi.migration.enabled: true`
+in the UAT override. The Job defaults to `database.secretName` key `database-url`
+and discovers the schema from that connection. To require dedicated credentials,
+set `logaiApi.migration.secretName` to an existing Secret containing `FLYWAY_URL`,
+`FLYWAY_USER` and `FLYWAY_PASSWORD`. Optionally set `logaiApi.migration.schema` to
+assert the expected runtime schema. Provide `reviewedBaselineVersion` only for
+reviewed first adoption without Flyway history. Use a full Argo CD application
+sync and confirm the PreSync hook result before checking the API.
 
 ### R03 — API template
 
-In the API container's `env` list, remove `APPLY_DATABASE_SCHEMA_ON_STARTUP` and
-`SEED_SAMPLE_DATA_ON_STARTUP` together with their `value:` lines. Add this
-block before `DB_HOST`. Retain any existing credential-refresh wiring.
+Under the existing API container's `env` list in `20-logai-api.yaml`, add this block.
+The supplied template puts it after credential-refresh entries, before `DB_HOST`:
 
 ```yaml
             {{- if .Values.logaiApi.policyConfigMap }}
@@ -126,17 +114,20 @@ Merge individual edits; the supplied partial chart must not replace the full cha
 | --- | --- | --- | --- |
 | A01 | Image references in `manifest.json` | Promote both exact candidate digests to JFrog. | Pending |
 | A02 | Entire `rollouts/ping-policy-studio/` directory | Extract/copy to the secured operator workspace, retaining relative `schema/` paths. | Pending |
-| A03 | `scripts/client/verify-policy-schema.sh`, `check-policy-release.sh`, `migrate-policy-schema.sh`, `render-ping-provider.sh` | Extracted bundle places these under `scripts/`; use that layout for manual transfer. | Pending |
+| A03 | `scripts/client/verify-policy-schema.sh`, `check-policy-release.sh`, `render-ping-provider.sh` | Extracted bundle places these under `scripts/`; use that layout for manual transfer. | Pending |
 | A04 | `identity/ping-uat.json`, `docs/ping-uat-integration.md` | Extract/copy into the same relative operator-workspace paths. | Pending |
-| D01 | Rollout `.psql` scripts and schema | Run the controlled Flyway migration with actual target DB/schema/roles and verified backup. | Pending |
+| D01 | Rollout `.psql` scripts and schema | Apply the reviewed DB sequence with actual target DB/schema/roles and verified backup. | Pending |
 | P01 | Rendered private Ping provider JSON | Perform a targeted Keycloak provider create/update for `schneider-main`. | Pending |
 | V03 | `scripts/check-policy-release.sh` in extracted workspace | Check the complete client-chart render against the manifest before sync. | Pending |
 
-**D01:** follow the rollout README for preflight, backup/clone rehearsal, writer
-quiescence, before/after counts, runtime grants and runtime-role/search-path
-verification. Run the bundled `scripts/migrate-policy-schema.sh` before syncing
-the new API and UI. Follow the runbook's explicit adoption procedure for a
-reviewed legacy database. Keep Keycloak's Liquibase history in the shared schema.
+**D01:** Use the API image's bundled Flyway via the PreSync Job for the
+Schneider UAT chart. Follow the rollout preflight for schema review, backup and
+clone rehearsal, writer quiescence, and before/after counts. The Job
+applies versions `001 → 003 → 004 → 005 → 006 → 007 → 008 → 009 → 010 → 011`
+as needed, then verifies runtime grants with the API's database credentials.
+Preserve existing LogAI data and Keycloak/Liquibase objects. The bundle excludes
+seed `002` and the down scripts. A reviewed standalone migration remains available
+for charts that do not use the PreSync Job.
 
 **P01:** defaults are `client_secret_basic` and mandatory `openid` only. Optional
 profile/email scopes, extra claims/mappers, PKCE and upstream logout remain unset

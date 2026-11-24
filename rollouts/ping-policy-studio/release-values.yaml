@@ -3,8 +3,8 @@
 logaiApi:
   image:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
-    tag: logai-api-v0.1.9-rc.2
-    digest: sha256:aea11602302ef76c3a3c5f332b71329e0798d1cfecd6b14b19998a5873fe3ef8
+    tag: logai-api-v0.1.9-rc.5
+    digest: sha256:307f066186af82615440552203722baabfc964348807e8d720f35e95e7e839ef
 logaiUi:
   image:
     repository: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider
