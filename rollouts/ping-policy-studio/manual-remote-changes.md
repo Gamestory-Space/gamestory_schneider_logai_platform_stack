@@ -19,7 +19,7 @@ Paths beginning `applications/logai/` refer to the client's existing central cha
 | R01 | `applications/logai/values.yaml` | Merge the shared image pins and opt-in migration settings. | Pending |
 | R02 | `applications/logai/values-eu-west-3-eks-shared-dev.yaml` | Inherit the shared image pins, remove the legacy startup values and keep migration disabled. | Pending |
 | R03 | `applications/logai/templates/20-logai-api.yaml` | Retain the supplied policy ConfigMap mapping and credential recovery wiring. Remove legacy startup environment entries if present. | Pending |
-| R04 | `applications/logai/templates/19-logai-api-migration.yaml` | Add the Flyway PreSync Job from the archive. | Pending |
+| R04 | `applications/logai/templates/19-logai-api-migration.yaml` | Add or update the Flyway PreSync Job from the archive. | Pending |
 | V01 | `applications/logai/templates/30-logai-ui.yaml` | Retain the existing image helper, which honors the shared digest. | Verified against supplied template |
 | V02 | Existing client Argo Application/ApplicationSet; actual source path awaiting file | Verify revision, chart path and UAT value-file selection; edit only if stale. | Pending verification |
 | O01 | Client-managed policy ConfigMap; actual name chosen only if needed | Preserve storage profile or supply approved snapshot-use flags. | Conditional |
@@ -121,7 +121,8 @@ Merge individual edits; the supplied partial chart must not replace the full cha
 | V03 | `scripts/check-policy-release.sh` in extracted workspace | Check the complete client-chart render against the manifest before sync. | Pending |
 
 **D01:** Use the API image's bundled Flyway via the PreSync Job for the
-Schneider UAT chart. Review the schema using the rollout preflight. The Job
+Schneider UAT chart. Follow the rollout preflight for schema review, backup and
+clone rehearsal, writer quiescence, and before/after counts. The Job
 applies versions `001 → 003 → 004 → 005 → 006 → 007 → 008 → 009 → 010 → 011`
 as needed, then verifies runtime grants with the API's database credentials.
 Preserve existing LogAI data and Keycloak/Liquibase objects. The bundle excludes
