@@ -27,16 +27,16 @@ Paths beginning `applications/logai/` refer to the client's existing central cha
 ### R01 and R02 — shared and UAT values
 
 Merge the signed bundle's `applications/logai/values.yaml` into Schneider's shared
-values. It pins API rc.4, UI rc.1 and Identity v0.1.7. Keep the UAT override free
+values. It pins API rc.5, UI rc.1 and Identity v0.1.7. Keep the UAT override free
 of image blocks so it inherits the shared pins. Retain the site's namespace, hosts,
 gateway, resources, Secret references and database settings. The optional policy
 ConfigMap stays blank unless the site has an approved policy storage profile.
 
 The UAT override leaves `logaiApi.migration.enabled: false`. For the shared-credential
 candidate, confirm the Argo application selects Schneider UAT and verify the signed
-API image in JFrog before pinning it in the chart. Update the API source commit,
-image reference and evidence in `manifest.json`, and use the same image pin in
-`release-values.yaml` and the chart defaults when preparing the archive.
+API image in JFrog before syncing. The API source commit, signed image reference
+and evidence are in `manifest.json`.
+The chart defaults and `release-values.yaml` carry the same API pin.
 
 Before enabling, run the read-only UAT catalog check in
 [`diagnostics/schneider-uat-db.yaml`](diagnostics/schneider-uat-db.yaml).

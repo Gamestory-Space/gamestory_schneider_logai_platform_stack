@@ -31,6 +31,11 @@ RELEASE_COMPONENT_VERSIONS = {
         'logai-api': 'v0.1.9-rc.4',
         'logai-ui': 'v0.1.8-rc.1',
     },
+    'v0.1.12': {
+        'identity-api': 'v0.1.7',
+        'logai-api': 'v0.1.9-rc.5',
+        'logai-ui': 'v0.1.8-rc.1',
+    },
 }
 
 

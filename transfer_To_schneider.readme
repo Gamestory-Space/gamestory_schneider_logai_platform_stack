@@ -1,6 +1,6 @@
 # Schneider manual transfer list — Ping + Policy Studio
 
-Updated: 21 November 2026. Chris will apply client-side changes manually.
+Updated: 24 November 2026. Chris will apply client-side changes manually.
 Remote application statuses remain pending until Chris confirms completion.
 
 Files for the existing applications/logai/ chart:
@@ -22,8 +22,8 @@ Conditional checks:
 
 Published candidates (promote exact digests to the configured JFrog repository):
 
-- API: logai-api-v0.1.9-rc.4
-  sha256:076633042a15f88e2afcc9fc255c17ddbe43985927eda0127ef28f45cf838ddb
+- API: logai-api-v0.1.9-rc.5
+  sha256:307f066186af82615440552203722baabfc964348807e8d720f35e95e7e839ef
 - UI: logai-ui-v0.1.8-rc.1
   sha256:7ef465cdc0a3250d78960caba5f5fbb8650b5ce39f85a6bcfe08d2fee6152a47
 
@@ -35,5 +35,5 @@ and Keycloak 26.0.8 are retained. Preserve existing namespace, hosts, gateway,
 Secrets, database wiring and credential recovery. The supplied chart is partial;
 merge individual edits into the complete client chart. No apps.yaml is needed.
 
-Image promotion and targeted Ping enablement are separate client operations.
-The opt-in PreSync Job applies the reviewed migration and verifies runtime grants.
+Image promotion and the UAT database review are separate client operations.
+The opt-in PreSync Job reuses the API database Secret by default and verifies runtime access.
