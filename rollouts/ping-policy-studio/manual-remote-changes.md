@@ -32,13 +32,28 @@ of image blocks so it inherits the shared pins. Retain the site's namespace, hos
 gateway, resources, Secret references and database settings. The optional policy
 ConfigMap stays blank unless the site has an approved policy storage profile.
 
-The UAT override leaves `logaiApi.migration.enabled: false`. Before enabling it,
-confirm the Argo application selects Schneider UAT and that the exact API image
-and its signature are available in JFrog. Confirm the Job can reach the approved
-database and schema. Set `logaiApi.migration.secretName` to the existing migration-role
-Secret with `FLYWAY_URL`, `FLYWAY_USER` and `FLYWAY_PASSWORD`. The Job also uses the
-API's existing `database-url` Secret key to verify runtime access. Set a baseline
-only after checking the existing schema and Flyway history.
+The UAT override leaves `logaiApi.migration.enabled: false`. For the shared-credential
+candidate, confirm the Argo application selects Schneider UAT and verify the signed
+API image in JFrog before pinning it in the chart. Update the API source commit,
+image reference and evidence in `manifest.json`, and use the same image pin in
+`release-values.yaml` and the chart defaults when preparing the archive.
+
+Before enabling, run the read-only UAT catalog check in
+[`diagnostics/schneider-uat-db.yaml`](diagnostics/schneider-uat-db.yaml).
+In Rancher, open the UAT cluster, use **Import YAML** to paste the manifest, then
+open **Workloads → Pods** in `68225-logai-uat` and view the `diagnostic` container
+logs. The diagnostic connects with the existing `logai-db-secret`, sets the
+transaction read-only, and emits catalog and connection metadata. Delete the
+diagnostic pod after collecting its logs.
+
+Once permissions and schema are verified, set `logaiApi.migration.enabled: true`
+in the UAT override. The Job defaults to `database.secretName` key `database-url`
+and discovers the schema from that connection. To require dedicated credentials,
+set `logaiApi.migration.secretName` to an existing Secret containing `FLYWAY_URL`,
+`FLYWAY_USER` and `FLYWAY_PASSWORD`. Optionally set `logaiApi.migration.schema` to
+assert the expected runtime schema. Provide `reviewedBaselineVersion` only for
+reviewed first adoption without Flyway history. Use a full Argo CD application
+sync and confirm the PreSync hook result before checking the API.
 
 ### R03 — API template
 

@@ -1,0 +1,120 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: logai-db-diagnostic
+  namespace: 68225-logai-uat
+spec:
+  restartPolicy: Never
+  activeDeadlineSeconds: 180
+  automountServiceAccountToken: false
+  imagePullSecrets:
+    - name: logai-jfrog-secret
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+    - name: diagnostic
+      image: global-artifacts.se.com/gsc-logai-docker-prod-fed/gamestory_logai_schneider:logai-api-v0.1.9-rc.4@sha256:076633042a15f88e2afcc9fc255c17ddbe43985927eda0127ef28f45cf838ddb
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop: [ALL]
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 500m
+          memory: 256Mi
+      env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: logai-db-secret
+              key: database-url
+      command: [python, -c]
+      args:
+        - |
+          import json
+          import os
+          import sys
+          import psycopg
+          from psycopg.conninfo import conninfo_to_dict
+          from psycopg.rows import dict_row
+
+          def report(conn, key, sql):
+              print(json.dumps({key: conn.execute(sql).fetchall()}, default=str), flush=True)
+
+          try:
+              parameters = conninfo_to_dict(os.environ["DATABASE_URL"])
+              print(json.dumps({"connection_options": sorted(set(parameters) - {"user", "password", "passfile"}),
+                                "configured_sslmode": parameters.get("sslmode", "libpq default")}), flush=True)
+              with psycopg.connect(**(parameters | {"connect_timeout": 15}), row_factory=dict_row) as conn:
+                  conn.execute("SET TRANSACTION READ ONLY")
+                  conn.execute("SET LOCAL statement_timeout = '30s'")
+                  report(conn, "connection", """
+                      SELECT current_database() AS database, current_user AS role,
+                             current_schema() AS schema, current_setting('search_path') AS search_path,
+                             current_setting('transaction_read_only') AS read_only,
+                             current_setting('server_version') AS server_version,
+                             (SELECT ssl FROM pg_catalog.pg_stat_ssl WHERE pid = pg_backend_pid()) AS tls,
+                             has_schema_privilege(current_schema(), 'USAGE') AS schema_usage,
+                             has_schema_privilege(current_schema(), 'CREATE') AS schema_create,
+                             has_schema_privilege(current_schema(), 'USAGE WITH GRANT OPTION') AS schema_usage_grant
+                  """)
+                  report(conn, "relations", """
+                      SELECT n.nspname AS schema, c.relname AS name, c.relkind AS kind,
+                             pg_get_userbyid(c.relowner) AS owner,
+                             pg_has_role(c.relowner, 'USAGE') AS effective_owner,
+                             pg_table_is_visible(c.oid) AS visible_on_search_path
+                      FROM pg_catalog.pg_class c JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+                      WHERE c.relkind IN ('r','p','S','v','m','f')
+                        AND (left(c.relname, 6) = 'logai_'
+                             OR lower(c.relname) IN ('databasechangelog','databasechangeloglock'))
+                      ORDER BY 1, 2
+                  """)
+                  report(conn, "logai_functions", """
+                      SELECT n.nspname AS schema, p.proname AS name,
+                             pg_get_userbyid(p.proowner) AS owner,
+                             pg_has_role(p.proowner, 'USAGE') AS effective_owner
+                      FROM pg_catalog.pg_proc p JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace
+                      WHERE left(p.proname, 6) = 'logai_' ORDER BY 1, 2
+                  """)
+                  report(conn, "legacy_columns", """
+                      SELECT table_schema, table_name, ordinal_position, column_name, udt_name, is_nullable
+                      FROM information_schema.columns
+                      WHERE table_name IN ('logai_release_shipments','logai_chutes','logai_order_orchestration_runs')
+                      ORDER BY 1, 2, 3
+                  """)
+                  report(conn, "legacy_indexes", """
+                      SELECT schemaname, tablename, indexname, indexdef FROM pg_catalog.pg_indexes
+                      WHERE tablename IN ('logai_release_shipments','logai_chutes','logai_order_orchestration_runs')
+                      ORDER BY 1, 2, 3
+                  """)
+                  report(conn, "legacy_constraints", """
+                      SELECT n.nspname AS schema, c.relname AS relation, k.conname AS name,
+                             pg_get_constraintdef(k.oid) AS definition
+                      FROM pg_catalog.pg_constraint k
+                      JOIN pg_catalog.pg_class c ON c.oid = k.conrelid
+                      JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+                      WHERE c.relname IN ('logai_release_shipments','logai_chutes','logai_order_orchestration_runs')
+                      ORDER BY 1, 2, 3
+                  """)
+                  history = conn.execute("""
+                      SELECT to_regclass(format('%I.logai_flyway_schema_history', current_schema())) IS NOT NULL AS present
+                  """).fetchone()
+                  if history["present"]:
+                      from psycopg import sql
+                      schema = conn.execute("SELECT current_schema() AS name").fetchone()["name"]
+                      report(conn, "flyway_history", sql.SQL("""
+                          SELECT installed_rank, version, type, success
+                          FROM {}.logai_flyway_schema_history ORDER BY installed_rank
+                      """).format(sql.Identifier(schema)))
+          except (psycopg.Error, KeyError) as error:
+              print(f"Database diagnostic failed ({getattr(error, 'sqlstate', None) or type(error).__name__})",
+                    file=sys.stderr)
+              sys.exit(1)

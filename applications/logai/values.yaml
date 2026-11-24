@@ -61,8 +61,12 @@ logaiApi:
   policyConfigMap: ""
   migration:
     enabled: false
+    # Empty reuses database.secretName / database-url. Set an existing Secret
+    # with FLYWAY_URL, FLYWAY_USER and FLYWAY_PASSWORD for dedicated credentials.
     secretName: ""
+    # Optional assertion against the API connection's effective schema.
     schema: ""
+    # Set only for a reviewed legacy adoption.
     reviewedBaselineVersion: ""
   resources:
     requests:
