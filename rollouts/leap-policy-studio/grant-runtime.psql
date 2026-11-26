@@ -1,0 +1,37 @@
+\ir ../ping-policy-studio/target.psql
+\if :{?runtime_role}
+\else
+  \echo 'Required: -v runtime_role=<existing approved LogAI runtime role>'
+  DO $$ BEGIN RAISE EXCEPTION 'Rollout precondition failed; nothing applied'; END $$;
+\endif
+SELECT EXISTS(SELECT 1 FROM pg_catalog.pg_roles WHERE rolname=:'runtime_role') AS runtime_exists \gset
+\if :runtime_exists
+\else
+  \echo 'Runtime role does not exist. No privileges changed.'
+  DO $$ BEGIN RAISE EXCEPTION 'Rollout precondition failed; nothing applied'; END $$;
+\endif
+BEGIN;
+SET LOCAL lock_timeout='5s';
+SET LOCAL statement_timeout='5min';
+SELECT pg_catalog.set_config('search_path',pg_catalog.quote_ident(:'target_schema')||', pg_catalog',true);
+GRANT USAGE ON SCHEMA :"target_schema" TO :"runtime_role";
+GRANT SELECT ON use_cases TO :"runtime_role";
+GRANT SELECT,INSERT ON
+ policy_storage,policies,policy_versions,policy_definitions,
+ policy_write_intents,policy_approvals,policy_audit,
+ global_snapshots,snapshot_members,current_snapshot,
+ selection_reviews,policy_definition_versions,policy_settings,
+ policy_rules,policy_objectives,policy_categories,policy_strategies,
+ policy_snapshot_uses,snapshot_approvals,definition_revisions,
+ dictionary_versions,dictionary_members,shared_dictionary_versions,
+ shared_dictionary_terms,policy_use_case_details TO :"runtime_role";
+GRANT UPDATE(backend,location_hash) ON policy_storage TO :"runtime_role";
+GRANT UPDATE(head_revision,active_revision) ON policies TO :"runtime_role";
+GRANT UPDATE(state,result_revision) ON policy_write_intents TO :"runtime_role";
+GRANT UPDATE(consumed_revision) ON policy_approvals TO :"runtime_role";
+GRANT UPDATE(snapshot_id) ON current_snapshot TO :"runtime_role";
+GRANT UPDATE(ended_at,closed_by) ON policy_snapshot_uses TO :"runtime_role";
+GRANT UPDATE(consumed_use) ON snapshot_approvals TO :"runtime_role";
+GRANT USAGE,SELECT ON SEQUENCE logai_policy_audit_id_seq,logai_global_snapshots_sequence_seq TO :"runtime_role";
+COMMIT;
+\echo 'Stage 1 policy runtime grants applied; existing base-table grants and ownership were not changed.'

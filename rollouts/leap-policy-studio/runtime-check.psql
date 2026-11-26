@@ -1,0 +1,32 @@
+-- Read-only Stage 1 review check. Run with the actual API role and search_path.
+\ir ../ping-policy-studio/target.psql
+BEGIN READ ONLY;
+SET LOCAL statement_timeout = '15s';
+SELECT current_database(), current_user, current_schema(), current_setting('search_path');
+WITH required(name, writable) AS (VALUES
+ ('use_cases', false),
+ ('current_snapshot', true), ('definition_revisions', true),
+ ('dictionary_members', true), ('dictionary_versions', true),
+ ('global_snapshots', true), ('policies', true), ('policy_approvals', true),
+ ('policy_audit', true), ('policy_categories', true), ('policy_definition_versions', true),
+ ('policy_definitions', true), ('policy_objectives', true), ('policy_rules', true),
+ ('policy_settings', true), ('policy_snapshot_uses', true), ('policy_storage', true),
+ ('policy_strategies', true), ('policy_use_case_details', true), ('policy_versions', true),
+ ('policy_write_intents', true), ('selection_reviews', true),
+ ('shared_dictionary_terms', true), ('shared_dictionary_versions', true),
+ ('snapshot_approvals', true), ('snapshot_members', true)
+), resolved AS (
+ SELECT writable, to_regclass(name) AS effective,
+        to_regclass(format('%I.%I', :'target_schema', name)) AS expected
+ FROM required
+)
+SELECT bool_and(COALESCE(
+ effective = expected AND has_table_privilege(current_user, expected, 'SELECT')
+ AND CASE WHEN writable THEN has_table_privilege(current_user, expected, 'INSERT')
+          ELSE NOT has_table_privilege(current_user, expected, 'INSERT,UPDATE,DELETE,TRUNCATE')
+ END, false)) AS ready FROM resolved \gset
+\if :ready
+\else
+ DO $$ BEGIN RAISE EXCEPTION 'Stage 1 catalogue names, search_path or runtime privileges do not match the target'; END $$;
+\endif
+COMMIT;
